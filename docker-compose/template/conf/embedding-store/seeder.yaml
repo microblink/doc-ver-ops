@@ -6,4 +6,4 @@ col-insert-workers: 50
 col-insert-batch: 1
 gc-seed-store: true
 gc-seed-store-bucket: docver-va-releases
-gc-seed-store-prefix: croatia-db/6478fcb410dcce6d3b037199
+gc-seed-store-prefix: full-db/6478fcb410dcce6d3b037199

@@ -86,14 +86,23 @@ initialize the database. After the database is initialized, the `seeder` service
 To track the progress simply use `docker-compose logs seeder`, there you will see the logs on percentage of the database
 that is initialized.
 
+## Where is the Document verification endpoint available?
+
+Once initialized, the Document verification endpoint will be available on the machine 
+you started this docker-compose deployment on, on port `8080`.
+
+If you wish to change the port, you can do so by updating the configuration of the `doc-ver-api` service in the
+in the `config/doc-ver-api/.env` file, by updating the value of `DOC_VER_API_PORT` variable.
+
 # Available databases
 
 The database used can be configured at `conf/embedding-store-server/seeder.yaml` by changing the 
 `gc-seed-store-prefix` field. By default we use `full-db` as the prefix.
 
 Right now, we only have the `full-db` and `croatia-db` databases available. 
-Using `croatia-db` is helpful to confirm that the deployment is working as expected as it is 
-by an order of magnitude smaller than `full-db`.
+Using `croatia-db` is helpful to confirm that the deployment is initializing and working as
+expected as it is by an order of magnitude smaller than `full-db`. Do not use `croatia-db` for production
+environments as it is likely not representative of the real-world use case.
 
 # Resource requirements
 
