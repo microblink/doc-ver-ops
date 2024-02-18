@@ -1,0 +1,32 @@
+version: "3"
+
+include:
+
+  - path: ../base/bundle/docker-compose.yaml
+    project_directory: ../base/bundle
+    # add service account data for model bucket to creds/bundle/gcs.json
+    # https://cloud.google.com/iam/docs/service-accounts-create#creating
+    env_file: 
+      - conf/bundle/.env
+
+  - path: ../base/embedding-store/docker-compose.yaml
+    project_directory: ../base/embedding-store
+    env_file: 
+      - conf/embedding-store/.env
+      # - creds/embedding-store/.env
+
+  - path: ../base/retrieval-intermediary/docker-compose.yaml
+    project_directory: ../base/retrieval-intermediary
+    env_file: 
+      - conf/retrieval-intermediary/.env
+
+  - path: ../base/visual-anomaly/docker-compose.yaml
+    project_directory: ../base/visual-anomaly
+    env_file: 
+      - conf/visual-anomaly/.env
+
+  - path: ../base/doc-ver-api/docker-compose.yaml
+    project_directory: ../base/doc-ver-api
+    env_file: 
+      - conf/doc-ver-api/.env
+      - creds/doc-ver-api/.env

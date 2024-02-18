@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  visual-anomaly:
+    image: eu.gcr.io/microblink-identity/web-api-visual-anomaly:1.1.0
+    depends_on:
+      retrieval-intermediary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "visual-anomaly:8080/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    environment:
+      ALLOW_CORS: "${ALLOW_CORS}"
+      ENABLE_HEALTH_ENDPOINTS: "true"
+      ENABLE_METRICS: "false"
+      INTERMEDIARY_PROTOCOL: "http"
+      INTERMEDIARY_TIMEOUT_MS: "15000"
+      INTERMEDIARY_URL: retrieval-intermediary:8005
+      PORT: "8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '${LIMITS_CPUS}'
+          memory: ${LIMITS_MEM}
+        reservations:
+          cpus: '${RESERVATIONS_CPUS}'
+          memory: ${RESERVATIONS_MEM}
+    networks:
+      - visual-anomaly-network

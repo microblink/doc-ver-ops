@@ -1,0 +1,83 @@
+version: '3'
+
+services:
+  model_proxy:
+    depends_on:
+      visual-anomaly-nginx:
+        condition: service_healthy
+    image: eu.gcr.io/microblink-identity/mlp-model-proxy/onprem:v0.17.7
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr", "model_proxy:8005"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - visual-anomaly-network
+    volumes:
+      - ./proxy/bundle-signature.yaml:/etc/bundle-signature.yaml
+    command:
+      - mproxy
+      - server
+      - --tf-serving-connection-string
+      - visual-anomaly-nginx:80
+      - -c
+      - /etc/bundle-signature.yaml
+
+  visual-anomaly-nginx:
+    depends_on:
+      s6478fcb410dcce6d3b037199s:
+        condition: service_healthy
+    image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "visual-anomaly-nginx:80/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - visual-anomaly-network
+    volumes:
+      - ${REL_DIR}/conf/bundle/nginx.conf:/etc/nginx/nginx.conf
+
+  s6478fcb410dcce6d3b037199s:
+    depends_on:
+      model_download:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr", "s6478fcb410dcce6d3b037199s:8001"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    image: eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem:23.06
+    networks:
+      - visual-anomaly-network
+    volumes:
+      - ./model-serving/model-download/models/6478fcb410dcce6d3b037199:/models/6478fcb410dcce6d3b037199
+    command:
+      - tritonserver
+      - --model-repository=/models
+    deploy:
+      resources:
+        limits:
+          cpus:  ${SERVING_6478fcb410dcce6d3b037199_CPU_LIMIT}
+          memory: ${SERVING_6478fcb410dcce6d3b037199_MEM_LIMIT}
+        reservations:
+          cpus: ${SERVING_6478fcb410dcce6d3b037199_CPU_RESERVATION}
+          memory: ${SERVING_6478fcb410dcce6d3b037199_MEM_RESERVATION}
+
+
+
+  model_download:
+    image: rclone/rclone:1
+    networks:
+      - visual-anomaly-network
+    entrypoint: sh
+    volumes:
+      - ./model-serving/model-download/rclone.conf:/config/rclone/rclone.conf
+      - ./model-serving/model-download/models:/models
+      - ./model-serving/model-download/model-download.sh:/data/model-download.sh
+      - ${REL_DIR}/creds/bundle/gcs.json:/src/gcs.json
+    command: 
+      - ./model-download.sh
+
+networks:
+  visual-anomaly-network:

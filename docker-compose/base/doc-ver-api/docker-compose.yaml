@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  doc-ver-api:
+    image: eu.gcr.io/microblink-identity/web-api-doc-ver:2.4.0
+    depends_on:
+      visual-anomaly:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "doc-ver-api:8080/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    ports:
+      - ${DOC_VER_API_PORT}:8080
+    environment:
+      ALLOWED_METHODS: "GET,POST,OPTIONS"
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      ALLOW_CORS: ${ALLOW_CORS}
+      AVAILABLE_WORKER_TIMEOUT_MS: ${AVAILABLE_WORKER_TIMEOUT_MS}
+      GA_SERVER_URL: "visual-anomaly:8080"
+      IMAGE_MAX_SIZE_KB: ${IMAGE_MAX_SIZE_KB}
+      LICENSEE: ${LICENSEE}
+      LOGGER_MAP: "com.microblink=DEBUG"
+      LOG_ENABLE_CUSTOMIZATION: "true"
+      WORKER_TIMEOUT_MS: ${WORKER_TIMEOUT_MS}
+      LICENSE_KEY: ${LICENSE_KEY}
+    deploy:
+      resources:
+        limits:
+          cpus: ${LIMITS_CPUS}
+          memory: ${LIMITS_MEM}
+        reservations:
+          cpus: ${RESERVATIONS_CPUS}
+          memory: ${RESERVATIONS_MEM}
+    networks:
+      - visual-anomaly-network
