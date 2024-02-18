@@ -15,12 +15,25 @@ To install docker compose, follow the instructions [here](https://docs.docker.co
 If you don't want to "pollute" your docker environment we recommend using a [standalone installation](https://docs.docker.com/compose/install/standalone/) of docker-compose. It is a single binary that you can put in your PATH 
 and use it as a regular command as explained in the provided link.
 
+### Your licence key and service acount json credentials
+
+You will need a licence key and a service account json file to authenticate to our services. You can acquire these on [developer.microblink.com](https://developer.microblink.com/). If you are using Document verification self-hosted, you will need to download the service account json (`serviceaccount.json`) file and the licence key from the licences section (under Document verification self-hosted).
+
 # Quickstart - Deploying your instance
 
 Clone this repository and position yourself in the root of the repo:
 `git clone git@github.com:microblink/doc-ver-ops.git && cd doc-ver-ops`
 
-## Initialise your environment
+## Authentication for image registry - access to our images hosted on eu.gcr.io/microblink-identity
+
+Using `serviceaccount.json` mentioned above, you can authenticate to our image registry by running the following command:
+
+```bash
+docker login -u _json_key --password-stdin https://eu.gcr.io < <path to serviceaccount.json>
+```
+This will authenticate you to our image registry and allow you to pull the images needed to run the deployment.
+
+## Initialise your environment and running the deployment
 
 To initialize your environment you should use `init.sh` provided in the `docker-compose` directory.
 
@@ -35,9 +48,10 @@ Update the values in <> with your own values.
  * `<path to serviceaccount.json>` - the path to the service account json file that you will use to authenticate. This file is acquired on developer.microblink.com under licences - document verification self-hosted.
  * `<licence key>` - the licence key that you will use to authenticate. This key is acquired on developer.microblink.com under licences - document verification self-hosted.
 
-This will create a new directory in the `docker-compose` directory with the `<deployment_name>` you provided. This directory will contain the configuration files for your deployment runnable by a single command `docker-compose up -d`.
+This will create a new directory in the `docker-compose` directory with the `<deployment_name>` you provided. 
+This directory will contain the configuration files for your deployment runnable by a single command `docker-compose up -d`.
 
-To prevent any confusion, if for example I'm working for company `microblink` I have my serviceaccount.json at path
+To prevent any confusion, if for example I'm working for company `microblink` I have my `serviceaccount.json` at path
 `/home/alex/serviceaccount.json` and my licence key is `someExampleString` I would run the following command:
 
 ```bash
@@ -51,7 +65,7 @@ cd microblink
 docker-compose up -d
 ```
 
-## Inspecting logs
+## Inspecting the logs
 
 To inspect the logs of a specific service, run `docker-compose logs <service_name>`.
 
