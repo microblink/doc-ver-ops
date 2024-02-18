@@ -2,7 +2,7 @@
 
 Docver consists of 5 components, each of which is defined in base/<component_dir>. 
 The default setup is defined in /base, and it is not expected to change no matter where the whole docver stack needs to be deployed -> in other words, base should not be edited.
-The setup for a real deployment is shown in /template. All the services defined in /base are [included](https://docs.docker.com/compose/multiple-compose-files/include/) in /template/docker-compose.yaml -> to start the whole stack in a single network, `docker compose -f /tempalte/docker-compose.yaml up -d` is enough.
+You will configure your deployment in /<your instance> by running `init.sh` that will copy `template` that you will be able to edit to your liking.
 
 ## Prerequisites
 * docker compose >= 2.22.0
