@@ -8,32 +8,46 @@ The setup for a real deployment is shown in /template. All the services defined 
 * docker compose >= 2.22.0
 * docker >= 20.10.5
 
+### Docker compose
+
+To install docker compose, follow the instructions [here](https://docs.docker.com/compose/install/).
+
+If you don't want to "pollute" your docker environment we recommend using a [standalone installation](https://docs.docker.com/compose/install/standalone/) of docker-compose. It is a single binary that you can put in your PATH 
+and use it as a regular command as explained in the provided link.
+
 # Quickstart - Deploying your instance
 
-To get a working deployment of docver do the following.
-
-1. Position yourself in `docker-compose` directory that has `base` and `template` directories.
-2. Copy the `template` directory to a new directory, e.g. `<my company name>`.
-3. Position yourself in the new directory, e.g. `<my company name>`.
-4. Run `bash init.sh <path to serviceacount.json> <contents of your LICENSE KEY>
-
-Summarized in a bash commands:
-
-First initialize the repo and cd into the repo root:
+Clone this repository and position yourself in the root of the repo:
 `git clone git@github.com:microblink/doc-ver-ops.git && cd doc-ver-ops`
 
-Then:
-```bash
-# Position yourself in the root of cloned repository
-cd docker-compose
-# Copy the template directory to a new directory
-cp -r template <my company name>
-# Position yourself in the new directory
-cd <my company name>
-# Run the init script
-bash init.sh <path to serviceacount.json> <contents of your LICENSE KEY>
+## Initialise your environment
 
-# Finally run the compose
+To initialize your environment you should use `init.sh` provided in the `docker-compose` directory.
+
+You can do that by running the following commands
+
+```bash
+cd docker-compose
+bash init.sh <deployment_name> <path to serviceaccount.json> <licence key>
+```
+Update the values in <> with your own values.
+ * `<deployment_name>` - the name of your deployment, we recommend simply using your company name
+ * `<path to serviceaccount.json>` - the path to the service account json file that you will use to authenticate. This file is acquired on developer.microblink.com under licences - document verification self-hosted.
+ * `<licence key>` - the licence key that you will use to authenticate. This key is acquired on developer.microblink.com under licences - document verification self-hosted.
+
+This will create a new directory in the `docker-compose` directory with the `<deployment_name>` you provided. This directory will contain the configuration files for your deployment runnable by a single command `docker-compose up -d`.
+
+To prevent any confusion, if for example I'm working for company `microblink` I have my serviceaccount.json at path
+`/home/alex/serviceaccount.json` and my licence key is `someExampleString` I would run the following command:
+
+```bash
+bash init.sh microblink /home/alex/serviceaccount.json someExampleString
+```
+
+Afterwards, I would continue to deploy my instance by running the following:
+
+```bash
+cd microblink
 docker-compose up -d
 ```
 
@@ -49,6 +63,24 @@ Available services
 * seeder
 * pgvector
 
+# Startup 
+
+To successfully startup, our solution needs to initialize its database. Depending on the database size this can be a 
+lengthy process. The database initialization is done by the `seeder` service. The `seeder` service will run once and
+initialize the database. After the database is initialized, the `seeder` service will exit.
+
+To track the progress simply use `docker-compose logs seeder`, there you will see the logs on percentage of the database
+that is initialized.
+
+# Available databases
+
+The database used can be configured at `conf/embedding-store-server/seeder.yaml` by changing the 
+`gc-seed-store-prefix` field. By default we use `full-db` as the prefix.
+
+Right now, we only have the `full-db` and `croatia-db` databases available. 
+Using `croatia-db` is helpful to confirm that the deployment is working as expected as it is 
+by an order of magnitude smaller than `full-db`.
+
 # Resource requirements
 
 For each service you will be able to configure how much CPU and RAM it can use. Alongside `docker-compose.yaml` 
@@ -60,22 +92,20 @@ the default values as we need to make sure that the services are not starved of 
 we can help you determine the right values for your deployment.
 
 
-## Configuration details
-If the exposed env vars are not enough and you still want to override /base services, you can do so by [extending](https://docs.docker.com/compose/multiple-compose-files/extends/) them in /<your instance>/docker-compose.yaml.
+# Configuration details
+
+We do not expect the need to change the default configuration for each service. However, if you need to change the
+parts of our deployment that are not exposed via env vars (that you can configure in `.env` files) you can do so by [extending](https://docs.docker.com/compose/multiple-compose-files/extends/) them in /<your instance>/docker-compose.yaml.
 Since creds and conf are loaded outside the /base directory, /<your instance>/.env file needs to be added. Inside there should be an env variable with the full path to the /<your instance> directory on the target server. 
 
 Server prerequisites and configuration options for each component will be described in the following sections.
 
 
 ## Prerequisites
-* docker engine >= 20.10.5
-* docker compose >= 2.22.0
 * docker registry credentials (permission to pull from eu.gcr.io/microblink-identity)
 * gcloud service account for a bucket where encrypted models will be stored
 * doc-ver-api licence key
-* embedding store seeder credentials
-    * for gcloud: gcloud service account for the bucket where seed data is stored
-    * for s3: s3 bucket access key and secret key
+* serviceaccount.json file for gcs
 
 ## Components
 

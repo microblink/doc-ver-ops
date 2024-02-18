@@ -1,8 +1,10 @@
 #!/bin/bash
 
-pathToServiceAccountJson="$1"
-licenceKey="$2"
-licensee="$3"
+deploymentName="$1"
+
+pathToServiceAccountJson="$2"
+licenceKey="$3"
+licensee="$4"
 
 if [ -z "$pathToServiceAccountJson" ]; then
   echo "Service account json path is required as a first argument"
@@ -24,6 +26,10 @@ if [[ $licenceKey != sRw* ]]; then
   echo "License key string should start with 'sRw' please check the license key and try again."
   exit 1
 fi
+
+cp -r template $deploymentName
+
+cd $deploymentName
 
 mkdir -p creds/bundle
 mkdir -p creds/doc-ver-api
