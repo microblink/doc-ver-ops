@@ -1,0 +1,13 @@
+{{ if .Values.auth.licence.createSecret }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.auth.licence.secretName }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+stringData:
+  # This key is expected to be in secret provisioned to `doc-ver-api` service
+  LICENSE_KEY: {{ .Values.auth.licence.licenseKey | required "if auth.licence.createSecret is set, auth.licence.licenseKey value must be provided" }}
+type: Opaque
+{{ end }}

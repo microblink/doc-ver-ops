@@ -1,0 +1,381 @@
+auth:
+  licence:
+    # -- name of license-key secret, if changed, it must be updated in doc-ver-api
+    secretName: "license-key"
+    # -- enable if you want to create licence secret as part of this charts deployment
+    createSecret: false
+    # -- if createSecret is set to true, set the license key here
+    licenseKey: ""
+  serviceAccount:
+    # -- name of the secret, this string value must be updated in both doc-ver-api and embedding-store
+    secretName: "sa-json"
+    # -- the name of pull secret that will be used to pull images from the registry, if updated, it must be updated in values for all services
+    imgPullSecretName: "eu.gcr.io"
+    # -- if you want to create service account secret and image pull secret as part of this charts deployment
+    createBothSecrets: false
+    # -- base64 value of service account json you got from developer.microblink.com
+    serviceAccountJsonB64: ""
+  dbCreds:
+    # -- name of the secret, this string value must be updated in both postgresql and embedding-store
+    secretName: "mb-docver-db-creds"
+    # -- if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret with fixed credentials
+    createSecret: true
+
+doc-ver-api:
+  # -- using fixed number of replicas if autoscaling is not enabled
+  replicaCount: 1
+  # -- Autoscaling configurations
+  autoscaling:
+    # -- if enabled, deployment will be autoscaled
+    enabled: false
+    # -- min replicas hpa will scale down to
+    minReplicas: 1
+    # -- max replicas hpa will scale up to
+    maxReplicas: 3
+    memory:
+      # -- if enabled, hpa will scale based on memory usage
+      enabled: false
+      # -- target memory usage percentage
+      target: 80
+    cpu:
+      # -- if enabled, hpa will scale based on cpu usage
+      enabled: true
+      # -- target cpu usage percentage
+      target: 80
+  image:
+    repository: eu.gcr.io/microblink-identity/web-api-doc-ver
+    tag: "2.4.0"
+    pullSecrets:
+      - name: eu.gcr.io
+  env: 
+    # -- don't change unless communicated by Microblink support team
+    LICENSEE: "localhost"
+  # -- has to match the name of the secret in auth.licence.secretName, or if you want to 
+  # -- provision secret outside of this chart, has to match the name of the secret. If you are
+  # -- unclear on the content of the secret, check out the tempates/license-key.yaml
+  extraSecrets:
+    - license-key
+  resources:
+    # Reducing limits lower then this is not recommended as it will
+    # affect the performance of the service.
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+  ingress:
+    # -- enable if you want to expose the service
+    enabled: false
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+      nginx.ingress.kubernetes.io/client-max-body-size: 15m
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    hosts:
+      # -- if you want to expose the service, set the host name
+      - host: "docver.microblink.com"
+        paths: ["/docver","/info","/barcode"]
+    pathType: ImplementationSpecific
+
+visual-anomaly:
+  # -- using fixed number of replicas if autoscaling is not enabled
+  replicaCount: 1
+  autoscaling:
+    # -- if enabled, deployment will be autoscaled
+    enabled: false
+    # -- min replicas hpa will scale down to
+    minReplicas: 1
+    # -- max replicas hpa will scale up to
+    maxReplicas: 1
+    memory:
+      # -- if enabled, hpa will scale based on memory usage
+      enabled: false
+      # -- target memory usage percentage
+      target: 80
+    cpu:
+      # -- if enabled, hpa will scale based on cpu usage
+      enabled: true
+      # -- target cpu usage percentage
+      target: 80
+  image:
+    pullSecrets:
+      - name: eu.gcr.io
+  enabled: true
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 300m
+      memory: 0.5Gi
+  ingress:
+    enabled: false
+
+anomdet-intermediary:
+  replicaCount: 1
+  autoscaling:
+    # -- if enabled, deployment will be autoscaled
+    enabled: false
+    # -- min replicas hpa will scale down to
+    minReplicas: 1
+    # -- max replicas hpa will scale up to
+    maxReplicas: 2
+    # -- if set, hpa will scale based on cpu usage, target cpu usage percentage
+    targetCPUUtilizationPercentage: 80
+    # -- if set, hpa will scale based on memory usage, target memory usage percentage
+    targetMemoryUtilizationPercentage: 80
+  resources:
+    limits:
+      # -- deployment resource cpu limit
+      cpu: 1
+      # -- deployment resource memory limit
+      memory: 1Gi
+    requests:
+      # -- deployment resource cpu requests
+      cpu: 300m
+      # -- deployment resource memory requests
+      memory: 512Mi
+
+  # -- do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release
+  anomdetIntermediaryConfig:
+    model-id: "6478fcb410dcce6d3b037199"
+    model-name: "visual-anomaly"
+    collection-name: mdv-1458
+    parallel-queries: 200
+  image:
+    repository: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem
+    pullSecrets:
+    - name: eu.gcr.io
+  ingress:
+    enabled: false
+
+embedding-store:
+  seeder:
+    enabled: false
+    image: 
+      repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
+      pullSecrets:
+        - name: eu.gcr.io
+    grpc:
+      grpcRecvSize: "52428800"
+      grpcSendSize: "52428800"
+    secret: sa-json
+    config:
+      collectionCreateWorkers: 200
+      collectionInsertWorkers: 50
+      collectionInsertBatch: 1
+    seedStore:
+      s3:
+        enabled: false
+      gc:
+        enabled: true
+        bucket: "docver-va-releases"
+        prefix: "full-db/6478fcb410dcce6d3b037199"
+    resources:
+      limits:
+        cpu: 1
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+  server:
+    image: 
+      repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
+      pullSecrets:
+        - name: eu.gcr.io
+    database:
+      pgvector:
+        enabled: true
+        # If using external database, set this to a valid host and port
+        # For example SaaS postgre in AWS or GCP
+        addr: "postgresql:5432"
+        # -- set this to false if you are using "full" connection string to "external" DB instance (not part of this helm release)
+        addrPrepandReleaseName: true
+        connectionStringParams: "pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
+    grpc:
+      grpcRecvSize: "52428800"
+      grpcSendSize: "52428800"
+
+    autoscaling:
+      # -- if enabled, server deployment will be autoscaled
+      enabled: false
+      # -- min replicas hpa will scale down to
+      minReplicas: 1
+      # -- max replicas hpa will scale up to
+      maxReplicas: 2
+      # -- if set, hpa will scale based on cpu usage, target memory usage percentage
+      targetCPUUtilizationPercentage: 80
+      # -- if set, hpa will scale based on memory usage, target memory usage percentage
+      targetMemoryUtilizationPercentage: 80
+
+    # If facking with high RPS load, consider increasing the requirements
+    resources:
+      limits:
+        cpu: 2
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+
+    secret: mb-docver-db-creds
+
+
+postgresql:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: ankane/pgvector
+    tag: v0.5.1
+    pullPolicy: IfNotPresent
+  global:
+    postgresql:
+      auth:
+        existingSecret: mb-docver-db-creds
+        postgresqlDatabase: postgres
+  auth:
+    # -- must be fixed to this value, do not change
+    username: embedding-store-sa
+  # volumePermissions:
+    # enabled: true
+  primary:
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+    args: 
+     - -c
+     - config_file=/bitnami/postgresql/conf/postgresql.conf
+    persistence:
+      enabled: true
+      ## -- change the storeage class to the one that is available in your cluster
+      storageClass: "efs-sc"
+      size: 1300Gi
+    service:
+      type: ClusterIP
+    resources:
+      limits:
+        cpu: 20
+        memory: "24Gi"
+      requests:
+        cpu: 10
+        memory: "12Gi"
+    tolerations:
+      - key: "kubernetes.io/workload"
+        operator: "Equal"
+        value: "storage"
+        effect: "NoSchedule"
+    # Patch to prevent postgre chart bug
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: postgresql
+                  app.kubernetes.io/instance: argo-wf
+                  app.kubernetes.io/component: primary
+              namespaces:
+                - "placeholder"
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+    livenessProbe:
+      failureThreshold: 600
+    configuration: |
+      max_connections = 1000
+      shared_buffers = 18GB
+      effective_cache_size = 24GB
+      maintenance_work_mem = 1GB
+      checkpoint_completion_target = 0.9
+      wal_buffers = 16MB
+      default_statistics_target = 1000
+      random_page_cost = 1.1
+      effective_io_concurrency = 300
+      work_mem = 20MB
+      huge_pages = off
+      min_wal_size = 2GB
+      max_wal_size = 4GB
+      max_worker_processes = 20
+      max_parallel_workers_per_gather = 8
+      max_parallel_workers = 20
+      max_parallel_maintenance_workers = 4
+      
+      wal_level = minimal
+      max_wal_senders = 0
+
+      listen_addresses = '*'
+
+mlp-local-storage:
+  # -- enable this ONLY if you do not have dynamic storage provisioning in k8s cluster
+  enabled: false
+  StorageClass:
+    - create: true
+      name: efs-sc
+      provisioner: kubernetes.io/no-provisioner
+  PersistentVolume:
+    - volumenameprefix: test-tmp-delete-when-seen-
+      storageClass:
+        name: efs-sc
+        reclaimPolicy: Delete
+      # owner: 1001
+      capacity: 1300Gi
+      storageType: ssd
+      nodes:
+        - s1
+
+bundle-visual-anomaly-core-versions:
+  bundle:
+    serving:
+      nginx:
+        resolver: "kube-dns.kube-system.svc.cluster.local"
+    proxy:
+      image:
+        repository: eu.gcr.io/microblink-identity/mlp-model-proxy/onprem
+        tag: v0.17.7
+      minLimits:
+        cpu: 500m
+        memory: "1Gi"
+      maxLimits:
+        cpu: 2
+        memory: "2Gi"
+      ingress:
+        enabled: false
+      autoscaling:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 3
+        targetCPUUtilizationPercentage: "80"
+      env:
+        GOGC: "50"
+    models:
+      autoscaling:
+        type: hpa
+        minReplicas: 1
+        maxReplicas: 3
+      model:
+        globalStorage:
+            type: gs
+            secret: sa-json
+            bucket: identity-enc-models-prod
+        storage:
+            type: gs
+            secret: sa-json
+            bucket: identity-enc-models-prod
+  models:
+    6478fcb410dcce6d3b037199:
+      # Model resources can be reduced, however, it is not recommended if
+      # the model is used in production. 
+      minLimits:
+        cpu: 2
+        memory: "2Gi"
+      maxLimits:
+        cpu: 2
+        memory: "2Gi"
+      engine:
+        type: "triton"
+      image:
+        repository: "eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem"
+        tag: "23.06"

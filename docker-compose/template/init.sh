@@ -1,10 +1,8 @@
 #!/bin/bash
 
-deploymentName="$1"
-
-pathToServiceAccountJson="$2"
-licenceKey="$3"
-licensee="$4"
+pathToServiceAccountJson="$1"
+licenceKey="$2"
+licensee="$3"
 
 if [ -z "$pathToServiceAccountJson" ]; then
   echo "Service account json path is required as a first argument"
@@ -27,10 +25,6 @@ if [[ $licenceKey != sRw* ]]; then
   exit 1
 fi
 
-cp -r template $deploymentName
-
-cd $deploymentName
-
 mkdir -p creds/bundle
 mkdir -p creds/doc-ver-api
 mkdir -p creds/embedding-store
@@ -47,3 +41,4 @@ if [ ! -f "$cdir/docker-compose.yaml" ]; then
 fi
 
 printf "REL_DIR=%s\n" "$cdir" > .env
+
