@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.7](https://img.shields.io/badge/Version-0.3.7-informational?style=flat-square)
+![Version: 0.3.8](https://img.shields.io/badge/Version-0.3.8-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
@@ -124,6 +124,7 @@
 | embedding-store.server.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target memory usage percentage |
 | embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
+| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `false` | set this to true you are using postgresql.emabled: true - postgres as a part of this helm release |
 | embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
 | embedding-store.server.database.pgvector.enabled | bool | `true` |  |
 | embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
@@ -144,9 +145,9 @@
 | mlp-local-storage.StorageClass[0].create | bool | `true` |  |
 | mlp-local-storage.StorageClass[0].name | string | `"efs-sc"` |  |
 | mlp-local-storage.StorageClass[0].provisioner | string | `"kubernetes.io/no-provisioner"` |  |
-| mlp-local-storage.enabled | bool | `false` | enable this ONLY if you do not have dynamic storage provisioning in k8s cluster |
+| mlp-local-storage.enabled | bool | `false` | enable this ONLY if you do not have dynamic storage provisioning in k8s cluster, likely using on-prem, baremetal k8s |
 | postgresql.auth.username | string | `"embedding-store-sa"` | must be fixed to this value, do not change |
-| postgresql.enabled | bool | `false` |  |
+| postgresql.enabled | bool | `false` | Disabled, as we expect that the database will be hosted outside of this helm release, e.g in AWS RDS or GCP CloudSQL |
 | postgresql.global.postgresql.auth.existingSecret | string | `"mb-docver-db-creds"` |  |
 | postgresql.global.postgresql.auth.postgresqlDatabase | string | `"postgres"` |  |
 | postgresql.image.pullPolicy | string | `"IfNotPresent"` |  |

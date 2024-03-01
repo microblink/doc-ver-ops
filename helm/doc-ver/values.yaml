@@ -193,8 +193,8 @@ embedding-store:
         # If using external database, set this to a valid host and port
         # For example SaaS postgre in AWS or GCP
         addr: "postgresql:5432"
-        # -- set this to false if you are using "full" connection string to "external" DB instance (not part of this helm release)
-        addrPrepandReleaseName: true
+        # -- set this to true you are using postgresql.emabled: true - postgres as a part of this helm release
+        addrPrepandReleaseName: false
         connectionStringParams: "pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
     grpc:
       grpcRecvSize: "52428800"
@@ -225,6 +225,8 @@ embedding-store:
 
 
 postgresql:
+  # -- hosting postgres as part of this helm release is disabled by default, if you want to enable it, set enabled to true
+  # -- Disabled, as we expect that the database will be hosted outside of this helm release, e.g in AWS RDS or GCP CloudSQL
   enabled: false
   image:
     registry: docker.io
@@ -309,7 +311,7 @@ postgresql:
       listen_addresses = '*'
 
 mlp-local-storage:
-  # -- enable this ONLY if you do not have dynamic storage provisioning in k8s cluster
+  # -- enable this ONLY if you do not have dynamic storage provisioning in k8s cluster, likely using on-prem, baremetal k8s
   enabled: false
   StorageClass:
     - create: true
