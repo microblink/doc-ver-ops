@@ -7,7 +7,7 @@ For production ready, user facing loads we prepare a helm chart that can be used
 Using our helm you can easily configure autoscaling rules and resource requirements for each service, making it easy to install
 on existing Kuberentes clusters. For more information please refer to [README.md](helm/doc-ver/README.md) under helm/doc-ver.
 
-# Docker compose
+## Docker compose
 If you are working within a: 
  - constrainted environment
  - do not require horizontal scaling/have predictable loads
