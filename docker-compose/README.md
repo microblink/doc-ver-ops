@@ -21,7 +21,9 @@ and use it as a regular command as explained in the provided link.
 
 ### Your licence key and service acount json credentials
 
-You will need a licence key and a service account json file to authenticate to our services. You can acquire these on [developer.microblink.com](https://developer.microblink.com/). If you are using Document verification self-hosted, you will need to download the service account json (`serviceaccount.json`) file and the licence key from the licences section (under Document verification self-hosted).
+As mantioned [here](../README.md#your-licence-key-and-service-acount-json-credentials). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
+If you are using Document verification self-hosted, you will need to download the service account json (`serviceaccount.json`) file and the 
+licence key from the licences section (under Document verification self-hosted).
 
 # Quickstart - Deploying your instance
 
