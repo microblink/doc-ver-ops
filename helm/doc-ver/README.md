@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.8](https://img.shields.io/badge/Version-0.3.8-informational?style=flat-square)
+![Version: 0.3.9](https://img.shields.io/badge/Version-0.3.9-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
@@ -28,7 +28,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.6 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.5 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.3 |
+| https://helm.microblink.com/charts | embedding-store | 0.3.5 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.8 |
 
@@ -118,7 +118,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.resources.requests.memory | string | `"1Gi"` |  |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
-| embedding-store.seeder.config.collectionInsertWorkers | int | `50` |  |
+| embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
 | embedding-store.seeder.enabled | bool | `false` |  |
 | embedding-store.seeder.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.seeder.grpc.grpcSendSize | string | `"52428800"` |  |
@@ -131,7 +131,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.secret | string | `"sa-json"` |  |
 | embedding-store.seeder.seedStore.gc.bucket | string | `"docver-va-releases"` |  |
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db/6478fcb410dcce6d3b037199"` |  |
+| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-768/6478fcb410dcce6d3b037199"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
 | embedding-store.server.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
@@ -139,7 +139,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.server.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target memory usage percentage |
 | embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
-| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `false` | set this to true you are using postgresql.emabled: true - postgres as a part of this helm release |
+| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `false` | set this to true you are should be using postgresql.emabled: true - postgres as a part of this helm release |
 | embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
 | embedding-store.server.database.pgvector.enabled | bool | `true` |  |
 | embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
@@ -181,13 +181,13 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.containerSecurityContext.enabled | bool | `false` |  |
 | postgresql.primary.livenessProbe.failureThreshold | int | `600` |  |
 | postgresql.primary.persistence.enabled | bool | `true` |  |
-| postgresql.primary.persistence.size | string | `"1300Gi"` |  |
-| postgresql.primary.persistence.storageClass | string | `"efs-sc"` |  |
+| postgresql.primary.persistence.size | string | `"500Gi"` |  |
+| postgresql.primary.persistence.storageClass | string | `"microblink-docver"` |  |
 | postgresql.primary.podSecurityContext.enabled | bool | `false` |  |
 | postgresql.primary.resources.limits.cpu | int | `20` |  |
 | postgresql.primary.resources.limits.memory | string | `"24Gi"` |  |
 | postgresql.primary.resources.requests.cpu | int | `10` |  |
-| postgresql.primary.resources.requests.memory | string | `"12Gi"` |  |
+| postgresql.primary.resources.requests.memory | string | `"20Gi"` |  |
 | postgresql.primary.service.type | string | `"ClusterIP"` |  |
 | postgresql.primary.tolerations[0].effect | string | `"NoSchedule"` |  |
 | postgresql.primary.tolerations[0].key | string | `"kubernetes.io/workload"` |  |
