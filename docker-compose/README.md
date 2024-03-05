@@ -1,8 +1,12 @@
 # Docver docker-compose deployment
 
 Docver consists of 5 components, each of which is defined in base/<component_dir>. 
-The default setup is defined in /base, and it is not expected to change no matter where the whole docver stack needs to be deployed -> in other words, base should not be edited.
-You will configure your deployment in /<your instance> by running `init.sh` that will copy `template` that you will be able to edit to your liking.
+Both `base` and `template` directories should not be edited and you are expected to configure
+your deployment in a separate directory.
+To configure this we provide `init.sh` to easily create one or multiple deployment instances and configurations
+
+For more information on the topology of the services that make the solution please refer to
+documentation in helm package provided [here](../helm/doc-ver/README.md).
 
 ## Prerequisites
 * docker compose >= 2.22.0
@@ -17,7 +21,9 @@ and use it as a regular command as explained in the provided link.
 
 ### Your licence key and service acount json credentials
 
-You will need a licence key and a service account json file to authenticate to our services. You can acquire these on [developer.microblink.com](https://developer.microblink.com/). If you are using Document verification self-hosted, you will need to download the service account json (`serviceaccount.json`) file and the licence key from the licences section (under Document verification self-hosted).
+As mantioned [here](../README.md#your-licence-key-and-service-acount-json-credentials). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
+If you are using Document verification self-hosted, you will need to download the service account json (`serviceaccount.json`) file and the 
+licence key from the licences section (under Document verification self-hosted).
 
 # Quickstart - Deploying your instance
 

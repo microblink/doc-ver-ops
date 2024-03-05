@@ -166,7 +166,10 @@ embedding-store:
     secret: sa-json
     config:
       collectionCreateWorkers: 200
-      collectionInsertWorkers: 50
+      # -- this controlls the initialization rate of the embedding-store database.
+      # -- increasing this value will speed up the initialization process, but it will also increase the load on the database
+      # -- make sure the database can handle the load to prevent the database from crashing
+      collectionInsertWorkers: 20
       collectionInsertBatch: 1
     seedStore:
       s3:
@@ -174,7 +177,7 @@ embedding-store:
       gc:
         enabled: true
         bucket: "docver-va-releases"
-        prefix: "full-db/6478fcb410dcce6d3b037199"
+        prefix: "full-db-768/6478fcb410dcce6d3b037199"
     resources:
       limits:
         cpu: 1
@@ -193,7 +196,7 @@ embedding-store:
         # If using external database, set this to a valid host and port
         # For example SaaS postgre in AWS or GCP
         addr: "postgresql:5432"
-        # -- set this to true you are using postgresql.emabled: true - postgres as a part of this helm release
+        # -- set this to true you are should be using postgresql.emabled: true - postgres as a part of this helm release
         addrPrepandReleaseName: false
         connectionStringParams: "pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
     grpc:
@@ -253,9 +256,9 @@ postgresql:
      - config_file=/bitnami/postgresql/conf/postgresql.conf
     persistence:
       enabled: true
-      ## -- change the storeage class to the one that is available in your cluster
-      storageClass: "efs-sc"
-      size: 1300Gi
+      ## -- change the storeage class to the one that is available in your kubernetes cluster
+      storageClass: "microblink-docver"
+      size: 500Gi
     service:
       type: ClusterIP
     resources:
@@ -264,7 +267,7 @@ postgresql:
         memory: "24Gi"
       requests:
         cpu: 10
-        memory: "12Gi"
+        memory: "20Gi"
     tolerations:
       - key: "kubernetes.io/workload"
         operator: "Equal"

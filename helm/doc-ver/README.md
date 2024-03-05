@@ -5,6 +5,21 @@
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
 
+## Usage
+
+This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
+
+To use it, simply add the repository to your helm client:
+```bash
+helm repo add microblink https://helm.microblink.com/charts
+helm repo update
+```
+
+Then you can install the chart using:
+```bash
+helm install my-release -f <path to values file you want to use to configure the chart> mb/doc-ver
+```
+
 ## Requirements
 
 | Repository | Name | Version |
