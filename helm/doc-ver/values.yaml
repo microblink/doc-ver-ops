@@ -299,10 +299,6 @@ postgresql:
   # volumePermissions:
     # enabled: true
   primary:
-    containerSecurityContext:
-      enabled: false
-    podSecurityContext:
-      enabled: false
     args: 
      - -c
      - config_file=/bitnami/postgresql/conf/postgresql.conf
