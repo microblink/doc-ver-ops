@@ -64,6 +64,37 @@ doc-ver-api:
     requests:
       cpu: 1
       memory: 1Gi
+
+  # Define node selector key-value pairs, example:
+  # nodeSelector:
+  #   kubernetes.io/e2e-az-name: e2e-az1
+  #
+  # -- deployment node selector
+  nodeSelector: {}
+
+  # Define tolerations for pod assignment, example:
+  # tolerations:
+  # - key: "key"
+  #   operator: "Equal"
+  #   value: "value"
+  #   effect: "NoSchedule"
+  #
+  # -- deployment tolerations
+  tolerations: []
+  
+  # Define affinity for pod assignment, example:
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #       - matchExpressions:
+  #         - key: kubernetes.io/e2e-az-name
+  #           operator: In
+  #           values:
+  #           - e2e-az1
+  #
+  # -- deployment affinity
+  affinity: {}
   ingress:
     # -- enable if you want to expose the service
     enabled: false
@@ -112,6 +143,14 @@ visual-anomaly:
     requests:
       cpu: 300m
       memory: 0.5Gi
+  # -- deployment node selector
+  nodeSelector: {}
+  # -- deployment tolerations
+  tolerations: []
+  # -- deployment podAnnotations
+  podAnnotations: {}
+  # -- deployment affinity
+  affinity: {}
   ingress:
     enabled: false
 
@@ -139,6 +178,12 @@ anomdet-intermediary:
       cpu: 300m
       # -- deployment resource memory requests
       memory: 512Mi
+  # -- deployment node selector
+  nodeSelector: {}
+  # -- deployment tolerations
+  tolerations: []
+  # -- deployment affinity
+  affinity: {}
 
   # -- do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release
   anomdetIntermediaryConfig:
@@ -196,9 +241,9 @@ embedding-store:
         # If using external database, set this to a valid host and port
         # For example SaaS postgre in AWS or GCP
         addr: "postgresql:5432"
-        # -- set this to true you are should be using postgresql.emabled: true - postgres as a part of this helm release
-        addrPrepandReleaseName: false
-        connectionStringParams: "pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
+        # -- set this to false if you are using an "external" SaaS database
+        addrPrepandReleaseName: true
+        connectionStringParams: "pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
     grpc:
       grpcRecvSize: "52428800"
       grpcSendSize: "52428800"
@@ -223,6 +268,13 @@ embedding-store:
       requests:
         cpu: 500m
         memory: 1Gi
+    
+    # -- server deployment node selector
+    nodeSelector: {}
+    # -- server deployment tolerations
+    tolerations: []
+    # -- server deployment affinity  
+    affinity: {}
 
     secret: mb-docver-db-creds
 
@@ -318,14 +370,14 @@ mlp-local-storage:
   enabled: false
   StorageClass:
     - create: true
-      name: efs-sc
+      name: microblink-docver
       provisioner: kubernetes.io/no-provisioner
   PersistentVolume:
     - volumenameprefix: test-tmp-delete-when-seen-
       storageClass:
-        name: efs-sc
+        name: microblink-docver
         reclaimPolicy: Delete
-      # owner: 1001
+      owner: 1001
       capacity: 1300Gi
       storageType: ssd
       nodes:

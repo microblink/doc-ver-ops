@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.8](https://img.shields.io/badge/Version-0.3.8-informational?style=flat-square)
+![Version: 0.3.10](https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
@@ -28,7 +28,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.6 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.5 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.3 |
+| https://helm.microblink.com/charts | embedding-store | 0.3.6 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.8 |
 
@@ -36,6 +36,7 @@ helm install my-release -f <path to values file you want to use to configure the
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| anomdet-intermediary.affinity | object | `{}` | deployment affinity |
 | anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-1458","model-id":"6478fcb410dcce6d3b037199","model-name":"visual-anomaly","parallel-queries":200}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
 | anomdet-intermediary.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
 | anomdet-intermediary.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
@@ -45,11 +46,13 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
 | anomdet-intermediary.image.repository | string | `"eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem"` |  |
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
+| anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
 | anomdet-intermediary.replicaCount | int | `1` |  |
 | anomdet-intermediary.resources.limits.cpu | int | `1` | deployment resource cpu limit |
 | anomdet-intermediary.resources.limits.memory | string | `"1Gi"` | deployment resource memory limit |
 | anomdet-intermediary.resources.requests.cpu | string | `"300m"` | deployment resource cpu requests |
 | anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
+| anomdet-intermediary.tolerations | list | `[]` | deployment tolerations |
 | auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret with fixed credentials |
 | auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
 | auth.licence.createSecret | bool | `false` | enable if you want to create licence secret as part of this charts deployment |
@@ -88,6 +91,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.memory | string | `"2Gi"` |  |
+| doc-ver-api.affinity | object | `{}` | deployment affinity |
 | doc-ver-api.autoscaling | object | `{"cpu":{"enabled":true,"target":80},"enabled":false,"maxReplicas":3,"memory":{"enabled":false,"target":80},"minReplicas":1}` | Autoscaling configurations |
 | doc-ver-api.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | doc-ver-api.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
@@ -111,14 +115,16 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
 | doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver","/info","/barcode"]}` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.pathType | string | `"ImplementationSpecific"` |  |
+| doc-ver-api.nodeSelector | object | `{}` | deployment node selector |
 | doc-ver-api.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
 | doc-ver-api.resources.limits.cpu | int | `2` |  |
 | doc-ver-api.resources.limits.memory | string | `"2Gi"` |  |
 | doc-ver-api.resources.requests.cpu | int | `1` |  |
 | doc-ver-api.resources.requests.memory | string | `"1Gi"` |  |
+| doc-ver-api.tolerations | list | `[]` | deployment tolerations |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
-| embedding-store.seeder.config.collectionInsertWorkers | int | `50` |  |
+| embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
 | embedding-store.seeder.enabled | bool | `false` |  |
 | embedding-store.seeder.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.seeder.grpc.grpcSendSize | string | `"52428800"` |  |
@@ -131,34 +137,38 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.secret | string | `"sa-json"` |  |
 | embedding-store.seeder.seedStore.gc.bucket | string | `"docver-va-releases"` |  |
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db/6478fcb410dcce6d3b037199"` |  |
+| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-768/6478fcb410dcce6d3b037199"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
+| embedding-store.server.affinity | object | `{}` | server deployment affinity   |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
 | embedding-store.server.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
 | embedding-store.server.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | embedding-store.server.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target memory usage percentage |
 | embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
-| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `false` | set this to true you are using postgresql.emabled: true - postgres as a part of this helm release |
-| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
+| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `true` | set this to false if you are using an "external" SaaS database |
+| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
 | embedding-store.server.database.pgvector.enabled | bool | `true` |  |
 | embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.server.grpc.grpcSendSize | string | `"52428800"` |  |
 | embedding-store.server.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
 | embedding-store.server.image.repository | string | `"eu.gcr.io/microblink-identity/embedding-store/onprem"` |  |
+| embedding-store.server.nodeSelector | object | `{}` | server deployment node selector |
 | embedding-store.server.resources.limits.cpu | int | `2` |  |
 | embedding-store.server.resources.limits.memory | string | `"2Gi"` |  |
 | embedding-store.server.resources.requests.cpu | string | `"500m"` |  |
 | embedding-store.server.resources.requests.memory | string | `"1Gi"` |  |
 | embedding-store.server.secret | string | `"mb-docver-db-creds"` |  |
+| embedding-store.server.tolerations | list | `[]` | server deployment tolerations |
 | mlp-local-storage.PersistentVolume[0].capacity | string | `"1300Gi"` |  |
 | mlp-local-storage.PersistentVolume[0].nodes[0] | string | `"s1"` |  |
-| mlp-local-storage.PersistentVolume[0].storageClass.name | string | `"efs-sc"` |  |
+| mlp-local-storage.PersistentVolume[0].owner | int | `1001` |  |
+| mlp-local-storage.PersistentVolume[0].storageClass.name | string | `"microblink-docver"` |  |
 | mlp-local-storage.PersistentVolume[0].storageClass.reclaimPolicy | string | `"Delete"` |  |
 | mlp-local-storage.PersistentVolume[0].storageType | string | `"ssd"` |  |
 | mlp-local-storage.PersistentVolume[0].volumenameprefix | string | `"test-tmp-delete-when-seen-"` |  |
 | mlp-local-storage.StorageClass[0].create | bool | `true` |  |
-| mlp-local-storage.StorageClass[0].name | string | `"efs-sc"` |  |
+| mlp-local-storage.StorageClass[0].name | string | `"microblink-docver"` |  |
 | mlp-local-storage.StorageClass[0].provisioner | string | `"kubernetes.io/no-provisioner"` |  |
 | mlp-local-storage.enabled | bool | `false` | enable this ONLY if you do not have dynamic storage provisioning in k8s cluster, likely using on-prem, baremetal k8s |
 | postgresql.auth.username | string | `"embedding-store-sa"` | must be fixed to this value, do not change |
@@ -181,18 +191,19 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.containerSecurityContext.enabled | bool | `false` |  |
 | postgresql.primary.livenessProbe.failureThreshold | int | `600` |  |
 | postgresql.primary.persistence.enabled | bool | `true` |  |
-| postgresql.primary.persistence.size | string | `"1300Gi"` |  |
-| postgresql.primary.persistence.storageClass | string | `"efs-sc"` |  |
+| postgresql.primary.persistence.size | string | `"500Gi"` |  |
+| postgresql.primary.persistence.storageClass | string | `"microblink-docver"` |  |
 | postgresql.primary.podSecurityContext.enabled | bool | `false` |  |
 | postgresql.primary.resources.limits.cpu | int | `20` |  |
 | postgresql.primary.resources.limits.memory | string | `"24Gi"` |  |
 | postgresql.primary.resources.requests.cpu | int | `10` |  |
-| postgresql.primary.resources.requests.memory | string | `"12Gi"` |  |
+| postgresql.primary.resources.requests.memory | string | `"20Gi"` |  |
 | postgresql.primary.service.type | string | `"ClusterIP"` |  |
 | postgresql.primary.tolerations[0].effect | string | `"NoSchedule"` |  |
 | postgresql.primary.tolerations[0].key | string | `"kubernetes.io/workload"` |  |
 | postgresql.primary.tolerations[0].operator | string | `"Equal"` |  |
 | postgresql.primary.tolerations[0].value | string | `"storage"` |  |
+| visual-anomaly.affinity | object | `{}` | deployment affinity |
 | visual-anomaly.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | visual-anomaly.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
 | visual-anomaly.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
@@ -203,11 +214,14 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.enabled | bool | `true` |  |
 | visual-anomaly.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
+| visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
+| visual-anomaly.podAnnotations | object | `{}` | deployment podAnnotations |
 | visual-anomaly.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
 | visual-anomaly.resources.limits.cpu | int | `1` |  |
 | visual-anomaly.resources.limits.memory | string | `"1Gi"` |  |
 | visual-anomaly.resources.requests.cpu | string | `"300m"` |  |
 | visual-anomaly.resources.requests.memory | string | `"0.5Gi"` |  |
+| visual-anomaly.tolerations | list | `[]` | deployment tolerations |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.10.0](https://github.com/norwoodj/helm-docs/releases/v1.10.0)

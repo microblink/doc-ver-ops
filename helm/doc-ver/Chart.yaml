@@ -1,6 +1,6 @@
 name: doc-ver
 apiVersion: v2
-version: 0.3.9
+version: 0.3.10
 dependencies:
 - name: doc-ver-api
   repository: https://helm.microblink.com/charts
@@ -13,7 +13,7 @@ dependencies:
   version: 0.0.8
 - name: embedding-store
   repository: https://helm.microblink.com/charts
-  version: 0.3.5
+  version: 0.3.6
 - name: postgresql
   version: 13.2.27
   repository: https://charts.bitnami.com/bitnami
