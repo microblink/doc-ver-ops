@@ -64,6 +64,37 @@ doc-ver-api:
     requests:
       cpu: 1
       memory: 1Gi
+
+  # Define node selector key-value pairs, example:
+  # nodeSelector:
+  #   kubernetes.io/e2e-az-name: e2e-az1
+  #
+  # -- deployment node selector
+  nodeSelector: {}
+
+  # Define tolerations for pod assignment, example:
+  # tolerations:
+  # - key: "key"
+  #   operator: "Equal"
+  #   value: "value"
+  #   effect: "NoSchedule"
+  #
+  # -- deployment tolerations
+  tolerations: []
+  
+  # Define affinity for pod assignment, example:
+  # affinity:
+  #   nodeAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       nodeSelectorTerms:
+  #       - matchExpressions:
+  #         - key: kubernetes.io/e2e-az-name
+  #           operator: In
+  #           values:
+  #           - e2e-az1
+  #
+  # -- deployment affinity
+  affinity: {}
   ingress:
     # -- enable if you want to expose the service
     enabled: false
@@ -112,6 +143,14 @@ visual-anomaly:
     requests:
       cpu: 300m
       memory: 0.5Gi
+  # -- deployment node selector
+  nodeSelector: {}
+  # -- deployment tolerations
+  tolerations: []
+  # -- deployment podAnnotations
+  podAnnotations: {}
+  # -- deployment affinity
+  affinity: {}
   ingress:
     enabled: false
 
@@ -139,6 +178,12 @@ anomdet-intermediary:
       cpu: 300m
       # -- deployment resource memory requests
       memory: 512Mi
+  # -- deployment node selector
+  nodeSelector: {}
+  # -- deployment tolerations
+  tolerations: []
+  # -- deployment affinity
+  affinity: {}
 
   # -- do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release
   anomdetIntermediaryConfig:
@@ -223,6 +268,13 @@ embedding-store:
       requests:
         cpu: 500m
         memory: 1Gi
+    
+    # -- server deployment node selector
+    nodeSelector: {}
+    # -- server deployment tolerations
+    tolerations: []
+    # -- server deployment affinity  
+    affinity: {}
 
     secret: mb-docver-db-creds
 
