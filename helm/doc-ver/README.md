@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.9](https://img.shields.io/badge/Version-0.3.9-informational?style=flat-square)
+![Version: 0.3.10](https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
@@ -28,7 +28,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.6 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.5 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.5 |
+| https://helm.microblink.com/charts | embedding-store | 0.3.6 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.8 |
 
@@ -146,8 +146,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.server.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target memory usage percentage |
 | embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
-| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `false` | set this to true you are should be using postgresql.emabled: true - postgres as a part of this helm release |
-| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
+| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `true` | set this to false if you are using an "external" SaaS database |
+| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
 | embedding-store.server.database.pgvector.enabled | bool | `true` |  |
 | embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.server.grpc.grpcSendSize | string | `"52428800"` |  |
@@ -162,12 +162,13 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.server.tolerations | list | `[]` | server deployment tolerations |
 | mlp-local-storage.PersistentVolume[0].capacity | string | `"1300Gi"` |  |
 | mlp-local-storage.PersistentVolume[0].nodes[0] | string | `"s1"` |  |
-| mlp-local-storage.PersistentVolume[0].storageClass.name | string | `"efs-sc"` |  |
+| mlp-local-storage.PersistentVolume[0].owner | int | `1001` |  |
+| mlp-local-storage.PersistentVolume[0].storageClass.name | string | `"microblink-docver"` |  |
 | mlp-local-storage.PersistentVolume[0].storageClass.reclaimPolicy | string | `"Delete"` |  |
 | mlp-local-storage.PersistentVolume[0].storageType | string | `"ssd"` |  |
 | mlp-local-storage.PersistentVolume[0].volumenameprefix | string | `"test-tmp-delete-when-seen-"` |  |
 | mlp-local-storage.StorageClass[0].create | bool | `true` |  |
-| mlp-local-storage.StorageClass[0].name | string | `"efs-sc"` |  |
+| mlp-local-storage.StorageClass[0].name | string | `"microblink-docver"` |  |
 | mlp-local-storage.StorageClass[0].provisioner | string | `"kubernetes.io/no-provisioner"` |  |
 | mlp-local-storage.enabled | bool | `false` | enable this ONLY if you do not have dynamic storage provisioning in k8s cluster, likely using on-prem, baremetal k8s |
 | postgresql.auth.username | string | `"embedding-store-sa"` | must be fixed to this value, do not change |

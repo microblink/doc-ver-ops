@@ -241,9 +241,9 @@ embedding-store:
         # If using external database, set this to a valid host and port
         # For example SaaS postgre in AWS or GCP
         addr: "postgresql:5432"
-        # -- set this to true you are should be using postgresql.emabled: true - postgres as a part of this helm release
-        addrPrepandReleaseName: false
-        connectionStringParams: "pool_max_conns=60&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
+        # -- set this to false if you are using an "external" SaaS database
+        addrPrepandReleaseName: true
+        connectionStringParams: "pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
     grpc:
       grpcRecvSize: "52428800"
       grpcSendSize: "52428800"
@@ -370,14 +370,14 @@ mlp-local-storage:
   enabled: false
   StorageClass:
     - create: true
-      name: efs-sc
+      name: microblink-docver
       provisioner: kubernetes.io/no-provisioner
   PersistentVolume:
     - volumenameprefix: test-tmp-delete-when-seen-
       storageClass:
-        name: efs-sc
+        name: microblink-docver
         reclaimPolicy: Delete
-      # owner: 1001
+      owner: 1001
       capacity: 1300Gi
       storageType: ssd
       nodes:
