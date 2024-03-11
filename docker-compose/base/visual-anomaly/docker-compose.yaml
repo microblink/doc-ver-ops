@@ -2,7 +2,7 @@ version: '3'
 
 services:
   visual-anomaly:
-    image: eu.gcr.io/microblink-identity/web-api-visual-anomaly:1.1.0
+    image: eu.gcr.io/microblink-identity/web-api-visual-anomaly:1.2.0
     depends_on:
       retrieval-intermediary:
         condition: service_healthy

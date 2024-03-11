@@ -2,7 +2,7 @@ version: '3'
 
 services:
   doc-ver-api:
-    image: eu.gcr.io/microblink-identity/web-api-doc-ver:2.4.0
+    image: eu.gcr.io/microblink-identity/web-api-doc-ver:2.5.0
     depends_on:
       visual-anomaly:
         condition: service_healthy
