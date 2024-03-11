@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.10](https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square)
+![Version: 0.3.11](https://img.shields.io/badge/Version-0.3.11-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
@@ -27,10 +27,10 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.6 |
-| https://helm.microblink.com/charts | doc-ver-api | 0.0.5 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.6 |
+| https://helm.microblink.com/charts | doc-ver-api | 0.0.7 |
+| https://helm.microblink.com/charts | embedding-store | 0.3.7 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
-| https://helm.microblink.com/charts | visual-anomaly | 0.0.8 |
+| https://helm.microblink.com/charts | visual-anomaly | 0.0.9 |
 
 ## Values
 
@@ -188,12 +188,10 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.args[0] | string | `"-c"` |  |
 | postgresql.primary.args[1] | string | `"config_file=/bitnami/postgresql/conf/postgresql.conf"` |  |
 | postgresql.primary.configuration | string | `"max_connections = 1000\nshared_buffers = 18GB\neffective_cache_size = 24GB\nmaintenance_work_mem = 1GB\ncheckpoint_completion_target = 0.9\nwal_buffers = 16MB\ndefault_statistics_target = 1000\nrandom_page_cost = 1.1\neffective_io_concurrency = 300\nwork_mem = 20MB\nhuge_pages = off\nmin_wal_size = 2GB\nmax_wal_size = 4GB\nmax_worker_processes = 20\nmax_parallel_workers_per_gather = 8\nmax_parallel_workers = 20\nmax_parallel_maintenance_workers = 4\n\nwal_level = minimal\nmax_wal_senders = 0\n\nlisten_addresses = '*'\n"` |  |
-| postgresql.primary.containerSecurityContext.enabled | bool | `false` |  |
 | postgresql.primary.livenessProbe.failureThreshold | int | `600` |  |
 | postgresql.primary.persistence.enabled | bool | `true` |  |
 | postgresql.primary.persistence.size | string | `"500Gi"` |  |
 | postgresql.primary.persistence.storageClass | string | `"microblink-docver"` |  |
-| postgresql.primary.podSecurityContext.enabled | bool | `false` |  |
 | postgresql.primary.resources.limits.cpu | int | `20` |  |
 | postgresql.primary.resources.limits.memory | string | `"24Gi"` |  |
 | postgresql.primary.resources.requests.cpu | int | `10` |  |
