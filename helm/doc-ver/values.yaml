@@ -1,3 +1,18 @@
+global:
+  otel:
+    # -- if enabled, deploys the collector and instruments services - the collector is configured through the opentelemetry-collector section and services through configMapName and secretName
+    enabled: true
+    # -- url to the opentelemetry collector
+    collectorUrl: "release-name-opentelemetry-collector:4317"
+    # -- name of the created configmap with extra opentelemetry service configurations
+    configMapName: "otel-configmap"
+    # -- name of the secret with extra opentelemetry service configurations
+    secretName: ""
+    # -- enable if you want to deploy jaeger for the collector to send data to
+    jaeger: true
+    # -- enable if you want to deploy prometheus for the collector to send data to
+    prometheus: true
+
 auth:
   licence:
     # -- name of license-key secret, if changed, it must be updated in doc-ver-api
@@ -56,7 +71,7 @@ doc-ver-api:
     repository: eu.gcr.io/microblink-identity/web-api-doc-ver
     pullSecrets:
       - name: eu.gcr.io
-  env: 
+  env:
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
   # -- has to match the name of the secret in auth.licence.secretName, or if you want to 
@@ -124,7 +139,7 @@ doc-ver-api:
     hosts:
       # -- if you want to expose the service, set the host name
       - host: "docver.microblink.com"
-        paths: ["/docver","/info","/barcode"]
+        paths: ["/docver", "/info", "/barcode"]
     pathType: ImplementationSpecific
 
 visual-anomaly:
@@ -184,8 +199,6 @@ anomdet-intermediary:
     targetMemoryUtilizationPercentage: 80
   resources:
     limits:
-      # -- deployment resource cpu limit
-      cpu: 1
       # -- deployment resource memory limit
       memory: 1Gi
     requests:
@@ -211,14 +224,14 @@ anomdet-intermediary:
   image:
     repository: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem
     pullSecrets:
-    - name: eu.gcr.io
+      - name: eu.gcr.io
   ingress:
     enabled: false
 
 embedding-store:
   seeder:
     enabled: false
-    image: 
+    image:
       repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
       pullSecrets:
         - name: eu.gcr.io
@@ -248,7 +261,7 @@ embedding-store:
         cpu: 500m
         memory: 1Gi
   server:
-    image: 
+    image:
       repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
       pullSecrets:
         - name: eu.gcr.io
@@ -282,21 +295,19 @@ embedding-store:
     # If facking with high RPS load, consider increasing the requirements
     resources:
       limits:
-        cpu: 2
         memory: 2Gi
       requests:
         cpu: 500m
         memory: 1Gi
-    
+
     # -- server deployment node selector
     nodeSelector: {}
     # -- server deployment tolerations
     tolerations: []
-    # -- server deployment affinity  
+    # -- server deployment affinity
     affinity: {}
 
     secret: mb-docver-db-creds
-
 
 postgresql:
   # -- hosting postgres as part of this helm release is disabled by default, if you want to enable it, set enabled to true
@@ -318,9 +329,9 @@ postgresql:
   # volumePermissions:
     # enabled: true
   primary:
-    args: 
-     - -c
-     - config_file=/bitnami/postgresql/conf/postgresql.conf
+    args:
+      - -c
+      - config_file=/bitnami/postgresql/conf/postgresql.conf
     persistence:
       enabled: true
       ## -- change the storeage class to the one that is available in your kubernetes cluster
@@ -330,7 +341,6 @@ postgresql:
       type: ClusterIP
     resources:
       limits:
-        cpu: 10
         memory: "24Gi"
       requests:
         cpu: 6
@@ -380,7 +390,7 @@ postgresql:
       max_parallel_workers_per_gather = 4
       max_parallel_workers = 10
       max_parallel_maintenance_workers = 4
-      
+
       wal_level = minimal
       max_wal_senders = 0
 
@@ -394,7 +404,7 @@ mlp-local-storage:
       name: microblink-docver
       provisioner: kubernetes.io/no-provisioner
   PersistentVolume:
-    - volumenameprefix: test-tmp-delete-when-seen-
+    - volumenameprefix: release-name-
       storageClass:
         name: microblink-docver
         reclaimPolicy: Delete
@@ -417,7 +427,6 @@ bundle-visual-anomaly-core-versions:
         cpu: 500m
         memory: "1Gi"
       maxLimits:
-        cpu: 2
         memory: "2Gi"
       ingress:
         enabled: false
@@ -435,25 +444,163 @@ bundle-visual-anomaly-core-versions:
         maxReplicas: 3
       model:
         globalStorage:
-            type: gs
-            secret: sa-json
-            bucket: identity-enc-models-prod
+          type: gs
+          secret: sa-json
+          bucket: identity-enc-models-prod
         storage:
-            type: gs
-            secret: sa-json
-            bucket: identity-enc-models-prod
+          type: gs
+          secret: sa-json
+          bucket: identity-enc-models-prod
   models:
     6478fcb410dcce6d3b037199:
       # Model resources can be reduced, however, it is not recommended if
-      # the model is used in production. 
+      # the model is used in production.
       minLimits:
         cpu: 2
         memory: "2Gi"
       maxLimits:
-        cpu: 2
         memory: "2Gi"
       engine:
         type: "triton"
       image:
         repository: "eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem"
         tag: "23.06"
+
+# this will deploy the opentelemetry collector as a statefulset next to the application
+opentelemetry-collector:
+  mode: statefulset
+  tolerations: []
+
+  config:
+    # -- monitoring tools should be added beforehand and the exporters section should be configured accordingly
+    # -- jaeger/zipkin/prometheus/datadog/...
+    exporters:
+      prometheus:
+        endpoint: 0.0.0.0:8889
+      otlp:
+        endpoint: "release-name-jaeger-collector:4317"
+        tls:
+          insecure: true
+
+    # -- default receivers for the collector, our services support only the grpc receiver
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+
+    # -- Processors documentation:  https://opentelemetry.io/docs/collector/configuration/#processors
+    processors:
+      batch:
+        send_batch_size: 50000
+        timeout: 3s
+      # -- add custom extra attributes to the traces
+      attributes:
+        actions:
+          key: deployment.environment
+          value: dev
+          action: insert
+      # -- trigger the garbage collector when the memory limit is reached, so that the collector doesn't go out of memory
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 50
+      # -- sample 10% of all traces and all traces with status code ERROR/UNSET
+      tail_sampling:
+        # -- time to wait before a decision is made
+        decision_wait: 10s
+        # -- the number of traces to process in the tail sampler
+        num_traces: 100
+        # -- the number of traces you're expected to receive per second
+        # -- it should be modified accordingly to the expected load so that the processor can work better
+        expected_new_traces_per_sec: 10
+        # -- other policies can be added here: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor
+        policies:
+          - name: trace-10-percent-of-all
+            type: probabilistic
+            probabilistic: { sampling_percentage: 10 }
+          - name: trace-errors
+            type: status_code
+            status_code: { status_codes: [ERROR, UNSET] }
+
+    # -- Connector documentation https://opentelemetry.io/docs/collector/configuration/#connectors
+    connectors:
+      # -- this will calculate latency metrics for all traces and provide it as a histogram for visualization
+      spanmetrics:
+        histogram:
+          explicit:
+            buckets: [100us, 1ms, 2ms, 6ms, 10ms, 100ms, 250ms]
+        aggregation_temporality: "AGGREGATION_TEMPORALITY_CUMULATIVE"
+
+    # -- Extensions documentation https://opentelemetry.io/docs/collector/configuration/#extensions
+    extensions:
+      health_check:
+        endpoint: "0.0.0.0:13133"
+      zpages:
+        endpoint: localhost:1777
+      pprof:
+        endpoint: localhost:55679
+
+    # -- Defines the entire pipeline of the collector
+    service:
+      extensions: [health_check, zpages, pprof]
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [attributes, memory_limiter, tail_sampling, batch]
+          exporters: [logging, spanmetrics, otlp]
+        metrics:
+          receivers: [otlp, spanmetrics]
+          processors: [attributes, memory_limiter, batch]
+          exporters: [logging, prometheus]
+
+# -- the following section is an example deployment of monitoring tools where the traces and metrics can be viewed
+# -- in a production environment, the monitoring tools should be deployed separately and only configured as exporters in the opentelemetry collector
+jaeger:
+  provisionDataStore:
+    cassandra: false
+  allInOne:
+    nodeSelector:
+      gpu-accelerator-type: none
+    enabled: true
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
+  storage:
+    type: none
+  agent:
+    enabled: false
+  collector:
+    enabled: false
+  query:
+    enabled: false
+
+prometheus:
+  rbac:
+    create: false
+  kube-state-metrics:
+    enabled: false
+  prometheus-node-exporter:
+    enabled: false
+  prometheus-pushgateway:
+    enabled: false
+  prometheus.yml:
+    scrape_configs:
+      - job_name: "otel-collector"
+        scrape_interval: 10s
+        static_configs:
+          - targets: ["release-name-opentelemetry-collector:8889"]
+  server:
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
+    tolerations: []
+    affinity: {}
+    persistentVolume:
+      enabled: false

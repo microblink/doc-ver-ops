@@ -25,3 +25,20 @@ dependencies:
 - name: bundle-visual-anomaly-core-versions
   repository: https://helm.microblink.com/charts
   version: 0.4.6
+- name: jaeger
+  version: "0.72.1"
+  repository: "https://jaegertracing.github.io/helm-charts"
+  condition: global.otel.jaeger
+- name: prometheus
+  version: "25.8.0"
+  repository: https://prometheus-community.github.io/helm-charts
+  condition: global.otel.prometheus
+- name: opentelemetry-collector
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.84.0
+  condition: global.otel.enabled
+- name: common
+  repository: https://charts.bitnami.com/bitnami
+  tags:
+    - bitnami-common
+  version: 2.19.0

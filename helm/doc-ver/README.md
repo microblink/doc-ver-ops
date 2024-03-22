@@ -24,6 +24,7 @@ helm install my-release -f <path to values file you want to use to configure the
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://charts.bitnami.com/bitnami | common | 2.19.0 |
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.6 |
@@ -31,6 +32,9 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | embedding-store | 0.3.7 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.9 |
+| https://jaegertracing.github.io/helm-charts | jaeger | 0.72.1 |
+| https://open-telemetry.github.io/opentelemetry-helm-charts | opentelemetry-collector | 0.84.0 |
+| https://prometheus-community.github.io/helm-charts | prometheus | 25.8.0 |
 
 ## Values
 
@@ -49,7 +53,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
 | anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
 | anomdet-intermediary.replicaCount | int | `1` |  |
-| anomdet-intermediary.resources.limits.cpu | int | `1` | deployment resource cpu limit |
 | anomdet-intermediary.resources.limits.memory | string | `"1Gi"` | deployment resource memory limit |
 | anomdet-intermediary.resources.requests.cpu | string | `"300m"` | deployment resource cpu requests |
 | anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
@@ -82,7 +85,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"eu.gcr.io/microblink-identity/mlp-model-proxy/onprem"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.17.7"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.cpu | string | `"500m"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.memory | string | `"1Gi"` |  |
@@ -90,7 +92,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.memory | string | `"2Gi"` |  |
@@ -144,7 +145,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
 | embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-768/6478fcb410dcce6d3b037199"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
-| embedding-store.server.affinity | object | `{}` | server deployment affinity   |
+| embedding-store.server.affinity | object | `{}` | server deployment affinity |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
 | embedding-store.server.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
 | embedding-store.server.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
@@ -160,23 +161,45 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.server.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
 | embedding-store.server.image.repository | string | `"eu.gcr.io/microblink-identity/embedding-store/onprem"` |  |
 | embedding-store.server.nodeSelector | object | `{}` | server deployment node selector |
-| embedding-store.server.resources.limits.cpu | int | `2` |  |
 | embedding-store.server.resources.limits.memory | string | `"2Gi"` |  |
 | embedding-store.server.resources.requests.cpu | string | `"500m"` |  |
 | embedding-store.server.resources.requests.memory | string | `"1Gi"` |  |
 | embedding-store.server.secret | string | `"mb-docver-db-creds"` |  |
 | embedding-store.server.tolerations | list | `[]` | server deployment tolerations |
+| global.otel.collectorUrl | string | `"release-name-opentelemetry-collector:4317"` | url to the opentelemetry collector |
+| global.otel.configMapName | string | `"otel-configmap"` | name of the created configmap with extra opentelemetry service configurations |
+| global.otel.enabled | bool | `true` | if enabled, deploys the collector and instruments services - the collector is configured through the opentelemetry-collector section and services through configMapName and secretName |
+| global.otel.jaeger | bool | `true` | enable if you want to deploy jaeger for the collector to send data to |
+| global.otel.prometheus | bool | `true` | enable if you want to deploy prometheus for the collector to send data to |
+| global.otel.secretName | string | `""` | name of the secret with extra opentelemetry service configurations |
+| jaeger | object | `{"agent":{"enabled":false},"allInOne":{"enabled":true,"nodeSelector":{"gpu-accelerator-type":"none"},"resources":{"limits":{"memory":"1Gi"},"requests":{"cpu":1,"memory":"1Gi"}}},"collector":{"enabled":false},"provisionDataStore":{"cassandra":false},"query":{"enabled":false},"storage":{"type":"none"}}` | in a production environment, the monitoring tools should be deployed separately and only configured as exporters in the opentelemetry collector |
 | mlp-local-storage.PersistentVolume[0].capacity | string | `"1300Gi"` |  |
 | mlp-local-storage.PersistentVolume[0].nodes[0] | string | `"s1"` |  |
 | mlp-local-storage.PersistentVolume[0].owner | int | `1001` |  |
 | mlp-local-storage.PersistentVolume[0].storageClass.name | string | `"microblink-docver"` |  |
 | mlp-local-storage.PersistentVolume[0].storageClass.reclaimPolicy | string | `"Delete"` |  |
 | mlp-local-storage.PersistentVolume[0].storageType | string | `"ssd"` |  |
-| mlp-local-storage.PersistentVolume[0].volumenameprefix | string | `"test-tmp-delete-when-seen-"` |  |
+| mlp-local-storage.PersistentVolume[0].volumenameprefix | string | `"release-name-"` |  |
 | mlp-local-storage.StorageClass[0].create | bool | `true` |  |
 | mlp-local-storage.StorageClass[0].name | string | `"microblink-docver"` |  |
 | mlp-local-storage.StorageClass[0].provisioner | string | `"kubernetes.io/no-provisioner"` |  |
 | mlp-local-storage.enabled | bool | `false` | enable this ONLY if you do not have dynamic storage provisioning in k8s cluster, likely using on-prem, baremetal k8s |
+| opentelemetry-collector.config.connectors | object | `{"spanmetrics":{"aggregation_temporality":"AGGREGATION_TEMPORALITY_CUMULATIVE","histogram":{"explicit":{"buckets":["100us","1ms","2ms","6ms","10ms","100ms","250ms"]}}}}` | Connector documentation https://opentelemetry.io/docs/collector/configuration/#connectors |
+| opentelemetry-collector.config.connectors.spanmetrics | object | `{"aggregation_temporality":"AGGREGATION_TEMPORALITY_CUMULATIVE","histogram":{"explicit":{"buckets":["100us","1ms","2ms","6ms","10ms","100ms","250ms"]}}}` | this will calculate latency metrics for all traces and provide it as a histogram for visualization |
+| opentelemetry-collector.config.exporters | object | `{"otlp":{"endpoint":"release-name-jaeger-collector:4317","tls":{"insecure":true}},"prometheus":{"endpoint":"0.0.0.0:8889"}}` | jaeger/zipkin/prometheus/datadog/... |
+| opentelemetry-collector.config.extensions | object | `{"health_check":{"endpoint":"0.0.0.0:13133"},"pprof":{"endpoint":"localhost:55679"},"zpages":{"endpoint":"localhost:1777"}}` | Extensions documentation https://opentelemetry.io/docs/collector/configuration/#extensions |
+| opentelemetry-collector.config.processors | object | `{"attributes":{"actions":{"action":"insert","key":"deployment.environment","value":"dev"}},"batch":{"send_batch_size":50000,"timeout":"3s"},"memory_limiter":{"check_interval":"5s","limit_percentage":80,"spike_limit_percentage":50},"tail_sampling":{"decision_wait":"10s","expected_new_traces_per_sec":10,"num_traces":100,"policies":[{"name":"trace-10-percent-of-all","probabilistic":{"sampling_percentage":10},"type":"probabilistic"},{"name":"trace-errors","status_code":{"status_codes":["ERROR","UNSET"]},"type":"status_code"}]}}` | Processors documentation:  https://opentelemetry.io/docs/collector/configuration/#processors |
+| opentelemetry-collector.config.processors.attributes | object | `{"actions":{"action":"insert","key":"deployment.environment","value":"dev"}}` | add custom extra attributes to the traces |
+| opentelemetry-collector.config.processors.memory_limiter | object | `{"check_interval":"5s","limit_percentage":80,"spike_limit_percentage":50}` | trigger the garbage collector when the memory limit is reached, so that the collector doesn't go out of memory |
+| opentelemetry-collector.config.processors.tail_sampling | object | `{"decision_wait":"10s","expected_new_traces_per_sec":10,"num_traces":100,"policies":[{"name":"trace-10-percent-of-all","probabilistic":{"sampling_percentage":10},"type":"probabilistic"},{"name":"trace-errors","status_code":{"status_codes":["ERROR","UNSET"]},"type":"status_code"}]}` | sample 10% of all traces and all traces with status code ERROR/UNSET |
+| opentelemetry-collector.config.processors.tail_sampling.decision_wait | string | `"10s"` | time to wait before a decision is made |
+| opentelemetry-collector.config.processors.tail_sampling.expected_new_traces_per_sec | int | `10` | it should be modified accordingly to the expected load so that the processor can work better |
+| opentelemetry-collector.config.processors.tail_sampling.num_traces | int | `100` | the number of traces to process in the tail sampler |
+| opentelemetry-collector.config.processors.tail_sampling.policies | list | `[{"name":"trace-10-percent-of-all","probabilistic":{"sampling_percentage":10},"type":"probabilistic"},{"name":"trace-errors","status_code":{"status_codes":["ERROR","UNSET"]},"type":"status_code"}]` | other policies can be added here: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor |
+| opentelemetry-collector.config.receivers | object | `{"otlp":{"protocols":{"grpc":{"endpoint":"0.0.0.0:4317"}}}}` | default receivers for the collector, our services support only the grpc receiver |
+| opentelemetry-collector.config.service | object | `{"extensions":["health_check","zpages","pprof"],"pipelines":{"metrics":{"exporters":["logging","prometheus"],"processors":["attributes","memory_limiter","batch"],"receivers":["otlp","spanmetrics"]},"traces":{"exporters":["logging","spanmetrics","otlp"],"processors":["attributes","memory_limiter","tail_sampling","batch"],"receivers":["otlp"]}}}` | Defines the entire pipeline of the collector |
+| opentelemetry-collector.mode | string | `"statefulset"` |  |
+| opentelemetry-collector.tolerations | list | `[]` |  |
 | postgresql.auth.username | string | `"embedding-store-sa"` | must be fixed to this value, do not change |
 | postgresql.enabled | bool | `false` | Disabled, as we expect that the database will be hosted outside of this helm release, e.g in AWS RDS or GCP CloudSQL |
 | postgresql.global.postgresql.auth.existingSecret | string | `"mb-docver-db-creds"` |  |
@@ -199,7 +222,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.persistence.enabled | bool | `true` |  |
 | postgresql.primary.persistence.size | string | `"500Gi"` |  |
 | postgresql.primary.persistence.storageClass | string | `"default"` |  |
-| postgresql.primary.resources.limits.cpu | int | `10` |  |
 | postgresql.primary.resources.limits.memory | string | `"24Gi"` |  |
 | postgresql.primary.resources.requests.cpu | int | `6` |  |
 | postgresql.primary.resources.requests.memory | string | `"20Gi"` |  |
@@ -212,6 +234,19 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.tolerations[1].key | string | `"kubernetes.io/workload"` |  |
 | postgresql.primary.tolerations[1].operator | string | `"Equal"` |  |
 | postgresql.primary.tolerations[1].value | string | `"postgre-db"` |  |
+| prometheus."prometheus.yml".scrape_configs[0].job_name | string | `"otel-collector"` |  |
+| prometheus."prometheus.yml".scrape_configs[0].scrape_interval | string | `"10s"` |  |
+| prometheus."prometheus.yml".scrape_configs[0].static_configs[0].targets[0] | string | `"release-name-opentelemetry-collector:8889"` |  |
+| prometheus.kube-state-metrics.enabled | bool | `false` |  |
+| prometheus.prometheus-node-exporter.enabled | bool | `false` |  |
+| prometheus.prometheus-pushgateway.enabled | bool | `false` |  |
+| prometheus.rbac.create | bool | `false` |  |
+| prometheus.server.affinity | object | `{}` |  |
+| prometheus.server.persistentVolume.enabled | bool | `false` |  |
+| prometheus.server.resources.limits.memory | string | `"1Gi"` |  |
+| prometheus.server.resources.requests.cpu | int | `1` |  |
+| prometheus.server.resources.requests.memory | string | `"1Gi"` |  |
+| prometheus.server.tolerations | list | `[]` |  |
 | visual-anomaly.affinity | object | `{}` | deployment affinity |
 | visual-anomaly.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | visual-anomaly.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
@@ -233,4 +268,4 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.tolerations | list | `[]` | deployment tolerations |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.10.0](https://github.com/norwoodj/helm-docs/releases/v1.10.0)
+Autogenerated from chart metadata using [helm-docs v1.13.1](https://github.com/norwoodj/helm-docs/releases/v1.13.1)
