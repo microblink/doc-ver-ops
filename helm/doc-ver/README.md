@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.11](https://img.shields.io/badge/Version-0.3.11-informational?style=flat-square)
+![Version: 0.3.12](https://img.shields.io/badge/Version-0.3.12-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
@@ -37,7 +37,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | anomdet-intermediary.affinity | object | `{}` | deployment affinity |
-| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-1458","model-id":"6478fcb410dcce6d3b037199","model-name":"visual-anomaly","parallel-queries":200}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
+| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-1519","model-id":"6478fcb410dcce6d3b037199","model-name":"visual-anomaly","parallel-queries":10000}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
+| anomdet-intermediary.anomdetIntermediaryConfig.parallel-queries | int | `10000` | without blocking the requests in a sequence |
 | anomdet-intermediary.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
 | anomdet-intermediary.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
 | anomdet-intermediary.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
@@ -53,8 +54,10 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.resources.requests.cpu | string | `"300m"` | deployment resource cpu requests |
 | anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
 | anomdet-intermediary.tolerations | list | `[]` | deployment tolerations |
-| auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret with fixed credentials |
+| auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release) |
+| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Check out the templates/db-creds.yaml for the  content of the secret |
 | auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
+| auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled).  if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
 | auth.licence.createSecret | bool | `false` | enable if you want to create licence secret as part of this charts deployment |
 | auth.licence.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
 | auth.licence.secretName | string | `"license-key"` | name of license-key secret, if changed, it must be updated in doc-ver-api |
@@ -101,12 +104,12 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | doc-ver-api.env.LICENSEE | string | `"localhost"` | don't change unless communicated by Microblink support team |
-| doc-ver-api.extraSecrets | list | `["license-key"]` | unclear on the content of the secret, check out the tempates/license-key.yaml |
+| doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.licence.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
 | doc-ver-api.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
 | doc-ver-api.image.repository | string | `"eu.gcr.io/microblink-identity/web-api-doc-ver"` |  |
-| doc-ver-api.image.tag | string | `"2.4.0"` |  |
+| doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"15m"` |  |
+| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/cors-allow-origin" | string | `"*"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/enable-cors" | string | `"true"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/force-ssl-redirect" | string | `"true"` |  |
@@ -115,6 +118,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
 | doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver","/info","/barcode"]}` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.pathType | string | `"ImplementationSpecific"` |  |
+| doc-ver-api.ingress.tls[0].hosts[0] | object | `{"host":"docver.microblink.com"}` | if you want to expose the service, set the host name |
+| doc-ver-api.ingress.tls[0].secretName | string | `"docver-tls"` |  |
 | doc-ver-api.nodeSelector | object | `{}` | deployment node selector |
 | doc-ver-api.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
 | doc-ver-api.resources.limits.cpu | int | `2` |  |
@@ -148,6 +153,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
 | embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `true` | set this to false if you are using an "external" SaaS database |
 | embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
+| embedding-store.server.database.pgvector.database | string | `"postgres"` | name of the database, if you are using an external database, set this to the name of the database |
 | embedding-store.server.database.pgvector.enabled | bool | `true` |  |
 | embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.server.grpc.grpcSendSize | string | `"52428800"` |  |
@@ -187,20 +193,25 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight | int | `1` |  |
 | postgresql.primary.args[0] | string | `"-c"` |  |
 | postgresql.primary.args[1] | string | `"config_file=/bitnami/postgresql/conf/postgresql.conf"` |  |
-| postgresql.primary.configuration | string | `"max_connections = 1000\nshared_buffers = 18GB\neffective_cache_size = 24GB\nmaintenance_work_mem = 1GB\ncheckpoint_completion_target = 0.9\nwal_buffers = 16MB\ndefault_statistics_target = 1000\nrandom_page_cost = 1.1\neffective_io_concurrency = 300\nwork_mem = 20MB\nhuge_pages = off\nmin_wal_size = 2GB\nmax_wal_size = 4GB\nmax_worker_processes = 20\nmax_parallel_workers_per_gather = 8\nmax_parallel_workers = 20\nmax_parallel_maintenance_workers = 4\n\nwal_level = minimal\nmax_wal_senders = 0\n\nlisten_addresses = '*'\n"` |  |
+| postgresql.primary.configuration | string | `"max_connections = 1000\nshared_buffers = 18GB\neffective_cache_size = 24GB\nmaintenance_work_mem = 1GB\ncheckpoint_completion_target = 0.9\nwal_buffers = 16MB\ndefault_statistics_target = 1000\nrandom_page_cost = 1.1\neffective_io_concurrency = 300\nwork_mem = 2MB\nhuge_pages = off\nmin_wal_size = 2GB\nmax_wal_size = 4GB\nmax_worker_processes = 10\nmax_parallel_workers_per_gather = 4\nmax_parallel_workers = 10\nmax_parallel_maintenance_workers = 4\n\nwal_level = minimal\nmax_wal_senders = 0\n\nlisten_addresses = '*'\n"` |  |
 | postgresql.primary.livenessProbe.failureThreshold | int | `600` |  |
+| postgresql.primary.nodeSelector.workload | string | `"postgre-db"` |  |
 | postgresql.primary.persistence.enabled | bool | `true` |  |
 | postgresql.primary.persistence.size | string | `"500Gi"` |  |
-| postgresql.primary.persistence.storageClass | string | `"microblink-docver"` |  |
-| postgresql.primary.resources.limits.cpu | int | `20` |  |
+| postgresql.primary.persistence.storageClass | string | `"default"` |  |
+| postgresql.primary.resources.limits.cpu | int | `10` |  |
 | postgresql.primary.resources.limits.memory | string | `"24Gi"` |  |
-| postgresql.primary.resources.requests.cpu | int | `10` |  |
+| postgresql.primary.resources.requests.cpu | int | `6` |  |
 | postgresql.primary.resources.requests.memory | string | `"20Gi"` |  |
 | postgresql.primary.service.type | string | `"ClusterIP"` |  |
 | postgresql.primary.tolerations[0].effect | string | `"NoSchedule"` |  |
 | postgresql.primary.tolerations[0].key | string | `"kubernetes.io/workload"` |  |
 | postgresql.primary.tolerations[0].operator | string | `"Equal"` |  |
 | postgresql.primary.tolerations[0].value | string | `"storage"` |  |
+| postgresql.primary.tolerations[1].effect | string | `"NoSchedule"` |  |
+| postgresql.primary.tolerations[1].key | string | `"kubernetes.io/workload"` |  |
+| postgresql.primary.tolerations[1].operator | string | `"Equal"` |  |
+| postgresql.primary.tolerations[1].value | string | `"postgre-db"` |  |
 | visual-anomaly.affinity | object | `{}` | deployment affinity |
 | visual-anomaly.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | visual-anomaly.autoscaling.cpu.target | int | `80` | target cpu usage percentage |

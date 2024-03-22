@@ -18,8 +18,18 @@ auth:
   dbCreds:
     # -- name of the secret, this string value must be updated in both postgresql and embedding-store
     secretName: "mb-docver-db-creds"
-    # -- if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret with fixed credentials
+    # -- if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret
+    # used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release)
     createSecret: true
+    # -- if createSecret is set to true, set the database username here, if you update this value, make sure to update
+    # the value in the postgresql section as well (if postgresql is enabled). 
+    # if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database
+    username: "embedding-store-sa"
+    # -- if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so
+    # we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret
+    # with the name you specified under secretName, and disable createSecret. Check out the templates/db-creds.yaml for the 
+    # content of the secret
+    password: "x9xv1mw0td"
 
 doc-ver-api:
   # -- using fixed number of replicas if autoscaling is not enabled
@@ -44,15 +54,14 @@ doc-ver-api:
       target: 80
   image:
     repository: eu.gcr.io/microblink-identity/web-api-doc-ver
-    tag: "2.4.0"
     pullSecrets:
       - name: eu.gcr.io
   env: 
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
   # -- has to match the name of the secret in auth.licence.secretName, or if you want to 
-  # -- provision secret outside of this chart, has to match the name of the secret. If you are
-  # -- unclear on the content of the secret, check out the tempates/license-key.yaml
+  # provision secret outside of this chart, has to match the name of the secret. If you are
+  # unclear on the content of the secret, check out the tempates/license-key.yaml
   extraSecrets:
     - license-key
   resources:
@@ -103,9 +112,15 @@ doc-ver-api:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: 100m
-      nginx.ingress.kubernetes.io/client-max-body-size: 15m
+      nginx.ingress.kubernetes.io/client-max-body-size: 50m
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    tls:
+      - secretName: docver-tls
+        hosts:
+          # -- if you want to expose the service, set the host name
+          - host: "docver.microblink.com"
     hosts:
       # -- if you want to expose the service, set the host name
       - host: "docver.microblink.com"
@@ -189,8 +204,10 @@ anomdet-intermediary:
   anomdetIntermediaryConfig:
     model-id: "6478fcb410dcce6d3b037199"
     model-name: "visual-anomaly"
-    collection-name: mdv-1458
-    parallel-queries: 200
+    collection-name: mdv-1519
+    # -- each verification request will start ~200 queries, using 10000 to support have max of 50 RPS rate
+    # -- without blocking the requests in a sequence
+    parallel-queries: 10000
   image:
     repository: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem
     pullSecrets:
@@ -241,6 +258,8 @@ embedding-store:
         # If using external database, set this to a valid host and port
         # For example SaaS postgre in AWS or GCP
         addr: "postgresql:5432"
+        # -- name of the database, if you are using an external database, set this to the name of the database
+        database: postgres
         # -- set this to false if you are using an "external" SaaS database
         addrPrepandReleaseName: true
         connectionStringParams: "pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
@@ -305,21 +324,27 @@ postgresql:
     persistence:
       enabled: true
       ## -- change the storeage class to the one that is available in your kubernetes cluster
-      storageClass: "microblink-docver"
+      storageClass: "default"
       size: 500Gi
     service:
       type: ClusterIP
     resources:
       limits:
-        cpu: 20
+        cpu: 10
         memory: "24Gi"
       requests:
-        cpu: 10
+        cpu: 6
         memory: "20Gi"
+    nodeSelector:
+      workload: postgre-db
     tolerations:
       - key: "kubernetes.io/workload"
         operator: "Equal"
         value: "storage"
+        effect: "NoSchedule"
+      - key: "kubernetes.io/workload"
+        operator: "Equal"
+        value: "postgre-db"
         effect: "NoSchedule"
     # Patch to prevent postgre chart bug
     affinity:
@@ -347,13 +372,13 @@ postgresql:
       default_statistics_target = 1000
       random_page_cost = 1.1
       effective_io_concurrency = 300
-      work_mem = 20MB
+      work_mem = 2MB
       huge_pages = off
       min_wal_size = 2GB
       max_wal_size = 4GB
-      max_worker_processes = 20
-      max_parallel_workers_per_gather = 8
-      max_parallel_workers = 20
+      max_worker_processes = 10
+      max_parallel_workers_per_gather = 4
+      max_parallel_workers = 10
       max_parallel_maintenance_workers = 4
       
       wal_level = minimal
