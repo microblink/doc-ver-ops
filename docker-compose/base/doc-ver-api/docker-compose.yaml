@@ -2,7 +2,7 @@ version: '3'
 
 services:
   doc-ver-api:
-    image: eu.gcr.io/microblink-identity/web-api-doc-ver:2.4.0
+    image: eu.gcr.io/microblink-identity/web-api-doc-ver:2.5.0
     depends_on:
       visual-anomaly:
         condition: service_healthy
@@ -21,8 +21,6 @@ services:
       GA_SERVER_URL: "visual-anomaly:8080"
       IMAGE_MAX_SIZE_KB: ${IMAGE_MAX_SIZE_KB}
       LICENSEE: ${LICENSEE}
-      LOGGER_MAP: "com.microblink=DEBUG"
-      LOG_ENABLE_CUSTOMIZATION: "true"
       WORKER_TIMEOUT_MS: ${WORKER_TIMEOUT_MS}
       LICENSE_KEY: ${LICENSE_KEY}
     deploy:
