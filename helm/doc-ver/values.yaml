@@ -54,6 +54,7 @@ doc-ver-api:
       target: 80
   image:
     repository: eu.gcr.io/microblink-identity/web-api-doc-ver
+    tag: "2.5.0-cloud"
     pullSecrets:
       - name: eu.gcr.io
   env: 
@@ -218,6 +219,7 @@ anomdet-intermediary:
 embedding-store:
   seeder:
     enabled: false
+    runAsPostUpgradeJob: false
     image: 
       repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
       pullSecrets:
