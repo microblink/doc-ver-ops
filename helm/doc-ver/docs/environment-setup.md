@@ -23,7 +23,19 @@ If you are using Google Kubernetes Engine (GKE) you can use the `gcloud` command
 
 To install `gcloud` best follow official Google Cloud documentation: [Installing Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
 
-To set up `kubectl` to use the cluster, continue to follow instruction [here](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin).
+To "login" to your Google Cloud account run:
+
+```bash
+gcloud auth login
+```
+
+Next, google requires you to have auth plugin to work with Kubernetes Engine clusters. To install it run:
+
+```bash
+gcloud components install gke-gcloud-auth-plugin
+```
+
+For troubleshooting or more details please refer [here](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin).
 
 Once that is configured you can use simple command to authenticate `kubectl` with the cluster:
 
