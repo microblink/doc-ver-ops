@@ -10,6 +10,7 @@
 ### Prerequisites
 To install helm and setup your local environment, please follow the instructions [here](docs/environment-setup.md).
 
+### Installing the Chart
 This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
 
 To use it, simply add the repository to your helm client:
