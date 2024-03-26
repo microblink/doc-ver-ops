@@ -3,7 +3,7 @@
 ![Version: 0.3.14](https://img.shields.io/badge/Version-0.3.14-informational?style=flat-square)
 
 ## C4 Model
-![Scheme](docs/docver-deployment.svg)
+![Scheme](docs/tmpl/docver-deployment.svg)
 
 ## Usage
 
