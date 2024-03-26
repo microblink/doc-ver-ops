@@ -52,3 +52,7 @@ kubectl get nodes
 ```
 
 You should see a list of nodes in your cluster.
+
+## Installing Helm
+
+To install `helm` on your local machine, besst follow the official Helm documentation: [Installing Helm](https://helm.sh/docs/intro/install/).
