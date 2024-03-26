@@ -2,7 +2,7 @@ grpc-recv-size: 52428800
 grpc-send-size: 52428800
 
 col-create-workers: 200
-col-insert-workers: 20
+col-insert-workers: 10
 col-insert-batch: 1
 gc-seed-store: true
 gc-seed-store-bucket: docver-va-releases

@@ -2,7 +2,7 @@ version: '3'
 
 services:
   embedding-store-server:
-    image: "eu.gcr.io/microblink-identity/embedding-store/onprem:v0.30.5"
+    image: "eu.gcr.io/microblink-identity/embedding-store/onprem:v0.30.6"
     depends_on:
       pgvector:
         condition: service_healthy

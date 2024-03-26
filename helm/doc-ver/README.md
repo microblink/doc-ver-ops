@@ -1,11 +1,14 @@
 # doc-ver
 
-![Version: 0.3.12](https://img.shields.io/badge/Version-0.3.12-informational?style=flat-square)
+![Version: 0.3.14](https://img.shields.io/badge/Version-0.3.14-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/docver-deployment.svg)
 
 ## Usage
+
+### Prerequisites
+To install helm and setup your local environment, please follow the instructions [here](docs/environment-setup.md).
 
 This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
 
@@ -107,6 +110,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.licence.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
 | doc-ver-api.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
 | doc-ver-api.image.repository | string | `"eu.gcr.io/microblink-identity/web-api-doc-ver"` |  |
+| doc-ver-api.image.tag | string | `"2.5.0-cloud"` |  |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -139,6 +143,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.resources.limits.memory | string | `"2Gi"` |  |
 | embedding-store.seeder.resources.requests.cpu | string | `"500m"` |  |
 | embedding-store.seeder.resources.requests.memory | string | `"1Gi"` |  |
+| embedding-store.seeder.runAsPostUpgradeJob | bool | `false` |  |
 | embedding-store.seeder.secret | string | `"sa-json"` |  |
 | embedding-store.seeder.seedStore.gc.bucket | string | `"docver-va-releases"` |  |
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |

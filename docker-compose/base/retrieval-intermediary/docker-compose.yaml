@@ -17,7 +17,7 @@ services:
         condition: service_healthy
       seeder:
         condition: service_completed_successfully
-    image: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem:v0.10.7
+    image: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem:v0.10.8
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "retrieval-intermediary:8005"]
       interval: 15s
