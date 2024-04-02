@@ -19,7 +19,7 @@ To install docker compose, follow the instructions [here](https://docs.docker.co
 If you don't want to "pollute" your docker environment we recommend using a [standalone installation](https://docs.docker.com/compose/install/standalone/) of docker-compose. It is a single binary that you can put in your PATH 
 and use it as a regular command as explained in the provided link.
 
-### Your licence key and service acount json credentials
+### Your licence key
 
 As mentioned [here](../README.md#your-licence-key-and-service-acount-json-credentials). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
 If you are using Document verification self-hosted you will need to acquire the licence key from the licences section (under Document verification self-hosted).
