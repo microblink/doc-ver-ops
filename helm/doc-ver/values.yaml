@@ -1,8 +1,8 @@
 auth:
-  licence:
+  license:
     # -- name of license-key secret, if changed, it must be updated in doc-ver-api
     secretName: "license-key"
-    # -- enable if you want to create licence secret as part of this charts deployment
+    # -- enable if you want to create license secret as part of this charts deployment
     createSecret: false
     # -- if createSecret is set to true, set the license key here
     licenseKey: ""
@@ -48,7 +48,7 @@ doc-ver-api:
   env: 
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
-  # -- has to match the name of the secret in auth.licence.secretName, or if you want to 
+  # -- has to match the name of the secret in auth.license.secretName, or if you want to 
   # provision secret outside of this chart, has to match the name of the secret. If you are
   # unclear on the content of the secret, check out the tempates/license-key.yaml
   extraSecrets:
