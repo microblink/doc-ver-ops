@@ -2,14 +2,8 @@
 
 deploymentName="$1"
 
-pathToServiceAccountJson="$2"
-licenceKey="$3"
-licensee="$4"
-
-if [ -z "$pathToServiceAccountJson" ]; then
-  echo "Service account json path is required as a first argument"
-  exit 1
-fi
+licenceKey="$2"
+licensee="$3"
 
 if [ -z "$licenceKey" ]; then
   echo "Licence key is required as a second argument"

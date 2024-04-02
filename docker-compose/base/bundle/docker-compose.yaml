@@ -75,7 +75,6 @@ services:
       - ./model-serving/model-download/rclone.conf:/config/rclone/rclone.conf
       - ./model-serving/model-download/models:/models
       - ./model-serving/model-download/model-download.sh:/data/model-download.sh
-      - ${REL_DIR}/creds/bundle/gcs.json:/src/gcs.json
     command: 
       - ./model-download.sh
 
