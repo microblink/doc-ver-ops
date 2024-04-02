@@ -25,12 +25,7 @@ cp -r template $deploymentName
 
 cd $deploymentName
 
-mkdir -p creds/bundle
 mkdir -p creds/doc-ver-api
-mkdir -p creds/embedding-store
-
-cp $pathToServiceAccountJson creds/bundle/gcs.json
-cp $pathToServiceAccountJson creds/embedding-store/gcs.json
 
 echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-api/.env
 
