@@ -18,8 +18,10 @@ auth:
     username: "embedding-store-sa"
     # -- if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so
     # we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret
-    # with the name you specified under secretName, and disable createSecret. Check out the templates/db-creds.yaml for the 
-    # content of the secret
+    # with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields 
+    # `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password 
+    # of the database user you want our service to use.
+    # Check out the templates/db-creds.yaml for more details on the content of the secret
     password: "x9xv1mw0td"
 
 doc-ver-api:
@@ -109,7 +111,7 @@ doc-ver-api:
       - secretName: docver-tls
         hosts:
           # -- if you want to expose the service, set the host name
-          - host: "docver.microblink.com"
+          - "docver.microblink.com"
     hosts:
       # -- if you want to expose the service, set the host name
       - host: "docver.microblink.com"
