@@ -32,8 +32,6 @@ services:
       - "visual-anomaly"
       - --model-proxy-addr
       - model_proxy:8005  
-      - --model-proxy-secure
-      - "false"
       - --embedding-store-addr
       - embedding-store-server:8005 
       - --embedding-store-secure
