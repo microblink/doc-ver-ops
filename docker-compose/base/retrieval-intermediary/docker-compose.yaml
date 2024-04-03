@@ -17,7 +17,7 @@ services:
         condition: service_healthy
       seeder:
         condition: service_completed_successfully
-    image: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem:v0.10.7
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem:v0.10.8
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "retrieval-intermediary:8005"]
       interval: 15s
@@ -32,12 +32,8 @@ services:
       - "visual-anomaly"
       - --model-proxy-addr
       - model_proxy:8005  
-      - --model-proxy-secure
-      - "false"
       - --embedding-store-addr
       - embedding-store-server:8005 
-      - --embedding-store-secure
-      - "false"
       - --collection-name
       - ${COLLECTION_NAME}
       - --parallel-queries

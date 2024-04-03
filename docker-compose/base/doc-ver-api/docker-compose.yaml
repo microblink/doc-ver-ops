@@ -2,7 +2,7 @@ version: '3'
 
 services:
   doc-ver-api:
-    image: eu.gcr.io/microblink-identity/web-api-doc-ver:2.5.0
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:2.6.0-cloud
     depends_on:
       visual-anomaly:
         condition: service_healthy

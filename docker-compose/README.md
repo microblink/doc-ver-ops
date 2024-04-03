@@ -19,25 +19,15 @@ To install docker compose, follow the instructions [here](https://docs.docker.co
 If you don't want to "pollute" your docker environment we recommend using a [standalone installation](https://docs.docker.com/compose/install/standalone/) of docker-compose. It is a single binary that you can put in your PATH 
 and use it as a regular command as explained in the provided link.
 
-### Your licence key and service acount json credentials
+### Your licence key
 
-As mantioned [here](../README.md#your-licence-key-and-service-acount-json-credentials). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
-If you are using Document verification self-hosted, you will need to download the service account json (`serviceaccount.json`) file and the 
-licence key from the licences section (under Document verification self-hosted).
+As mentioned [here](../README.md#your-licence-key-and-service-acount-json-credentials). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
+If you are using Document verification self-hosted you will need to acquire the licence key from the licences section (under Document verification self-hosted).
 
 # Quickstart - Deploying your instance
 
 Clone this repository and position yourself in the root of the repo:
 `git clone git@github.com:microblink/doc-ver-ops.git && cd doc-ver-ops`
-
-## Authentication for image registry - access to our images hosted on eu.gcr.io/microblink-identity
-
-Using `serviceaccount.json` mentioned above, you can authenticate to our image registry by running the following command:
-
-```bash
-docker login -u _json_key --password-stdin https://eu.gcr.io < <path to serviceaccount.json>
-```
-This will authenticate you to our image registry and allow you to pull the images needed to run the deployment.
 
 ## Initialise your environment and running the deployment
 
@@ -47,21 +37,19 @@ You can do that by running the following commands
 
 ```bash
 cd docker-compose
-bash init.sh <deployment_name> <path to serviceaccount.json> <licence key>
+bash init.sh <deployment_name> <licence key>
 ```
 Update the values in <> with your own values.
  * `<deployment_name>` - the name of your deployment, we recommend simply using your company name
- * `<path to serviceaccount.json>` - the path to the service account json file that you will use to authenticate. This file is acquired on developer.microblink.com under licences - document verification self-hosted.
  * `<licence key>` - the licence key that you will use to authenticate. This key is acquired on developer.microblink.com under licences - document verification self-hosted.
 
 This will create a new directory in the `docker-compose` directory with the `<deployment_name>` you provided. 
 This directory will contain the configuration files for your deployment runnable by a single command `docker-compose up -d`.
 
-To prevent any confusion, if for example I'm working for company `microblink` I have my `serviceaccount.json` at path
-`/home/alex/serviceaccount.json` and my licence key is `someExampleString` I would run the following command:
+To prevent any confusion, if for example I'm working for company `microblink` and my licence key is `someExampleString` I would run the following command:
 
 ```bash
-bash init.sh microblink /home/alex/serviceaccount.json someExampleString
+bash init.sh microblink someExampleString
 ```
 
 Afterwards, I would continue to deploy my instance by running the following:
@@ -131,10 +119,7 @@ Server prerequisites and configuration options for each component will be descri
 
 
 ## Prerequisites
-* docker registry credentials (permission to pull from eu.gcr.io/microblink-identity)
-* gcloud service account for a bucket where encrypted models will be stored
 * doc-ver-api licence key
-* serviceaccount.json file for gcs
 
 ## Components
 
@@ -219,30 +204,6 @@ col-insert-batch: <int_val>
 gc-seed-store: <bool_val>
 gc-seed-store-bucket: <string_val>
 gc-seed-store-prefix: <string_val>
-```
-##### creds
-To enable seeder for s3, .env should be added to /<deployment_dir>/creds/embedding-store with the s3 access and secret keys:
-```
-EMBEDDING_STORE_S3_SEED_STORE_ACCESSKEY=<string_val>
-EMBEDDING_STORE_S3_SEED_STORE_SECRETKEY=<string_val>
-```
-If you get an error mentioning mounting gcs service account even though you configured s3 seeder, try adding an empty gcs.json to /<deployment_dir>/creds/embedding-store 
-
-To enable seeder for gcs, gcs.json [service account](https://cloud.google.com/iam/docs/service-accounts-create#gcloud) file should be added to /<deployment_dir>/creds/embedding-store, looks something like this:
-```
-{
-    "type": "string",
-    "project_id": "string",
-    "private_key_id": "uid",
-    "private_key": "private-key",
-    "client_email": "email",
-    "client_id": "int",
-    "auth_uri": "url",
-    "token_uri": "url",
-    "auth_provider_x509_cert_url": "url",
-    "client_x509_cert_url": "url",
-    "universe_domain": "domain"
-}
 ```
 #### server
 ##### conf

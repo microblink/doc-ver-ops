@@ -5,7 +5,7 @@ services:
     depends_on:
       visual-anomaly-nginx:
         condition: service_healthy
-    image: eu.gcr.io/microblink-identity/mlp-model-proxy/onprem:v0.17.7
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.17.7
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "model_proxy:8005"]
       interval: 15s
@@ -47,7 +47,7 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
-    image: eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem:23.06
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem:23.06
     networks:
       - visual-anomaly-network
     volumes:
@@ -75,7 +75,6 @@ services:
       - ./model-serving/model-download/rclone.conf:/config/rclone/rclone.conf
       - ./model-serving/model-download/models:/models
       - ./model-serving/model-download/model-download.sh:/data/model-download.sh
-      - ${REL_DIR}/creds/bundle/gcs.json:/src/gcs.json
     command: 
       - ./model-download.sh
 
