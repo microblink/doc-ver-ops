@@ -34,8 +34,6 @@ services:
       - model_proxy:8005  
       - --embedding-store-addr
       - embedding-store-server:8005 
-      - --embedding-store-secure
-      - "false"
       - --collection-name
       - ${COLLECTION_NAME}
       - --parallel-queries
