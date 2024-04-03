@@ -3,14 +3,13 @@
 This repository holds "operational" package deliveries for deploying Microblinks document verification solution.
 
 ## DocVer app version
-`2.5.0`
+`2.6.0`
 
 ## Pre-requisites
-### Your licence key and service acount json credentials
+### Your licence key
 
-To use either helm or docker-compose based deployment you will need a licence key and a service account json file. 
-You can acquire these on [developer.microblink.com](https://developer.microblink.com/). If you are using Document verification self-hosted, 
-you will need to download the service account json (`serviceaccount.json`) file and the licence key from the licences section (under Document verification self-hosted).
+To use either helm or docker-compose based deployment you will need a licence key.
+You can acquire it on [developer.microblink.com](https://developer.microblink.com/).
 
 ## Helm
 For production ready, user facing loads we prepare a helm chart that can be used to deploy our solution on your Kubernetes infrastructure. 

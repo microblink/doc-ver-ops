@@ -2,7 +2,7 @@ version: '3'
 
 services:
   embedding-store-server:
-    image: "eu.gcr.io/microblink-identity/embedding-store/onprem:v0.30.6"
+    image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.31.0"
     depends_on:
       pgvector:
         condition: service_healthy
@@ -27,7 +27,7 @@ services:
       - --pgvector-backend
       - "true"
       - "--pgvector-connection-str"
-      - "postgres://postgres:postgres@pgvector:5432/postgres?pool_max_conns=200&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=600s"
+      - "postgres://postgres:postgres@pgvector:5432/postgres?pool_max_conns=1000&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=600s"
     networks:
       - visual-anomaly-network
     deploy:
@@ -40,7 +40,7 @@ services:
           memory: ${EMBEDDING_STORE_RESERVATIONS_MEM}
   
   seeder:
-    image: eu.gcr.io/microblink-identity/embedding-store/onprem:v0.30.5
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.31.0
     depends_on:
       pgvector:
         condition: service_healthy
@@ -53,11 +53,8 @@ services:
       - embedding-store-server:8005
       - --embedding-store-secure
       - "false"
-      - --gc-seed-store-service-account-path
-      - /etc/gc/service-account.json
     volumes:
       - ${REL_DIR}/conf/embedding-store/seeder.yaml:/var/run/embedding_store.yml
-      - ${REL_DIR}/creds/embedding-store/gcs.json:/etc/gc/service-account.json
     networks:
       - visual-anomaly-network
 

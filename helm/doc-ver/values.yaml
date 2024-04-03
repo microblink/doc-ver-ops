@@ -1,20 +1,11 @@
 auth:
-  licence:
+  license:
     # -- name of license-key secret, if changed, it must be updated in doc-ver-api
     secretName: "license-key"
-    # -- enable if you want to create licence secret as part of this charts deployment
+    # -- enable if you want to create license secret as part of this charts deployment
     createSecret: false
     # -- if createSecret is set to true, set the license key here
     licenseKey: ""
-  serviceAccount:
-    # -- name of the secret, this string value must be updated in both doc-ver-api and embedding-store
-    secretName: "sa-json"
-    # -- the name of pull secret that will be used to pull images from the registry, if updated, it must be updated in values for all services
-    imgPullSecretName: "eu.gcr.io"
-    # -- if you want to create service account secret and image pull secret as part of this charts deployment
-    createBothSecrets: false
-    # -- base64 value of service account json you got from developer.microblink.com
-    serviceAccountJsonB64: ""
   dbCreds:
     # -- name of the secret, this string value must be updated in both postgresql and embedding-store
     secretName: "mb-docver-db-creds"
@@ -53,14 +44,11 @@ doc-ver-api:
       # -- target cpu usage percentage
       target: 80
   image:
-    repository: eu.gcr.io/microblink-identity/web-api-doc-ver
-    tag: "2.5.0-cloud"
-    pullSecrets:
-      - name: eu.gcr.io
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
   env: 
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
-  # -- has to match the name of the secret in auth.licence.secretName, or if you want to 
+  # -- has to match the name of the secret in auth.license.secretName, or if you want to 
   # provision secret outside of this chart, has to match the name of the secret. If you are
   # unclear on the content of the secret, check out the tempates/license-key.yaml
   extraSecrets:
@@ -149,8 +137,7 @@ visual-anomaly:
       # -- target cpu usage percentage
       target: 80
   image:
-    pullSecrets:
-      - name: eu.gcr.io
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly
   enabled: true
   resources:
     limits:
@@ -210,9 +197,7 @@ anomdet-intermediary:
     # -- without blocking the requests in a sequence
     parallel-queries: 10000
   image:
-    repository: eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem
-    pullSecrets:
-    - name: eu.gcr.io
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem
   ingress:
     enabled: false
 
@@ -221,13 +206,10 @@ embedding-store:
     enabled: false
     runAsPostUpgradeJob: false
     image: 
-      repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
-      pullSecrets:
-        - name: eu.gcr.io
+      repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"
     grpc:
       grpcRecvSize: "52428800"
       grpcSendSize: "52428800"
-    secret: sa-json
     config:
       collectionCreateWorkers: 200
       # -- this controlls the initialization rate of the embedding-store database.
@@ -240,8 +222,9 @@ embedding-store:
         enabled: false
       gc:
         enabled: true
-        bucket: "docver-va-releases"
-        prefix: "full-db-768/6478fcb410dcce6d3b037199"
+        isPublic: true
+        bucket: "document-verification-va-releases"
+        prefix: "full-db-1519/6478fcb410dcce6d3b037199"
     resources:
       limits:
         cpu: 1
@@ -251,9 +234,7 @@ embedding-store:
         memory: 1Gi
   server:
     image: 
-      repository: "eu.gcr.io/microblink-identity/embedding-store/onprem"
-      pullSecrets:
-        - name: eu.gcr.io
+      repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"
     database:
       pgvector:
         enabled: true
@@ -264,7 +245,7 @@ embedding-store:
         database: postgres
         # -- set this to false if you are using an "external" SaaS database
         addrPrepandReleaseName: true
-        connectionStringParams: "pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
+        connectionStringParams: "pool_max_conns=1000&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"
     grpc:
       grpcRecvSize: "52428800"
       grpcSendSize: "52428800"
@@ -413,7 +394,7 @@ bundle-visual-anomaly-core-versions:
         resolver: "kube-dns.kube-system.svc.cluster.local"
     proxy:
       image:
-        repository: eu.gcr.io/microblink-identity/mlp-model-proxy/onprem
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
         tag: v0.17.7
       minLimits:
         cpu: 500m
@@ -438,12 +419,12 @@ bundle-visual-anomaly-core-versions:
       model:
         globalStorage:
             type: gs
-            secret: sa-json
-            bucket: identity-enc-models-prod
+            bucket: identity-enc-models-public
+            isPublic: true
         storage:
             type: gs
-            secret: sa-json
-            bucket: identity-enc-models-prod
+            bucket: identity-enc-models-public
+            isPublic: true
   models:
     6478fcb410dcce6d3b037199:
       # Model resources can be reduced, however, it is not recommended if
@@ -457,5 +438,5 @@ bundle-visual-anomaly-core-versions:
       engine:
         type: "triton"
       image:
-        repository: "eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem"
+        repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"
         tag: "23.06"
