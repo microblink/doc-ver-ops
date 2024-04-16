@@ -1,6 +1,7 @@
 {{- $pass := .Values.auth.dbCreds.password | default "x9xv1mw0td" -}}
 {{- $username := .Values.auth.dbCreds.username | default "embedding-store-sa" -}}
 {{- $postgrePass := .Values.auth.dbCreds.postgresPassword | default "l3CDRjHVmxXqg3Hj" }}
+{{- if .Values.auth.dbCreds.createSecret }}
 kind: Secret
 apiVersion: v1
 metadata:
@@ -10,12 +11,13 @@ metadata:
     release: {{ .Release.Name }}
 type: Opaque
 stringData:
-  {{ if .Values.postgresql.enabled }}
+  {{- if .Values.postgresql.enabled }}
   # values used by postgres if deployed with the chart in k8s cluster
   # if you are using cloud SQL you will be creating your own secret outside of this chart
   password: {{ $pass }}
   postgres-password: {{ $postgrePass }}
-  {{ end }}
+  {{- end }}
   # values used by the embedding store server
   EMBEDDING_STORE_PGVECTOR_USERNAME: {{ $username }}
   EMBEDDING_STORE_PGVECTOR_PASSWORD: {{ $pass }}
+{{- end }}
