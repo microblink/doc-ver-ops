@@ -30,7 +30,7 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.6 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.9 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.7 |
 | https://helm.microblink.com/charts | embedding-store | 0.3.7 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
