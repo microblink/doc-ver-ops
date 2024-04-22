@@ -21,7 +21,7 @@ helm repo update
 
 Then you can install the chart using:
 ```bash
-helm install my-release -f <path to values file you want to use to configure the chart> mb/doc-ver
+helm install my-release -f <path to values file you want to use to configure the chart> microblink/doc-ver
 ```
 
 ## Requirements
