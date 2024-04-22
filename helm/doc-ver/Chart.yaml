@@ -24,4 +24,4 @@ dependencies:
   condition: mlp-local-storage.enabled
 - name: bundle-visual-anomaly-core-versions
   repository: https://helm.microblink.com/charts
-  version: 0.4.8
+  version: 0.4.9
