@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.3.14](https://img.shields.io/badge/Version-0.3.14-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -31,8 +31,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.9 |
-| https://helm.microblink.com/charts | doc-ver-api | 0.0.7 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.7 |
+| https://helm.microblink.com/charts | doc-ver-api | 0.0.8 |
+| https://helm.microblink.com/charts | embedding-store | 0.3.10 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.9 |
 
@@ -48,8 +48,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | anomdet-intermediary.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target cpu usage percentage |
 | anomdet-intermediary.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
-| anomdet-intermediary.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
-| anomdet-intermediary.image.repository | string | `"eu.gcr.io/microblink-identity/anomaly-detection-intermediary/onprem"` |  |
+| anomdet-intermediary.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem"` |  |
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
 | anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
 | anomdet-intermediary.replicaCount | int | `1` |  |
@@ -59,40 +58,38 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
 | anomdet-intermediary.tolerations | list | `[]` | deployment tolerations |
 | auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release) |
-| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Check out the templates/db-creds.yaml for the  content of the secret |
+| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields  `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password  of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
 | auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
 | auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled).  if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
-| auth.licence.createSecret | bool | `false` | enable if you want to create licence secret as part of this charts deployment |
-| auth.licence.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
-| auth.licence.secretName | string | `"license-key"` | name of license-key secret, if changed, it must be updated in doc-ver-api |
-| auth.serviceAccount.createBothSecrets | bool | `false` | if you want to create service account secret and image pull secret as part of this charts deployment |
-| auth.serviceAccount.imgPullSecretName | string | `"eu.gcr.io"` | the name of pull secret that will be used to pull images from the registry, if updated, it must be updated in values for all services |
-| auth.serviceAccount.secretName | string | `"sa-json"` | name of the secret, this string value must be updated in both doc-ver-api and embedding-store |
-| auth.serviceAccount.serviceAccountJsonB64 | string | `""` | base64 value of service account json you got from developer.microblink.com |
+| auth.license.createSecret | bool | `false` | enable if you want to create license secret as part of this charts deployment |
+| auth.license.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
+| auth.license.secretName | string | `"license-key"` | name of license-key secret, if changed, it must be updated in doc-ver-api |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.bucket | string | `"identity-enc-models-prod"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.secret | string | `"sa-json"` |  |
+| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.bucket | string | `"identity-enc-models-public"` |  |
+| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.isPublic | bool | `true` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.type | string | `"gs"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.storage.bucket | string | `"identity-enc-models-prod"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.storage.secret | string | `"sa-json"` |  |
+| bundle-visual-anomaly-core-versions.bundle.models.model.storage.bucket | string | `"identity-enc-models-public"` |  |
+| bundle-visual-anomaly-core-versions.bundle.models.model.storage.isPublic | bool | `true` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.model.storage.type | string | `"gs"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.enabled | bool | `true` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.targetCPUUtilizationPercentage | string | `"80"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.env.GOGC | string | `"50"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"eu.gcr.io/microblink-identity/mlp-model-proxy/onprem"` |  |
+| bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.17.7"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.cpu | string | `"500m"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.memory | string | `"1Gi"` |  |
+| bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsConfig | object | `{}` |  |
+| bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsPolicy | string | `""` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"eu.gcr.io/microblink-identity/tritonserver-cpu-onnxruntime/onprem"` |  |
+| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
@@ -108,10 +105,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | doc-ver-api.env.LICENSEE | string | `"localhost"` | don't change unless communicated by Microblink support team |
-| doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.licence.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
-| doc-ver-api.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
-| doc-ver-api.image.repository | string | `"eu.gcr.io/microblink-identity/web-api-doc-ver"` |  |
-| doc-ver-api.image.tag | string | `"2.5.0-cloud"` |  |
+| doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.license.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
+| doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` |  |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -123,7 +118,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
 | doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver","/info","/barcode"]}` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.pathType | string | `"ImplementationSpecific"` |  |
-| doc-ver-api.ingress.tls[0].hosts[0] | object | `{"host":"docver.microblink.com"}` | if you want to expose the service, set the host name |
+| doc-ver-api.ingress.tls[0].hosts[0] | string | `"docver.microblink.com"` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.tls[0].secretName | string | `"docver-tls"` |  |
 | doc-ver-api.nodeSelector | object | `{}` | deployment node selector |
 | doc-ver-api.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
@@ -138,17 +133,16 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.enabled | bool | `false` |  |
 | embedding-store.seeder.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.seeder.grpc.grpcSendSize | string | `"52428800"` |  |
-| embedding-store.seeder.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
-| embedding-store.seeder.image.repository | string | `"eu.gcr.io/microblink-identity/embedding-store/onprem"` |  |
+| embedding-store.seeder.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"` |  |
 | embedding-store.seeder.resources.limits.cpu | int | `1` |  |
 | embedding-store.seeder.resources.limits.memory | string | `"2Gi"` |  |
 | embedding-store.seeder.resources.requests.cpu | string | `"500m"` |  |
 | embedding-store.seeder.resources.requests.memory | string | `"1Gi"` |  |
 | embedding-store.seeder.runAsPostUpgradeJob | bool | `false` |  |
-| embedding-store.seeder.secret | string | `"sa-json"` |  |
-| embedding-store.seeder.seedStore.gc.bucket | string | `"docver-va-releases"` |  |
+| embedding-store.seeder.seedStore.gc.bucket | string | `"document-verification-va-releases"` |  |
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-768/6478fcb410dcce6d3b037199"` |  |
+| embedding-store.seeder.seedStore.gc.isPublic | bool | `true` |  |
+| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-1519/6478fcb410dcce6d3b037199"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
 | embedding-store.server.affinity | object | `{}` | server deployment affinity   |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
@@ -158,13 +152,12 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
 | embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `true` | set this to false if you are using an "external" SaaS database |
-| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=40&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
+| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=1000&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
 | embedding-store.server.database.pgvector.database | string | `"postgres"` | name of the database, if you are using an external database, set this to the name of the database |
 | embedding-store.server.database.pgvector.enabled | bool | `true` |  |
 | embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.server.grpc.grpcSendSize | string | `"52428800"` |  |
-| embedding-store.server.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
-| embedding-store.server.image.repository | string | `"eu.gcr.io/microblink-identity/embedding-store/onprem"` |  |
+| embedding-store.server.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"` |  |
 | embedding-store.server.nodeSelector | object | `{}` | server deployment node selector |
 | embedding-store.server.resources.limits.cpu | int | `2` |  |
 | embedding-store.server.resources.limits.memory | string | `"2Gi"` |  |
@@ -227,7 +220,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | visual-anomaly.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | visual-anomaly.enabled | bool | `true` |  |
-| visual-anomaly.image.pullSecrets[0].name | string | `"eu.gcr.io"` |  |
+| visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
 | visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
 | visual-anomaly.podAnnotations | object | `{}` | deployment podAnnotations |
@@ -239,4 +232,4 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.tolerations | list | `[]` | deployment tolerations |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.10.0](https://github.com/norwoodj/helm-docs/releases/v1.10.0)
+Autogenerated from chart metadata using [helm-docs v1.13.1](https://github.com/norwoodj/helm-docs/releases/v1.13.1)

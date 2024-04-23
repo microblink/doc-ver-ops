@@ -394,6 +394,8 @@ bundle-visual-anomaly-core-versions:
     serving:
       nginx:
         resolver: "kube-dns.kube-system.svc.cluster.local"
+        dnsPolicy: ""
+        dnsConfig: {}
     proxy:
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
