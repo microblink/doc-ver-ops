@@ -2,7 +2,7 @@ version: '3'
 
 services:
   embedding-store-server:
-    image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.31.0"
+    image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.31.1"
     depends_on:
       pgvector:
         condition: service_healthy
@@ -40,7 +40,7 @@ services:
           memory: ${EMBEDDING_STORE_RESERVATIONS_MEM}
   
   seeder:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.31.0
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.31.1
     depends_on:
       pgvector:
         condition: service_healthy
