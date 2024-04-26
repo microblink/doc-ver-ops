@@ -47,6 +47,7 @@ doc-ver-api:
       target: 80
   image:
     repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
+    tag: "2.6.1"
   env: 
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
@@ -140,6 +141,7 @@ visual-anomaly:
       target: 80
   image:
     repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly
+    tag: "1.2.1"
   enabled: true
   resources:
     limits:
