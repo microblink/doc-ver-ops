@@ -47,7 +47,7 @@ doc-ver-api:
       target: 80
   image:
     repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
-    tag: "2.6.1"
+    tag: "2.7.0"
   env: 
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
