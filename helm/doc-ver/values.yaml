@@ -25,6 +25,8 @@ auth:
     password: "x9xv1mw0td"
 
 doc-ver-api:
+  # -- enable doc-ver-api component
+  enabled: true
   # -- using fixed number of replicas if autoscaling is not enabled
   replicaCount: 1
   # -- Autoscaling configurations
@@ -47,6 +49,7 @@ doc-ver-api:
       target: 80
   image:
     repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
+    tag: "2.7.0"
   env: 
     # -- don't change unless communicated by Microblink support team
     LICENSEE: "localhost"
@@ -119,6 +122,8 @@ doc-ver-api:
     pathType: ImplementationSpecific
 
 visual-anomaly:
+  # -- enable visual-anomaly component
+  enabled: true
   # -- using fixed number of replicas if autoscaling is not enabled
   replicaCount: 1
   autoscaling:
@@ -140,7 +145,7 @@ visual-anomaly:
       target: 80
   image:
     repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly
-  enabled: true
+    tag: "1.2.1"
   resources:
     limits:
       cpu: 1
@@ -160,6 +165,8 @@ visual-anomaly:
     enabled: false
 
 anomdet-intermediary:
+  # -- enable anomdet-intermediary component
+  enabled: true
   replicaCount: 1
   autoscaling:
     # -- if enabled, deployment will be autoscaled
@@ -204,6 +211,8 @@ anomdet-intermediary:
     enabled: false
 
 embedding-store:
+  # -- enable embedding-store component
+  enabled: true
   seeder:
     enabled: false
     runAsPostUpgradeJob: false
@@ -390,10 +399,14 @@ mlp-local-storage:
         - s1
 
 bundle-visual-anomaly-core-versions:
+  # -- enable bundle-visual-anomaly-core-versions component
+  enabled: true
   bundle:
     serving:
       nginx:
         resolver: "kube-dns.kube-system.svc.cluster.local"
+        dnsPolicy: ""
+        dnsConfig: {}
     proxy:
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
