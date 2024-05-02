@@ -1,40 +1,18 @@
 # doc-ver
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square)
-
-## C4 Model
-![Scheme](docs/tmpl/docver-deployment.svg)
-
-## Usage
-
-### Prerequisites
-To install helm and setup your local environment, please follow the instructions [here](docs/environment-setup.md).
-
-### Installing the Chart
-This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
-
-To use it, simply add the repository to your helm client:
-```bash
-helm repo add microblink https://helm.microblink.com/charts
-helm repo update
-```
-
-Then you can install the chart using:
-```bash
-helm install my-release -f <path to values file you want to use to configure the chart> microblink/doc-ver
-```
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square)
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
-| https://helm.microblink.com/charts | anomdet-intermediary | 0.0.8 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.9 |
-| https://helm.microblink.com/charts | doc-ver-api | 0.0.8 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.10 |
+| https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.12 |
+| https://helm.microblink.com/charts | doc-ver-api | 0.0.10 |
+| https://helm.microblink.com/charts | embedding-store | 0.3.12 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
-| https://helm.microblink.com/charts | visual-anomaly | 0.0.9 |
+| https://helm.microblink.com/charts | visual-anomaly | 0.0.10 |
 
 ## Values
 
@@ -48,6 +26,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | anomdet-intermediary.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target cpu usage percentage |
 | anomdet-intermediary.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
+| anomdet-intermediary.enabled | bool | `true` | enable anomdet-intermediary component |
 | anomdet-intermediary.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem"` |  |
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
 | anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
@@ -88,6 +67,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsConfig | object | `{}` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsPolicy | string | `""` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
+| bundle-visual-anomaly-core-versions.enabled | bool | `true` | enable bundle-visual-anomaly-core-versions component |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
@@ -104,9 +84,11 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.memory.enabled | bool | `false` | if enabled, hpa will scale based on memory usage |
 | doc-ver-api.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
+| doc-ver-api.enabled | bool | `true` | enable doc-ver-api component |
 | doc-ver-api.env.LICENSEE | string | `"localhost"` | don't change unless communicated by Microblink support team |
 | doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.license.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` |  |
+| doc-ver-api.image.tag | string | `"2.7.0"` |  |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -127,6 +109,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.resources.requests.cpu | int | `1` |  |
 | doc-ver-api.resources.requests.memory | string | `"1Gi"` |  |
 | doc-ver-api.tolerations | list | `[]` | deployment tolerations |
+| embedding-store.enabled | bool | `true` | enable embedding-store component |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
 | embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
@@ -219,8 +202,9 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.autoscaling.memory.enabled | bool | `false` | if enabled, hpa will scale based on memory usage |
 | visual-anomaly.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | visual-anomaly.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
-| visual-anomaly.enabled | bool | `true` |  |
+| visual-anomaly.enabled | bool | `true` | enable visual-anomaly component |
 | visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
+| visual-anomaly.image.tag | string | `"1.2.1"` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
 | visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
 | visual-anomaly.podAnnotations | object | `{}` | deployment podAnnotations |
