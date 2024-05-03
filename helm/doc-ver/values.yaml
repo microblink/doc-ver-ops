@@ -27,6 +27,10 @@ auth:
 doc-ver-api:
   # -- enable doc-ver-api component
   enabled: true
+  # -- pod security context
+  podSecurityContext: {}
+  # -- container security context
+  containerSecurityContext: {}
   # -- using fixed number of replicas if autoscaling is not enabled
   replicaCount: 1
   # -- Autoscaling configurations
@@ -124,6 +128,10 @@ doc-ver-api:
 visual-anomaly:
   # -- enable visual-anomaly component
   enabled: true
+  # -- pod security context
+  podSecurityContext: {}
+  # -- container security context
+  containerSecurityContext: {}
   # -- using fixed number of replicas if autoscaling is not enabled
   replicaCount: 1
   autoscaling:
@@ -167,6 +175,10 @@ visual-anomaly:
 anomdet-intermediary:
   # -- enable anomdet-intermediary component
   enabled: true
+  # -- pod security context
+  podSecurityContext: {}
+  # -- container security context
+  containerSecurityContext: {}
   replicaCount: 1
   autoscaling:
     # -- if enabled, deployment will be autoscaled
@@ -215,6 +227,10 @@ embedding-store:
   enabled: true
   seeder:
     enabled: false
+    # -- pod security context
+    podSecurityContext: {}
+    # -- container security context
+    containerSecurityContext: {}
     runAsPostUpgradeJob: false
     image: 
       repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"
@@ -244,6 +260,10 @@ embedding-store:
         cpu: 500m
         memory: 1Gi
   server:
+    # -- pod security context
+    podSecurityContext: {}
+    # -- container security context
+    containerSecurityContext: {}
     image: 
       repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"
     database:
@@ -403,11 +423,23 @@ bundle-visual-anomaly-core-versions:
   enabled: true
   bundle:
     serving:
+      # -- pod security context
+      podSecurityContext: {}
+      # -- container security context
+      containerSecurityContext: {}
       nginx:
         resolver: "kube-dns.kube-system.svc.cluster.local"
         dnsPolicy: ""
         dnsConfig: {}
+        # -- pod security context
+        podSecurityContext: {}
+        # -- container security context
+        containerSecurityContext: {}
     proxy:
+      # -- pod security context
+      podSecurityContext: {}
+      # -- container security context
+      containerSecurityContext: {}
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
         tag: v0.17.7
@@ -452,6 +484,10 @@ bundle-visual-anomaly-core-versions:
         memory: "2Gi"
       engine:
         type: "triton"
+      # -- pod security context
+      podSecurityContext: {}
+      # -- container security context
+      containerSecurityContext: {}
       image:
         repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"
         tag: "23.06"

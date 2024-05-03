@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square)
+![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square)
 
 ## Requirements
 
@@ -26,10 +26,12 @@
 | anomdet-intermediary.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | anomdet-intermediary.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target cpu usage percentage |
 | anomdet-intermediary.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
+| anomdet-intermediary.containerSecurityContext | object | `{}` | container security context |
 | anomdet-intermediary.enabled | bool | `true` | enable anomdet-intermediary component |
 | anomdet-intermediary.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem"` |  |
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
 | anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
+| anomdet-intermediary.podSecurityContext | object | `{}` | pod security context |
 | anomdet-intermediary.replicaCount | int | `1` |  |
 | anomdet-intermediary.resources.limits.cpu | int | `1` | deployment resource cpu limit |
 | anomdet-intermediary.resources.limits.memory | string | `"1Gi"` | deployment resource memory limit |
@@ -56,6 +58,7 @@
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.targetCPUUtilizationPercentage | string | `"80"` |  |
+| bundle-visual-anomaly-core-versions.bundle.proxy.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.bundle.proxy.env.GOGC | string | `"50"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.17.7"` |  |
@@ -64,10 +67,16 @@
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.cpu | string | `"500m"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.memory | string | `"1Gi"` |  |
+| bundle-visual-anomaly-core-versions.bundle.proxy.podSecurityContext | object | `{}` | pod security context |
+| bundle-visual-anomaly-core-versions.bundle.serving.containerSecurityContext | object | `{}` | container security context |
+| bundle-visual-anomaly-core-versions.bundle.serving.nginx.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsConfig | object | `{}` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsPolicy | string | `""` |  |
+| bundle-visual-anomaly-core-versions.bundle.serving.nginx.podSecurityContext | object | `{}` | pod security context |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
+| bundle-visual-anomaly-core-versions.bundle.serving.podSecurityContext | object | `{}` | pod security context |
 | bundle-visual-anomaly-core-versions.enabled | bool | `true` | enable bundle-visual-anomaly-core-versions component |
+| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
@@ -75,6 +84,7 @@
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.memory | string | `"2Gi"` |  |
+| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.podSecurityContext | object | `{}` | pod security context |
 | doc-ver-api.affinity | object | `{}` | deployment affinity |
 | doc-ver-api.autoscaling | object | `{"cpu":{"enabled":true,"target":80},"enabled":false,"maxReplicas":3,"memory":{"enabled":false,"target":80},"minReplicas":1}` | Autoscaling configurations |
 | doc-ver-api.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
@@ -84,6 +94,7 @@
 | doc-ver-api.autoscaling.memory.enabled | bool | `false` | if enabled, hpa will scale based on memory usage |
 | doc-ver-api.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
+| doc-ver-api.containerSecurityContext | object | `{}` | container security context |
 | doc-ver-api.enabled | bool | `true` | enable doc-ver-api component |
 | doc-ver-api.env.LICENSEE | string | `"localhost"` | don't change unless communicated by Microblink support team |
 | doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.license.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
@@ -103,6 +114,7 @@
 | doc-ver-api.ingress.tls[0].hosts[0] | string | `"docver.microblink.com"` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.tls[0].secretName | string | `"docver-tls"` |  |
 | doc-ver-api.nodeSelector | object | `{}` | deployment node selector |
+| doc-ver-api.podSecurityContext | object | `{}` | pod security context |
 | doc-ver-api.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
 | doc-ver-api.resources.limits.cpu | int | `2` |  |
 | doc-ver-api.resources.limits.memory | string | `"2Gi"` |  |
@@ -113,10 +125,12 @@
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
 | embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
+| embedding-store.seeder.containerSecurityContext | object | `{}` | container security context |
 | embedding-store.seeder.enabled | bool | `false` |  |
 | embedding-store.seeder.grpc.grpcRecvSize | string | `"52428800"` |  |
 | embedding-store.seeder.grpc.grpcSendSize | string | `"52428800"` |  |
 | embedding-store.seeder.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"` |  |
+| embedding-store.seeder.podSecurityContext | object | `{}` | pod security context |
 | embedding-store.seeder.resources.limits.cpu | int | `1` |  |
 | embedding-store.seeder.resources.limits.memory | string | `"2Gi"` |  |
 | embedding-store.seeder.resources.requests.cpu | string | `"500m"` |  |
@@ -133,6 +147,7 @@
 | embedding-store.server.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | embedding-store.server.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target memory usage percentage |
 | embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
+| embedding-store.server.containerSecurityContext | object | `{}` | container security context |
 | embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
 | embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `true` | set this to false if you are using an "external" SaaS database |
 | embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=1000&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
@@ -142,6 +157,7 @@
 | embedding-store.server.grpc.grpcSendSize | string | `"52428800"` |  |
 | embedding-store.server.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"` |  |
 | embedding-store.server.nodeSelector | object | `{}` | server deployment node selector |
+| embedding-store.server.podSecurityContext | object | `{}` | pod security context |
 | embedding-store.server.resources.limits.cpu | int | `2` |  |
 | embedding-store.server.resources.limits.memory | string | `"2Gi"` |  |
 | embedding-store.server.resources.requests.cpu | string | `"500m"` |  |
@@ -202,12 +218,14 @@
 | visual-anomaly.autoscaling.memory.enabled | bool | `false` | if enabled, hpa will scale based on memory usage |
 | visual-anomaly.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | visual-anomaly.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
+| visual-anomaly.containerSecurityContext | object | `{}` | container security context |
 | visual-anomaly.enabled | bool | `true` | enable visual-anomaly component |
 | visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
 | visual-anomaly.image.tag | string | `"1.2.1"` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
 | visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
 | visual-anomaly.podAnnotations | object | `{}` | deployment podAnnotations |
+| visual-anomaly.podSecurityContext | object | `{}` | pod security context |
 | visual-anomaly.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
 | visual-anomaly.resources.limits.cpu | int | `1` |  |
 | visual-anomaly.resources.limits.memory | string | `"1Gi"` |  |
