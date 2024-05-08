@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square)
+![Version: 0.4.5](https://img.shields.io/badge/Version-0.4.5-informational?style=flat-square)
 
 ## Requirements
 
@@ -8,7 +8,7 @@
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.12 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.13 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.10 |
 | https://helm.microblink.com/charts | embedding-store | 0.3.12 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
