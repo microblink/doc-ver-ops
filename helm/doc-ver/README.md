@@ -2,6 +2,28 @@
 
 ![Version: 0.4.6](https://img.shields.io/badge/Version-0.4.6-informational?style=flat-square)
 
+## C4 Model
+![Scheme](docs/tmpl/docver-deployment.svg)
+
+## Usage
+
+### Prerequisites
+To install helm and setup your local environment, please follow the instructions [here](docs/environment-setup.md).
+
+### Installing the Chart
+This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
+
+To use it, simply add the repository to your helm client:
+```bash
+helm repo add microblink https://helm.microblink.com/charts
+helm repo update
+```
+
+Then you can install the chart using:
+```bash
+helm install my-release -f <path to values file you want to use to configure the chart> microblink/doc-ver
+```
+
 ## Requirements
 
 | Repository | Name | Version |
