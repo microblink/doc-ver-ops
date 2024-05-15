@@ -1,6 +1,28 @@
 # doc-ver
 
-![Version: 0.4.6](https://img.shields.io/badge/Version-0.4.6-informational?style=flat-square)
+![Version: 0.4.7](https://img.shields.io/badge/Version-0.4.7-informational?style=flat-square)
+
+## C4 Model
+![Scheme](docs/tmpl/docver-deployment.svg)
+
+## Usage
+
+### Prerequisites
+To install helm and setup your local environment, please follow the instructions [here](docs/environment-setup.md).
+
+### Installing the Chart
+This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
+
+To use it, simply add the repository to your helm client:
+```bash
+helm repo add microblink https://helm.microblink.com/charts
+helm repo update
+```
+
+Then you can install the chart using:
+```bash
+helm install my-release -f <path to values file you want to use to configure the chart> microblink/doc-ver
+```
 
 ## Requirements
 
@@ -8,11 +30,11 @@
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.13 |
-| https://helm.microblink.com/charts | doc-ver-api | 0.0.11 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.14 |
+| https://helm.microblink.com/charts | doc-ver-api | 0.0.12 |
 | https://helm.microblink.com/charts | embedding-store | 0.3.12 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
-| https://helm.microblink.com/charts | visual-anomaly | 0.0.10 |
+| https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
 ## Values
 
@@ -80,6 +102,7 @@
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
+| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.initContainerSecurityContext | object | `{}` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.cpu | int | `2` |  |
@@ -108,6 +131,7 @@
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/force-ssl-redirect" | string | `"true"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"100m"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/ssl-redirect" | string | `"true"` |  |
+| doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
 | doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver","/info","/barcode"]}` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.pathType | string | `"ImplementationSpecific"` |  |
@@ -222,6 +246,7 @@
 | visual-anomaly.enabled | bool | `true` | enable visual-anomaly component |
 | visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
 | visual-anomaly.image.tag | string | `"1.2.1"` |  |
+| visual-anomaly.ingress.className | string | `""` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
 | visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
 | visual-anomaly.podAnnotations | object | `{}` | deployment podAnnotations |
