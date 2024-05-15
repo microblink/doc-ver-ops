@@ -1,14 +1,14 @@
 name: doc-ver
 apiVersion: v2
-version: 0.4.6
+version: 0.4.7
 dependencies:
 - name: doc-ver-api
   repository: https://helm.microblink.com/charts
-  version: 0.0.11
+  version: 0.0.12
   condition: doc-ver-api.enabled
 - name: visual-anomaly
   repository: https://helm.microblink.com/charts
-  version: 0.0.10
+  version: 0.0.11
   condition: visual-anomaly.enabled
 - name: anomdet-intermediary
   repository: https://helm.microblink.com/charts
@@ -28,5 +28,5 @@ dependencies:
   condition: mlp-local-storage.enabled
 - name: bundle-visual-anomaly-core-versions
   repository: https://helm.microblink.com/charts
-  version: 0.4.13
+  version: 0.4.14
   condition: bundle-visual-anomaly-core-versions.enabled
