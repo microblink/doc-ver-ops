@@ -437,6 +437,8 @@ bundle-visual-anomaly-core-versions:
         podSecurityContext: {}
         # -- container security context
         containerSecurityContext: {}
+        # -- pod annotations
+        podAnnotations: {}
     proxy:
       # -- pod security context
       podSecurityContext: {}
