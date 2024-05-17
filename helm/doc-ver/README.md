@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.4.7](https://img.shields.io/badge/Version-0.4.7-informational?style=flat-square)
+![Version: 0.4.8](https://img.shields.io/badge/Version-0.4.8-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -30,7 +30,7 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.14 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.15 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.12 |
 | https://helm.microblink.com/charts | embedding-store | 0.3.12 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
@@ -94,6 +94,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsConfig | object | `{}` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsPolicy | string | `""` |  |
+| bundle-visual-anomaly-core-versions.bundle.serving.nginx.podAnnotations | object | `{}` | pod annotations |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.podSecurityContext | object | `{}` | pod security context |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.podSecurityContext | object | `{}` | pod security context |
