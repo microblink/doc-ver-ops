@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.4.8](https://img.shields.io/badge/Version-0.4.8-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -30,8 +30,10 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.4.15 |
-| https://helm.microblink.com/charts | doc-ver-api | 0.0.12 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.13.0 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.0 |
+| https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
+| https://helm.microblink.com/charts | docver-runner | 0.0.2 |
 | https://helm.microblink.com/charts | embedding-store | 0.3.12 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
@@ -67,6 +69,146 @@ helm install my-release -f <path to values file you want to use to configure the
 | auth.license.createSecret | bool | `false` | enable if you want to create license secret as part of this charts deployment |
 | auth.license.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
 | auth.license.secretName | string | `"license-key"` | name of license-key secret, if changed, it must be updated in doc-ver-api |
+| bundle-doc-ver-core-versions.bundle.models.affinity | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.initialScale | int | `1` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.maxReplicas | int | `2` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.scaleDownDelay | string | `"5m"` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.scaleStableWindow | string | `"60s"` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.targetCPUUtilizationPercentage | string | `"80"` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.targetConcurrency | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.targetMemoryUtilizationPercentage | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.targetRPS | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
+| bundle-doc-ver-core-versions.bundle.models.containerSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.batching.batch_timeout_micros | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.batching.enabled | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.batching.max_batch_size | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.batching.max_enqueued_batches | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.batching.num_batch_threads | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.batching.pad_variable_length_inputs | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.grpc_max_threads | int | `0` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.monitoring.enabled | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.parallelization.inter_op | int | `0` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.parallelization.intra_op | int | `0` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.11.1-haswell"` |  |
+| bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
+| bundle-doc-ver-core-versions.bundle.models.liveness.periodSeconds | int | `30` |  |
+| bundle-doc-ver-core-versions.bundle.models.maxLimits.cpu | string | `"3"` |  |
+| bundle-doc-ver-core-versions.bundle.models.maxLimits.gpu | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.bundle.models.minLimits.cpu | string | `"3"` |  |
+| bundle-doc-ver-core-versions.bundle.models.minLimits.gpu | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.minLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.bucket | string | `"mlp-models-prod"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.isPublic | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.secret | string | `"gc-mlp-models-prod"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.type | string | `"gs"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.storage.bucket | string | `"mlp-models-prod"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.storage.isPublic | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.storage.secret | string | `"gc-mlp-models-prod"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.storage.type | string | `"gs"` |  |
+| bundle-doc-ver-core-versions.bundle.models.nodeSelector | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.podAnnotations | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.podSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.readiness | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.models.replicaCount | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.models.startup.failureThreshold | int | `30` |  |
+| bundle-doc-ver-core-versions.bundle.models.startup.periodSeconds | int | `16` |  |
+| bundle-doc-ver-core-versions.bundle.models.tolerations | list | `[]` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.affinity | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.args.printfServiceNameFormat | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.autoscaling.enabled | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.autoscaling.maxReplicas | int | `0` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.autoscaling.minReplicas | int | `0` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.autoscaling.targetCPUUtilizationPercentage | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.autoscaling.targetMemoryUtilizationPercentage | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.containerSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.env | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.pullPolicy | string | `"IfNotPresent"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.17.7"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.className | string | `"nginx"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.host | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.ssl.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.ssl.force | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.ssl.redirect | bool | `true` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.ingress.tls.enabled | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.labels | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.liveness.initialDelaySeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.liveness.periodSeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.maxLimits.cpu | string | `"2"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.minLimits.cpu | string | `"1"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.nodeSelector | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.podAnnotations | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.podSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.readiness.initialDelaySeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.readiness.periodSeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.replicaCount | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.service.grpcPort | string | `"8005"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.service.httpPort | string | `"8000"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.service.type | string | `"ClusterIP"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.tolerations | list | `[]` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.containerPort | string | `"8080"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.containerSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.dnsConfig | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.dnsPolicy | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.enabled | bool | `false` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.liveness.initialDelaySeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.liveness.periodSeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.podSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.port | string | `"80"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.envoy.replicaCount | int | `1` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.containerPort | string | `"8080"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.containerSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.dnsConfig | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.dnsPolicy | string | `""` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.keepalive | string | `"320"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.keepaliveRequests | string | `"1000"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.liveness.initialDelaySeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.liveness.periodSeconds | int | `15` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.podSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.port | string | `"80"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.replicaCount | int | `1` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.resolver | string | `"coredns.kube-system"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.nginx.timeout | string | `"600s"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.service.grpcPort | string | `"80"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.service.httpPort | string | `"8501"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.service.type | string | `"ClusterIP"` |  |
+| bundle-doc-ver-core-versions.bundle.serving.syncJob.containerSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.bundle.serving.syncJob.podSecurityContext | object | `{}` |  |
+| bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
+| bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.tag | string | `"v2.13.0-broadwell"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.version | string | `"7.0.2"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.tag | string | `"v2.13.0-broadwell"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.version | string | `"7.0.1"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.tag | string | `"v2.13.0-broadwell"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.repository | string | `"photocopy-classifier-per-pixel-unified"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.version | string | `"7.0.1"` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
@@ -110,7 +252,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.memory | string | `"2Gi"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.podSecurityContext | object | `{}` | pod security context |
 | doc-ver-api.affinity | object | `{}` | deployment affinity |
-| doc-ver-api.autoscaling | object | `{"cpu":{"enabled":true,"target":80},"enabled":false,"maxReplicas":3,"memory":{"enabled":false,"target":80},"minReplicas":1}` | Autoscaling configurations |
 | doc-ver-api.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | doc-ver-api.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
 | doc-ver-api.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
@@ -118,12 +259,15 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.memory.enabled | bool | `false` | if enabled, hpa will scale based on memory usage |
 | doc-ver-api.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
-| doc-ver-api.containerSecurityContext | object | `{}` | container security context |
-| doc-ver-api.enabled | bool | `true` | enable doc-ver-api component |
-| doc-ver-api.env.LICENSEE | string | `"localhost"` | don't change unless communicated by Microblink support team |
-| doc-ver-api.extraSecrets | list | `["license-key"]` | has to match the name of the secret in auth.license.secretName, or if you want to  provision secret outside of this chart, has to match the name of the secret. If you are unclear on the content of the secret, check out the tempates/license-key.yaml |
-| doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` |  |
-| doc-ver-api.image.tag | string | `"2.7.0"` |  |
+| doc-ver-api.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | container security context |
+| doc-ver-api.env."Runner__Pools__3.0.1__Address" | string | `"dns:///docver-runner:8081"` |  |
+| doc-ver-api.extraCMS | list | `[]` | list of configmap names to be added to deployment environment |
+| doc-ver-api.extraSecrets | list | `["license-key"]` | list of secret names to be added to deployment environment |
+| doc-ver-api.fullnameOverride | string | `""` | if set, overrides deployment, hpa, ingress, and service metadata.name |
+| doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
+| doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
+| doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
+| doc-ver-api.image.tag | string | `"3.0.1-08e2e4f"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -134,18 +278,55 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/ssl-redirect" | string | `"true"` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
-| doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver","/info","/barcode"]}` | if you want to expose the service, set the host name |
+| doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver/","/api/"]}` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.pathType | string | `"ImplementationSpecific"` |  |
 | doc-ver-api.ingress.tls[0].hosts[0] | string | `"docver.microblink.com"` | if you want to expose the service, set the host name |
 | doc-ver-api.ingress.tls[0].secretName | string | `"docver-tls"` |  |
+| doc-ver-api.nameOverride | string | `"doc-ver-api"` | if set, overrides app.kubernetes.io/name |
 | doc-ver-api.nodeSelector | object | `{}` | deployment node selector |
+| doc-ver-api.podAnnotations | object | `{}` | deployment podAnnotations |
 | doc-ver-api.podSecurityContext | object | `{}` | pod security context |
-| doc-ver-api.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
-| doc-ver-api.resources.limits.cpu | int | `2` |  |
-| doc-ver-api.resources.limits.memory | string | `"2Gi"` |  |
-| doc-ver-api.resources.requests.cpu | int | `1` |  |
-| doc-ver-api.resources.requests.memory | string | `"1Gi"` |  |
+| doc-ver-api.replicaCount | int | `1` | if autoscaling.enabled is false, deployment will run replicaCount replicas |
+| doc-ver-api.resources.limits.cpu | int | `2` | deployment resource cpu limit |
+| doc-ver-api.resources.limits.memory | string | `"2Gi"` | deployment resource memory limit |
+| doc-ver-api.resources.requests.cpu | int | `1` | deployment resource cpu requests |
+| doc-ver-api.resources.requests.memory | string | `"1Gi"` | deployment resource memory requests |
+| doc-ver-api.service.port | int | `8080` | service and container port |
+| doc-ver-api.service.type | string | `"ClusterIP"` | service type |
 | doc-ver-api.tolerations | list | `[]` | deployment tolerations |
+| doc-ver-api.topologySpreadConstraints | list | `[]` | deployment topologySpreadConstraints |
+| doc-ver-api.version | string | `"2.7.0-cloud"` | app version |
+| docver-runner.autoscaling.cpu.enabled | bool | `true` |  |
+| docver-runner.autoscaling.cpu.target | int | `70` |  |
+| docver-runner.autoscaling.enabled | bool | `true` |  |
+| docver-runner.autoscaling.maxReplicas | int | `16` |  |
+| docver-runner.autoscaling.memory.enabled | bool | `true` |  |
+| docver-runner.autoscaling.memory.target | int | `70` |  |
+| docver-runner.autoscaling.minReplicas | int | `2` |  |
+| docver-runner.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
+| docver-runner.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| docver-runner.containerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
+| docver-runner.containerSecurityContext.runAsNonRoot | bool | `true` |  |
+| docver-runner.containerSecurityContext.runAsUser | int | `65534` |  |
+| docver-runner.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
+| docver-runner.enabled | bool | `true` |  |
+| docver-runner.env.Executor__ApplicationId | string | `""` |  |
+| docver-runner.env.Executor__LicenseKey | string | `""` |  |
+| docver-runner.env.Executor__ModelServingSsl | string | `"false"` |  |
+| docver-runner.env.Executor__ModelServingUrl | string | `"bundle-doc-ver-core-versions-mp:8005"` |  |
+| docver-runner.extraSecrets[0] | string | `"license-key"` |  |
+| docver-runner.fullnameOverride | string | `"docver-runner"` |  |
+| docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
+| docver-runner.image.repository | string | `"europe-docker.pkg.dev/microblink-identity/docver/runner"` | deployment docker image repository |
+| docver-runner.image.tag | string | `"3.0.1-08e2e4f"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.resources.limits.cpu | string | `"1500m"` |  |
+| docver-runner.resources.limits.memory | string | `"1Gi"` |  |
+| docver-runner.resources.requests.cpu | string | `"500m"` |  |
+| docver-runner.resources.requests.memory | string | `"320Mi"` |  |
+| docver-runner.tolerations[0].effect | string | `"NoSchedule"` |  |
+| docver-runner.tolerations[0].key | string | `"workload"` |  |
+| docver-runner.tolerations[0].operator | string | `"Equal"` |  |
+| docver-runner.tolerations[0].value | string | `"cpu32"` |  |
 | embedding-store.enabled | bool | `true` | enable embedding-store component |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |

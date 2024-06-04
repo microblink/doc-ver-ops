@@ -25,15 +25,37 @@ auth:
     password: "x9xv1mw0td"
 
 doc-ver-api:
-  # -- enable doc-ver-api component
-  enabled: true
-  # -- pod security context
-  podSecurityContext: {}
-  # -- container security context
-  containerSecurityContext: {}
-  # -- using fixed number of replicas if autoscaling is not enabled
+  # -- if autoscaling.enabled is false, deployment will run replicaCount replicas
   replicaCount: 1
-  # -- Autoscaling configurations
+  # -- if set, overrides app.kubernetes.io/name
+  nameOverride: "doc-ver-api"
+  # -- if set, overrides deployment, hpa, ingress, and service metadata.name
+  fullnameOverride: ""
+  image:
+    # -- deployment docker image repository
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
+    # -- deployment docker image pull policy
+    pullPolicy: Always
+    # -- deployment docker image tag, if not set, version will be used as tag
+    tag: "3.0.1-08e2e4f"
+    # -- deployment docker image pull secrets
+    pullSecrets: []
+  service:
+    # -- service type
+    type: ClusterIP
+    # -- service and container port
+    port: 8080
+  resources:
+    limits:
+      # -- deployment resource cpu limit
+      cpu: 2
+      # -- deployment resource memory limit
+      memory: 2Gi
+    requests:
+      # -- deployment resource cpu requests
+      cpu: 1
+      # -- deployment resource memory requests
+      memory: 1Gi
   autoscaling:
     # -- if enabled, deployment will be autoscaled
     enabled: false
@@ -51,57 +73,6 @@ doc-ver-api:
       enabled: true
       # -- target cpu usage percentage
       target: 80
-  image:
-    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
-    tag: "2.7.0"
-  env: 
-    # -- don't change unless communicated by Microblink support team
-    LICENSEE: "localhost"
-  # -- has to match the name of the secret in auth.license.secretName, or if you want to 
-  # provision secret outside of this chart, has to match the name of the secret. If you are
-  # unclear on the content of the secret, check out the tempates/license-key.yaml
-  extraSecrets:
-    - license-key
-  resources:
-    # Reducing limits lower then this is not recommended as it will
-    # affect the performance of the service.
-    limits:
-      cpu: 2
-      memory: 2Gi
-    requests:
-      cpu: 1
-      memory: 1Gi
-
-  # Define node selector key-value pairs, example:
-  # nodeSelector:
-  #   kubernetes.io/e2e-az-name: e2e-az1
-  #
-  # -- deployment node selector
-  nodeSelector: {}
-
-  # Define tolerations for pod assignment, example:
-  # tolerations:
-  # - key: "key"
-  #   operator: "Equal"
-  #   value: "value"
-  #   effect: "NoSchedule"
-  #
-  # -- deployment tolerations
-  tolerations: []
-  
-  # Define affinity for pod assignment, example:
-  # affinity:
-  #   nodeAffinity:
-  #     requiredDuringSchedulingIgnoredDuringExecution:
-  #       nodeSelectorTerms:
-  #       - matchExpressions:
-  #         - key: kubernetes.io/e2e-az-name
-  #           operator: In
-  #           values:
-  #           - e2e-az1
-  #
-  # -- deployment affinity
-  affinity: {}
   ingress:
     # -- enable if you want to expose the service
     enabled: false
@@ -123,9 +94,41 @@ doc-ver-api:
     hosts:
       # -- if you want to expose the service, set the host name
       - host: "docver.microblink.com"
-        paths: ["/docver","/info","/barcode"]
+        paths: ["/docver/", "/api/"]
     pathType: ImplementationSpecific
 
+  env:
+    Runner__Pools__3.0.1__Address: "dns:///docver-runner:8081"
+  # -- deployment node selector
+  nodeSelector: {}
+  # -- deployment tolerations
+  tolerations: []
+  # -- deployment podAnnotations
+  podAnnotations: {}
+  # -- deployment affinity
+  affinity: {}
+  # -- deployment topologySpreadConstraints
+  topologySpreadConstraints: []
+  # -- list of secret names to be added to deployment environment
+  extraSecrets:
+    - license-key
+  # -- list of configmap names to be added to deployment environment
+  extraCMS: []
+  # -- pod security context
+  podSecurityContext: {}
+  # -- container security context
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+  # -- app version
+  version: 2.7.0-cloud
 visual-anomaly:
   # -- enable visual-anomaly component
   enabled: true
@@ -496,3 +499,243 @@ bundle-visual-anomaly-core-versions:
       image:
         repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"
         tag: "23.06"
+
+bundle-doc-ver-core-versions:
+  # -- enable bundle-doc-ver-core-versions component
+  enabled: true
+  fullnameOverride: "bundle-doc-ver-core-versions"
+  bundle:
+      serving:
+          service:
+              type: ClusterIP
+              grpcPort: "80"
+              httpPort: "8501"
+          nginx:
+              enabled: true
+              resolver: coredns.kube-system
+              timeout: 600s
+              keepaliveRequests: "1000"
+              keepalive: "320"
+              liveness:
+                  initialDelaySeconds: 15
+                  periodSeconds: 15
+              replicaCount: 1
+              dnsPolicy: ""
+              dnsConfig: {}
+              podSecurityContext: {}
+              containerSecurityContext: {}
+              containerPort: "8080"
+              port: "80"
+          envoy:
+              enabled: false
+              liveness:
+                  initialDelaySeconds: 15
+                  periodSeconds: 15
+              replicaCount: 1
+              dnsPolicy: ""
+              dnsConfig: {}
+              podSecurityContext: {}
+              containerSecurityContext: {}
+              containerPort: "8080"
+              port: "80"
+          syncJob:
+              podSecurityContext: {}
+              containerSecurityContext: {}
+      proxy:
+          ingress:
+              enabled: false
+              host: ""
+              className: nginx
+              ssl:
+                  enabled: true
+                  redirect: true
+                  force: false
+              tls:
+                  enabled: false
+          image:
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
+              tag: v0.17.7
+              pullPolicy: IfNotPresent
+          service:
+              type: ClusterIP
+              grpcPort: "8005"
+              httpPort: "8000"
+          args:
+              printfServiceNameFormat: ""
+          autoscaling:
+              enabled: false
+              minReplicas: 0
+              maxReplicas: 0
+              targetCPUUtilizationPercentage: ""
+              targetMemoryUtilizationPercentage: ""
+          maxLimits:
+              cpu: "2"
+              memory: 2Gi
+          minLimits:
+              cpu: "1"
+              memory: 1Gi
+          labels: {}
+          replicaCount: ""
+          podAnnotations: {}
+          podSecurityContext: {}
+          containerSecurityContext: {}
+          liveness:
+              initialDelaySeconds: 15
+              periodSeconds: 15
+          readiness:
+              initialDelaySeconds: 15
+              periodSeconds: 15
+          nodeSelector: {}
+          affinity: {}
+          tolerations: []
+          env: {}
+      models:
+          image:
+              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
+              tag: v2.11.1-haswell
+              pullPolicy: IfNotPresent
+          autoscaling:
+              enabled: true
+              type: hpa
+              minReplicas: 1
+              maxReplicas: 2
+              targetCPUUtilizationPercentage: "80"
+              targetMemoryUtilizationPercentage: ""
+              targetRPS: ""
+              targetConcurrency: ""
+              initialScale: 1
+              scaleDownDelay: 5m
+              scaleStableWindow: 60s
+          engine:
+              type: tfServing
+              batching:
+                  enabled: false
+                  max_enqueued_batches: ""
+                  pad_variable_length_inputs: false
+                  max_batch_size: ""
+                  num_batch_threads: ""
+                  batch_timeout_micros: ""
+              parallelization:
+                  enabled: true
+                  intra_op: 0
+                  inter_op: 0
+              monitoring:
+                  enabled: false
+              grpc_max_threads: 0
+          model:
+              globalStorage:
+                  type: gs
+                  secret: gc-mlp-models-prod
+                  bucket: mlp-models-prod
+                  isPublic: false
+              storage:
+                  type: gs
+                  secret: gc-mlp-models-prod
+                  bucket: mlp-models-prod
+                  isPublic: false
+          liveness:
+              initialDelaySeconds: 30
+              periodSeconds: 30
+          startup:
+              failureThreshold: 30
+              periodSeconds: 16
+          maxLimits:
+              cpu: "3"
+              memory: 2Gi
+              gpu: ""
+          minLimits:
+              cpu: "3"
+              memory: 2Gi
+              gpu: ""
+          podAnnotations: {}
+          podSecurityContext: {}
+          containerSecurityContext: {}
+          initContainerSecurityContext: {}
+          env: {}
+          readiness: {}
+          nodeSelector: {}
+          affinity: {}
+          tolerations: []
+          labels: {}
+          replicaCount: ""
+  models:
+      664f60da83f1d72d549f88f3:
+          model:
+              repository: photocopy-classifier-contextual-unified
+              project: doc-ver
+              version: 7.0.1
+          engine:
+              type: tfServing
+          image:
+              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
+              tag: v2.13.0-broadwell
+      664f60f083f1d72d549f88f4:
+          model:
+              repository: photocopy-classifier-per-pixel-unified
+              project: doc-ver
+              version: 7.0.1
+          engine:
+              type: tfServing
+          image:
+              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
+              tag: v2.13.0-broadwell
+      6647158183f1d72d549f88e4:
+          model:
+              repository: photo-fraud-classifier
+              project: doc-ver
+              version: 7.0.2
+          engine:
+              type: tfServing
+          image:
+              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
+              tag: v2.13.0-broadwell
+
+docver-runner:
+  enabled: true
+  fullnameOverride: docver-runner
+  image:
+    # -- deployment docker image repository
+    repository: europe-docker.pkg.dev/microblink-identity/docver/runner
+    # -- deployment docker image pull policy
+    pullPolicy: Always
+    # -- deployment docker image tag, if not set, version will be used as tag
+    tag: "3.0.1-08e2e4f"
+  env:
+    Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
+    Executor__ModelServingSsl: "false"
+    Executor__ApplicationId: ""
+    Executor__LicenseKey: ""
+  extraSecrets:
+    - license-key
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 16
+    cpu:
+      enabled: true
+      target: 70
+    memory:
+      enabled: true
+      target: 70
+  resources:
+    requests:
+      cpu: 500m
+      memory: 320Mi
+    limits:
+      cpu: 1500m
+      memory: 1Gi
+  tolerations:
+    - key: "workload"
+      operator: "Equal"
+      value: "cpu32"
+      effect: "NoSchedule"
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
