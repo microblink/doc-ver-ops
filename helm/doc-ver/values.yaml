@@ -37,7 +37,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.0.1-08e2e4f"
+    tag: "3.0.2-aaa7c9d"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -591,8 +591,8 @@ bundle-doc-ver-core-versions:
           env: {}
       models:
           image:
-              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
-              tag: v2.11.1-haswell
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0
               pullPolicy: IfNotPresent
           autoscaling:
               enabled: true
@@ -623,16 +623,14 @@ bundle-doc-ver-core-versions:
                   enabled: false
               grpc_max_threads: 0
           model:
-              globalStorage:
-                  type: gs
-                  secret: gc-mlp-models-prod
-                  bucket: mlp-models-prod
-                  isPublic: false
-              storage:
-                  type: gs
-                  secret: gc-mlp-models-prod
-                  bucket: mlp-models-prod
-                  isPublic: false
+            globalStorage:
+                type: gs
+                bucket: identity-enc-models-public
+                isPublic: true
+            storage:
+                type: gs
+                bucket: identity-enc-models-public
+                isPublic: true
           liveness:
               initialDelaySeconds: 30
               periodSeconds: 30
@@ -667,8 +665,8 @@ bundle-doc-ver-core-versions:
           engine:
               type: tfServing
           image:
-              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
-              tag: v2.13.0-broadwell
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0
       664f60f083f1d72d549f88f4:
           model:
               repository: photocopy-classifier-per-pixel-unified
@@ -677,8 +675,8 @@ bundle-doc-ver-core-versions:
           engine:
               type: tfServing
           image:
-              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
-              tag: v2.13.0-broadwell
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0
       6647158183f1d72d549f88e4:
           model:
               repository: photo-fraud-classifier
@@ -687,19 +685,19 @@ bundle-doc-ver-core-versions:
           engine:
               type: tfServing
           image:
-              repository: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu
-              tag: v2.13.0-broadwell
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0
 
 docver-runner:
   enabled: true
   fullnameOverride: docver-runner
   image:
     # -- deployment docker image repository
-    repository: europe-docker.pkg.dev/microblink-identity/docver/runner
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.0.1-08e2e4f"
+    tag: "3.0.2-aaa7c9d"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
