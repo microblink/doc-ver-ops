@@ -96,8 +96,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.11.1-haswell"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0"` |  |
 | bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
@@ -108,13 +108,11 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.minLimits.cpu | string | `"3"` |  |
 | bundle-doc-ver-core-versions.bundle.models.minLimits.gpu | string | `""` |  |
 | bundle-doc-ver-core-versions.bundle.models.minLimits.memory | string | `"2Gi"` |  |
-| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.bucket | string | `"mlp-models-prod"` |  |
-| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.isPublic | bool | `false` |  |
-| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.secret | string | `"gc-mlp-models-prod"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.bucket | string | `"identity-enc-models-public"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.globalStorage.isPublic | bool | `true` |  |
 | bundle-doc-ver-core-versions.bundle.models.model.globalStorage.type | string | `"gs"` |  |
-| bundle-doc-ver-core-versions.bundle.models.model.storage.bucket | string | `"mlp-models-prod"` |  |
-| bundle-doc-ver-core-versions.bundle.models.model.storage.isPublic | bool | `false` |  |
-| bundle-doc-ver-core-versions.bundle.models.model.storage.secret | string | `"gc-mlp-models-prod"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.storage.bucket | string | `"identity-enc-models-public"` |  |
+| bundle-doc-ver-core-versions.bundle.models.model.storage.isPublic | bool | `true` |  |
 | bundle-doc-ver-core-versions.bundle.models.model.storage.type | string | `"gs"` |  |
 | bundle-doc-ver-core-versions.bundle.models.nodeSelector | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.podAnnotations | object | `{}` |  |
@@ -192,20 +190,20 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
 | bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
 | bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.tag | string | `"v2.13.0-broadwell"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.tag | string | `"v2.13.0"` |  |
 | bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.repository | string | `"photo-fraud-classifier"` |  |
 | bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.version | string | `"7.0.2"` |  |
 | bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.tag | string | `"v2.13.0-broadwell"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.tag | string | `"v2.13.0"` |  |
 | bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
 | bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.version | string | `"7.0.1"` |  |
 | bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.repository | string | `"eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.tag | string | `"v2.13.0-broadwell"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.tag | string | `"v2.13.0"` |  |
 | bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.repository | string | `"photocopy-classifier-per-pixel-unified"` |  |
 | bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.version | string | `"7.0.1"` |  |
@@ -267,7 +265,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.0.1-08e2e4f"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.0.2"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -317,8 +315,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.extraSecrets[0] | string | `"license-key"` |  |
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
-| docver-runner.image.repository | string | `"europe-docker.pkg.dev/microblink-identity/docver/runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.0.1-08e2e4f"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
+| docver-runner.image.tag | string | `"3.0.2"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | string | `"1500m"` |  |
 | docver-runner.resources.limits.memory | string | `"1Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
