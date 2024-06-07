@@ -6,6 +6,8 @@ auth:
     createSecret: false
     # -- if createSecret is set to true, set the license key here
     licenseKey: ""
+    # -- App identifier from microblink developer hub
+    applicationId: ""
   dbCreds:
     # -- name of the secret, this string value must be updated in both postgresql and embedding-store
     secretName: "mb-docver-db-creds"
