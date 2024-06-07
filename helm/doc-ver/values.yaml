@@ -702,7 +702,6 @@ docver-runner:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
     Executor__ApplicationId: ""
-    Executor__LicenseKey: ""
   extraSecrets:
     - license-key
   autoscaling:
