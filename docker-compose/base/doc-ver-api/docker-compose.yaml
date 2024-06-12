@@ -2,7 +2,7 @@ version: '3'
 
 services:
   doc-ver-api:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:2.7.0
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:3.0.2
     depends_on:
       visual-anomaly:
         condition: service_healthy
@@ -23,6 +23,7 @@ services:
       LICENSEE: ${LICENSEE}
       WORKER_TIMEOUT_MS: ${WORKER_TIMEOUT_MS}
       LICENSE_KEY: ${LICENSE_KEY}
+      Runner__Pools__3.0__Address: "doc-ver-runner:8080"
     deploy:
       resources:
         limits:

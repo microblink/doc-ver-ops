@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  doc-ver-runner:
+    image:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "doc-ver-runner:8080/health" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    environment:
+      Executor__ApplicationId: ${APPLICATION_ID}
+      Executor__LicenseKey: ${LICENSE_KEY}
+      Executor__GeneralAnomalyServerUrl: "visual-anomaly:8080"
+      Executor__ModelServingUrl: "model-proxy:8005"
+      Executor__ModelServingSsl: false
+    deploy:
+      resources:
+        limits:
+          cpus: ${LIMITS_CPUS}
+          memory: ${LIMITS_MEM}
+        reservations:
+          cpus: ${RESERVATIONS_CPUS}
+          memory: ${RESERVATIONS_MEM}
+    networks:
+      - visual-anomaly-network
+

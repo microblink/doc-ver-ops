@@ -17,7 +17,7 @@ services:
         condition: service_healthy
       seeder:
         condition: service_completed_successfully
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem:v0.11.3
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem:v0.11.4
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "retrieval-intermediary:8005"]
       interval: 15s
