@@ -12,7 +12,7 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
     volumes:
       - ./proxy/bundle-signature.yaml:/etc/bundle-signature.yaml
     command:
@@ -40,7 +40,7 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
     volumes:
       - ${REL_DIR}/conf/bundle/nginx.conf:/etc/nginx/nginx.conf
 
@@ -55,7 +55,7 @@ services:
       retries: 5
     image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem:23.06
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
     volumes:
       - ./model-serving/model-download/models/6478fcb410dcce6d3b037199:/models/6478fcb410dcce6d3b037199
     command:
@@ -156,7 +156,7 @@ services:
   model_download:
     image: rclone/rclone:1
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
     entrypoint: sh
     volumes:
       - ./model-serving/model-download/rclone.conf:/config/rclone/rclone.conf
@@ -166,4 +166,4 @@ services:
       - ./model-download.sh
 
 networks:
-  visual-anomaly-network:
+  doc-ver-network:

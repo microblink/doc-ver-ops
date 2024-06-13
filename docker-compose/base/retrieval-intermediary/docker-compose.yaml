@@ -39,4 +39,4 @@ services:
       - --parallel-queries
       - "${PARALLEL_QUERIES}"
     networks:
-      - visual-anomaly-network
+      - doc-ver-network

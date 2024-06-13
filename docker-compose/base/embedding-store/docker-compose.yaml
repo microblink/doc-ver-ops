@@ -2,7 +2,7 @@ version: '3'
 
 services:
   embedding-store-server:
-    image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.32.0"
+    image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.32.1"
     depends_on:
       pgvector:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
       - "--pgvector-connection-str"
       - "postgres://postgres:postgres@pgvector:5432/postgres?pool_max_conns=1000&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=600s"
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
     deploy:
       resources:
         limits:
@@ -40,7 +40,7 @@ services:
           memory: ${EMBEDDING_STORE_RESERVATIONS_MEM}
   
   seeder:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.32.0
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem:v0.32.1
     depends_on:
       pgvector:
         condition: service_healthy
@@ -56,7 +56,7 @@ services:
     volumes:
       - ${REL_DIR}/conf/embedding-store/seeder.yaml:/var/run/embedding_store.yml
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
 
   pgvector:
     image: ankane/pgvector:v0.5.1
@@ -83,7 +83,7 @@ services:
           cpus: ${PG_VECTOR_RESERVATIONS_CPU}
           memory: ${PG_VECTOR_RESERVATIONS_MEM}
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
 
 volumes:
   embedding-store-data:

@@ -26,4 +26,4 @@ services:
           cpus: ${RESERVATIONS_CPUS}
           memory: ${RESERVATIONS_MEM}
     networks:
-      - visual-anomaly-network
+      - doc-ver-network
