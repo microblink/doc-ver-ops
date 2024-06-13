@@ -14,16 +14,9 @@ services:
     ports:
       - ${DOC_VER_API_PORT}:8080
     environment:
-      ALLOWED_METHODS: "GET,POST,OPTIONS"
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-      ALLOW_CORS: ${ALLOW_CORS}
-      AVAILABLE_WORKER_TIMEOUT_MS: ${AVAILABLE_WORKER_TIMEOUT_MS}
-      GA_SERVER_URL: "visual-anomaly:8080"
-      IMAGE_MAX_SIZE_KB: ${IMAGE_MAX_SIZE_KB}
-      LICENSEE: ${LICENSEE}
-      WORKER_TIMEOUT_MS: ${WORKER_TIMEOUT_MS}
-      LICENSE_KEY: ${LICENSE_KEY}
-      Runner__Pools__3.0__Address: "doc-ver-runner:8080"
+      Api__CorsMethods: "GET,POST,OPTIONS"
+      Api__CorsOrigins: ${ALLOWED_ORIGINS}
+      Runner__Pools__3.0__Address: "doc-ver-runner:8081"
     deploy:
       resources:
         limits:

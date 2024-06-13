@@ -25,8 +25,13 @@ include:
     env_file: 
       - conf/visual-anomaly/.env
 
+  - path: ../base/doc-ver-runner/docker-compose.yaml
+    project_directory: ../base/doc-ver-runner
+    env_file: 
+      - conf/doc-ver-runner/.env
+      - creds/doc-ver-runner/.env
+
   - path: ../base/doc-ver-api/docker-compose.yaml
     project_directory: ../base/doc-ver-api
     env_file: 
       - conf/doc-ver-api/.env
-      - creds/doc-ver-api/.env

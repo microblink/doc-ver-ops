@@ -25,9 +25,9 @@ cp -r template $deploymentName
 
 cd $deploymentName
 
-mkdir -p creds/doc-ver-api
+mkdir -p creds/doc-ver-runner
 
-echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-api/.env
+echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-runner/.env
 
 cdir="$(pwd)"
 
