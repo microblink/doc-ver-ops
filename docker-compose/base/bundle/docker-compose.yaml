@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  model_proxy:
+  model-proxy:
     depends_on:
       visual-anomaly-nginx:
         condition: service_healthy
     image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.17.7
     healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr", "model_proxy:8005"]
+      test: ["CMD", "grpc_health_probe", "-addr", "model-proxy:8005"]
       interval: 15s
       timeout: 10s
       retries: 5

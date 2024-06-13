@@ -11,7 +11,7 @@ services:
           cpus: ${RESERVATIONS_CPUS}
           memory: ${RESERVATIONS_MEM}
     depends_on:
-      model_proxy:
+      model-proxy:
         condition: service_healthy
       embedding-store-server:
         condition: service_healthy
@@ -31,7 +31,7 @@ services:
       - --model-name
       - "visual-anomaly"
       - --model-proxy-addr
-      - model_proxy:8005  
+      - model-proxy:8005  
       - --embedding-store-addr
       - embedding-store-server:8005 
       - --collection-name

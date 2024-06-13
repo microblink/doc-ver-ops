@@ -7,7 +7,7 @@ services:
       visual-anomaly:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "doc-ver-api:8080/health"]
+      test: ["CMD", "wget", "-qO-", "doc-ver-api:8080/health/ready"]
       interval: 15s
       timeout: 10s
       retries: 5
@@ -16,7 +16,7 @@ services:
     environment:
       Api__CorsMethods: "GET,POST,OPTIONS"
       Api__CorsOrigins: ${ALLOWED_ORIGINS}
-      Runner__Pools__3.0__Address: "doc-ver-runner:8081"
+      Runner__Pools__3.0__Address: "http://doc-ver-runner:8081"
     deploy:
       resources:
         limits:
