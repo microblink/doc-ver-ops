@@ -84,7 +84,7 @@ services:
       - --model_name=664f60f083f1d72d549f88f4
       - --model_base_path=/models/664f60f083f1d72d549f88f4
     healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr", "s664f60f083f1d72d549f88f4s:8001"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s664f60f083f1d72d549f88f4s:8500", "-model-name", "664f60f083f1d72d549f88f4", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -112,7 +112,7 @@ services:
       - --model_base_path=/models/6647158183f1d72d549f88e4
 
     healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr", "s6647158183f1d72d549f88e4s:8001"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s6647158183f1d72d549f88e4s:8500", "-model-name", "6647158183f1d72d549f88e4", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -139,7 +139,7 @@ services:
       - --model_name=664f60da83f1d72d549f88f3
       - --model_base_path=/models/664f60da83f1d72d549f88f3
     healthcheck:
-      test: ["CMD", "grpc_health_probe", "-addr", "s664f60da83f1d72d549f88f3s:8001"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s664f60da83f1d72d549f88f3s:8500", "-model-name", "664f60da83f1d72d549f88f3", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
