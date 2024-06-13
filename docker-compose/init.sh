@@ -1,7 +1,6 @@
 #!/bin/bash
 
 deploymentName="$1"
-
 licenceKey="$2"
 licensee="$3"
 
