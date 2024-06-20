@@ -9,5 +9,7 @@ metadata:
 stringData:
   # This key is expected to be in secret provisioned to `doc-ver-api` service
   LICENSE_KEY: {{ .Values.auth.license.licenseKey | required "if auth.license.createSecret is set, auth.license.licenseKey value must be provided" }}
+  Executor__LicenseKey: {{ .Values.auth.license.licenseKey | required "if auth.license.createSecret is set, auth.license.licenseKey value must be provided" }}
+  Executor__ApplicationId: {{ .Values.auth.license.applicationId | required "if auth.license.createSecret is set, auth.license.applicationId value must be provided" }}
 type: Opaque
 {{ end }}

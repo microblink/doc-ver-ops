@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square)
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -30,8 +30,8 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.13.0 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.0 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.13.2 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
 | https://helm.microblink.com/charts | embedding-store | 0.3.12 |
@@ -309,7 +309,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | docver-runner.enabled | bool | `true` |  |
 | docver-runner.env.Executor__ApplicationId | string | `""` |  |
-| docver-runner.env.Executor__LicenseKey | string | `""` |  |
 | docver-runner.env.Executor__ModelServingSsl | string | `"false"` |  |
 | docver-runner.env.Executor__ModelServingUrl | string | `"bundle-doc-ver-core-versions-mp:8005"` |  |
 | docver-runner.extraSecrets[0] | string | `"license-key"` |  |
