@@ -2,7 +2,7 @@ version: '3'
 
 services:
   doc-ver-runner:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.0.2
+    image: europe-docker.pkg.dev/microblink-identity/docver/runner:3.0.2-38b5f13 # todo: prod image
     healthcheck:
       test: ["CMD", "curl", "-f", "doc-ver-runner:8080/health/ready" ]
       interval: 15s
