@@ -3,7 +3,7 @@
 This repository holds "operational" package deliveries for deploying Microblinks document verification solution.
 
 ## DocVer app version
-`3.0.0`
+`3.0.3`
 
 ## Pre-requisites
 ### Your licence key
