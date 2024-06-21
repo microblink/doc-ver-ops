@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.0.2"
+    tag: "3.0.3"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -100,7 +100,7 @@ doc-ver-api:
     pathType: ImplementationSpecific
 
   env:
-    Runner__Pools__3.0.1__Address: "dns:///docver-runner:8081"
+    Runner__Pools__3.0__Address: "dns:///docver-runner:8081"
   # -- deployment node selector
   nodeSelector: {}
   # -- deployment tolerations
@@ -699,7 +699,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.0.2"
+    tag: "3.0.3"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
