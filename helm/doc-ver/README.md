@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square)
+![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -66,6 +66,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields  `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password  of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
 | auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
 | auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled).  if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
+| auth.license.applicationId | string | `""` | App identifier from microblink developer hub |
 | auth.license.createSecret | bool | `false` | enable if you want to create license secret as part of this charts deployment |
 | auth.license.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
 | auth.license.secretName | string | `"license-key"` | name of license-key secret, if changed, it must be updated in doc-ver-api |
@@ -258,14 +259,14 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | doc-ver-api.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | container security context |
-| doc-ver-api.env."Runner__Pools__3.0.1__Address" | string | `"dns:///docver-runner:8081"` |  |
+| doc-ver-api.env."Runner__Pools__3.0__Address" | string | `"dns:///docver-runner:8081"` |  |
 | doc-ver-api.extraCMS | list | `[]` | list of configmap names to be added to deployment environment |
 | doc-ver-api.extraSecrets | list | `["license-key"]` | list of secret names to be added to deployment environment |
 | doc-ver-api.fullnameOverride | string | `""` | if set, overrides deployment, hpa, ingress, and service metadata.name |
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.0.2"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.0.3"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -315,7 +316,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.0.2"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.0.3"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | string | `"1500m"` |  |
 | docver-runner.resources.limits.memory | string | `"1Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
