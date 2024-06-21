@@ -61,6 +61,7 @@ services:
 
   pgvector:
     image: ankane/pgvector:v0.5.1
+    shm_size: '256m'
     healthcheck:
       test: [ 'CMD', 'pg_isready', '-q', '-U', 'postgres' ]
       interval: 15s
