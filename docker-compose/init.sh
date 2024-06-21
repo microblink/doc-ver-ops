@@ -1,7 +1,6 @@
 #!/bin/bash
 
 deploymentName="$1"
-
 licenceKey="$2"
 licensee="$3"
 
@@ -25,9 +24,10 @@ cp -r template $deploymentName
 
 cd $deploymentName
 
-mkdir -p creds/doc-ver-api
+mkdir -p creds/doc-ver-runner
 
-echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-api/.env
+echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-runner/.env
+echo "APPLICATION_ID=\"$licensee\"" >> conf/doc-ver-runner/.env
 
 cdir="$(pwd)"
 

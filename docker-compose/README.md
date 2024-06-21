@@ -1,6 +1,6 @@
 # Docver docker-compose deployment
 
-Docver consists of 5 components, each of which is defined in base/<component_dir>. 
+Docver consists of six components, each of which is defined in `base/<component_dir>`.
 Both `base` and `template` directories should not be edited and you are expected to configure
 your deployment in a separate directory.
 To configure this we provide `init.sh` to easily create one or multiple deployment instances and configurations
@@ -21,7 +21,7 @@ and use it as a regular command as explained in the provided link.
 
 ### Your licence key
 
-As mentioned [here](../README.md#your-licence-key-and-service-acount-json-credentials). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
+As mentioned [here](../README.md). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
 If you are using Document verification self-hosted you will need to acquire the licence key from the licences section (under Document verification self-hosted).
 
 # Quickstart - Deploying your instance
@@ -37,19 +37,20 @@ You can do that by running the following commands
 
 ```bash
 cd docker-compose
-bash init.sh <deployment_name> <licence key>
+bash init.sh <deployment_name> <licence_key> <application_id>
 ```
 Update the values in <> with your own values.
  * `<deployment_name>` - the name of your deployment, we recommend simply using your company name
- * `<licence key>` - the licence key that you will use to authenticate. This key is acquired on developer.microblink.com under licences - document verification self-hosted.
+ * `<licence_key>` - the licence key that you will use to authenticate. This key is acquired on developer.microblink.com under licences - document verification self-hosted.
+ * `<application_id>` - application identifier. This value is acquired on developer.microblink.com under licences - document verification 
 
 This will create a new directory in the `docker-compose` directory with the `<deployment_name>` you provided. 
 This directory will contain the configuration files for your deployment runnable by a single command `docker-compose up -d`.
 
-To prevent any confusion, if for example I'm working for company `microblink` and my licence key is `someExampleString` I would run the following command:
+To prevent any confusion, if for example I'm working for company `microblink`, my licence key is `someExampleString` and application id is `myapp` I would run the following command:
 
 ```bash
-bash init.sh microblink someExampleString
+bash init.sh microblink someExampleString myapp
 ```
 
 Afterwards, I would continue to deploy my instance by running the following:
@@ -65,6 +66,7 @@ To inspect the logs of a specific service, run `docker-compose logs <service_nam
 
 Available services
 * doc-ver-api
+* doc-ver-runner
 * visual-anomaly
 * retrieval-intermediary
 * embedding-store-server
@@ -123,24 +125,33 @@ Server prerequisites and configuration options for each component will be descri
 
 ## Components
 
-### [doc-ver-api](https://bitbucket.org/microblink/web-api-doc-ver/src/master/)
+### [doc-ver-api](https://bitbucket.org/microblink/docver-api/src/)
 doc-ver-api docker-compose.yaml will start one longrunning doc-ver-api server service
 #### conf
 To configure doc-ver-api, an .env file should be added to /<deployment_dir>/conf/doc-ver-api, with the following values:
 ```
 ALLOWED_ORIGINS=<string_value>
-ALLOW_CORS=<bool_value>
-AVAILABLE_WORKER_TIMEOUT_MS=<int_value>
-IMAGE_MAX_SIZE_KB=<int_value>
-LICENSEE=<string_value>
-WORKER_TIMEOUT_MS=<int_value>
+LIMITS_CPUS=<int_value>
+LIMITS_MEM=<string_value>
+RESERVATIONS_CPUS=<int_value>
+RESERVATIONS_MEM=<string_value>
+```
+##### creds
+Not needed for doc-ver-api
+
+### [doc-ver-runner](https://bitbucket.org/microblink/docver-api/src/)
+doc-ver-runner docker-compose.yaml will start one longrunning doc-ver-api server service
+#### conf
+To configure doc-ver-runner, an .env file should be added to /<deployment_dir>/conf/doc-ver-runner, with the following values:
+```
+APPLICATION_ID=<string_value>
 LIMITS_CPUS=<int_value>
 LIMITS_MEM=<string_value>
 RESERVATIONS_CPUS=<int_value>
 RESERVATIONS_MEM=<string_value>
 ```
 #### creds
-To be able to work, doc-ver-api needs a license key that you can provide in /<deployment_dir>/creds/doc-ver-api:
+To be able to work, doc-ver-runner needs a license key that you can provide in /<deployment_dir>/creds/doc-ver-runner:
 ```
 LICENSE_KEY=<string_value>
 ```

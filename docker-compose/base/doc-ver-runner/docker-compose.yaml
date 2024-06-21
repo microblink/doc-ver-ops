@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  doc-ver-runner:
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "doc-ver-runner:8080/health/ready" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    environment:
+      Executor__ApplicationId: ${APPLICATION_ID}
+      Executor__LicenseKey: ${LICENSE_KEY}
+      Executor__GeneralAnomalyServerUrl: "visual-anomaly:8080"
+      Executor__ModelServingUrl: "model-proxy:8005"
+      Executor__ModelServingSsl: false
+    deploy:
+      resources:
+        limits:
+          cpus: ${LIMITS_CPUS}
+          memory: ${LIMITS_MEM}
+        reservations:
+          cpus: ${RESERVATIONS_CPUS}
+          memory: ${RESERVATIONS_MEM}
+    networks:
+      - doc-ver-network
