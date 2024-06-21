@@ -68,4 +68,3 @@ models:
                         classNameOutput: label
                         scoreOutput: probability
               backendInferenceEngine: tfServing
-

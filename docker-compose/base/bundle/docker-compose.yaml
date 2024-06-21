@@ -22,6 +22,8 @@ services:
       - visual-anomaly-nginx:80
       - -c
       - /etc/bundle-signature.yaml
+    ports:
+      - 62010:8005 # todo: remove this port - used for debugging proxy communication
 
   visual-anomaly-nginx:
     depends_on:
@@ -74,7 +76,7 @@ services:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: eu.gcr.io/microblink-identity/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2 # todo: prod image
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2
     networks:
       - doc-ver-network
     volumes:
@@ -101,7 +103,7 @@ services:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: eu.gcr.io/microblink-identity/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2 # todo: prod image
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2
     networks:
       - doc-ver-network
     volumes:
@@ -110,7 +112,6 @@ services:
       - --enable_model_warmup
       - --model_name=6647158183f1d72d549f88e4
       - --model_base_path=/models/6647158183f1d72d549f88e4
-
     healthcheck:
       test: ["CMD", "tfs_model_status_probe", "-addr", "s6647158183f1d72d549f88e4s:8500", "-model-name", "6647158183f1d72d549f88e4", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
@@ -129,7 +130,7 @@ services:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: eu.gcr.io/microblink-identity/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2 # todo: prod image
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2
     networks:
       - doc-ver-network
     volumes:
