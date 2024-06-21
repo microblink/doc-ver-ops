@@ -15,13 +15,13 @@
     3. [Nginx router](#nginx)
         1. [Configuration](#nginx_conf)
         2. [Credentials](#nginx_creds)
-    4. [Model proxy](#model_proxy)
-        1. [Configuration](#model_proxy_conf)
-        2. [Credentials](#model_proxy_creds)
+    4. [Model proxy](#model-proxy)
+        1. [Configuration](#model-proxy_conf)
+        2. [Credentials](#model-proxy_creds)
 4. [How to deploy](#deploy)
 
 ## Introduction <div id='intro'>
-Bundle consists of 4+ services: model_proxy, visual-anomaly-nginx router, model_download and as many s<model_id>s services as there are models in the bundle.
+Bundle consists of 4+ services: model-proxy, visual-anomaly-nginx router, model_download and as many s<model_id>s services as there are models in the bundle.
 The default setup is defined in /base.
 
 /base and /example directory must not be edited, they are generated anew each time a bundle event happens (new model, new bundle-state created).
@@ -256,7 +256,7 @@ Not needed for s<model_id>s (model-serving)
 
 ### visual-anomaly-nginx <div id='nginx'>
 
-Routes requests that are sent to model_proxy to the right s<model_id>s using 'model-id' grpc metadata, longrunning service.
+Routes requests that are sent to model-proxy to the right s<model_id>s using 'model-id' grpc metadata, longrunning service.
 
 #### Configuration <div id='nginx_conf'>
 
@@ -266,18 +266,18 @@ This nginx services configuration file is generated here /<deployment_dir>/bundl
 
 Not needed for visual-anomaly-nginx
 
-### [model_proxy](https://bitbucket.org/microblink/mlp-model-proxy/src/master/) <div id='model_proxy'>
+### [model-proxy](https://bitbucket.org/microblink/mlp-model-proxy/src/master/) <div id='model-proxy'>
 
 This service is the only one that has a port exposed on the host machine, this is where users send requests.
 Unpacks request data for tensorflow serving and maps tensorflow serving outputs to user friendly outputs, longrunning service.
 
-#### Configuration <div id='model_proxy_conf'>
+#### Configuration <div id='model-proxy_conf'>
 
 This service uses the bundle-signature.yaml that was uploaded to model registry together with the model to determine types for inputs and outputs, this file shouldn't be edited.
 To use alternative arguments, other than bundle signature, you need to edit /base/bundle/docker-compose.yaml service section.
 The following example shows the green lines that you can uncomment and edit in /base/bundle/docker-compose.yaml to use other args for model proxy:
 ``` diff
-  model_proxy
+  model-proxy
       ...
     volumes:
       - ./proxy/bundle-signature.yaml:/etc/bundle-signature.yaml
@@ -303,9 +303,9 @@ MODEL_PROXY_GRPC_PORT=8005
 ...
 ```
 
-#### Credentials <div id='model_proxy_creds'>
+#### Credentials <div id='model-proxy_creds'>
 
-Not needed for model_proxy
+Not needed for model-proxy
 
 ### How to deploy <div id='deploy'>
 1. make sure [Prerequisites](#prerequisites) are satisfied on target machine
