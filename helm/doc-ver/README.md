@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.4](https://img.shields.io/badge/Version-0.5.4-informational?style=flat-square)
+![Version: 0.5.5](https://img.shields.io/badge/Version-0.5.5-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -320,10 +320,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.resources.limits.memory | string | `"1Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
 | docver-runner.resources.requests.memory | string | `"320Mi"` |  |
-| docver-runner.tolerations[0].effect | string | `"NoSchedule"` |  |
-| docver-runner.tolerations[0].key | string | `"workload"` |  |
-| docver-runner.tolerations[0].operator | string | `"Equal"` |  |
-| docver-runner.tolerations[0].value | string | `"cpu32"` |  |
+| docver-runner.tolerations | list | `[]` |  |
 | embedding-store.enabled | bool | `true` | enable embedding-store component |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
@@ -386,17 +383,12 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.image.registry | string | `"docker.io"` |  |
 | postgresql.image.repository | string | `"ankane/pgvector"` |  |
 | postgresql.image.tag | string | `"v0.5.1"` |  |
-| postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchLabels."app.kubernetes.io/component" | string | `"primary"` |  |
-| postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchLabels."app.kubernetes.io/instance" | string | `"argo-wf"` |  |
-| postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchLabels."app.kubernetes.io/name" | string | `"postgresql"` |  |
-| postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.namespaces[0] | string | `"placeholder"` |  |
-| postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey | string | `"kubernetes.io/hostname"` |  |
-| postgresql.primary.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight | int | `1` |  |
+| postgresql.primary.affinity | object | `{}` |  |
 | postgresql.primary.args[0] | string | `"-c"` |  |
 | postgresql.primary.args[1] | string | `"config_file=/bitnami/postgresql/conf/postgresql.conf"` |  |
 | postgresql.primary.configuration | string | `"max_connections = 1000\nshared_buffers = 18GB\neffective_cache_size = 24GB\nmaintenance_work_mem = 1GB\ncheckpoint_completion_target = 0.9\nwal_buffers = 16MB\ndefault_statistics_target = 1000\nrandom_page_cost = 1.1\neffective_io_concurrency = 300\nwork_mem = 2MB\nhuge_pages = off\nmin_wal_size = 2GB\nmax_wal_size = 4GB\nmax_worker_processes = 10\nmax_parallel_workers_per_gather = 4\nmax_parallel_workers = 10\nmax_parallel_maintenance_workers = 4\n\nwal_level = minimal\nmax_wal_senders = 0\n\nlisten_addresses = '*'\n"` |  |
 | postgresql.primary.livenessProbe.failureThreshold | int | `600` |  |
-| postgresql.primary.nodeSelector.workload | string | `"postgre-db"` |  |
+| postgresql.primary.nodeSelector | object | `{}` |  |
 | postgresql.primary.persistence.enabled | bool | `true` |  |
 | postgresql.primary.persistence.size | string | `"500Gi"` |  |
 | postgresql.primary.persistence.storageClass | string | `"default"` |  |
@@ -405,14 +397,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | postgresql.primary.resources.requests.cpu | int | `6` |  |
 | postgresql.primary.resources.requests.memory | string | `"20Gi"` |  |
 | postgresql.primary.service.type | string | `"ClusterIP"` |  |
-| postgresql.primary.tolerations[0].effect | string | `"NoSchedule"` |  |
-| postgresql.primary.tolerations[0].key | string | `"kubernetes.io/workload"` |  |
-| postgresql.primary.tolerations[0].operator | string | `"Equal"` |  |
-| postgresql.primary.tolerations[0].value | string | `"storage"` |  |
-| postgresql.primary.tolerations[1].effect | string | `"NoSchedule"` |  |
-| postgresql.primary.tolerations[1].key | string | `"kubernetes.io/workload"` |  |
-| postgresql.primary.tolerations[1].operator | string | `"Equal"` |  |
-| postgresql.primary.tolerations[1].value | string | `"postgre-db"` |  |
+| postgresql.primary.tolerations | list | `[]` |  |
 | visual-anomaly.affinity | object | `{}` | deployment affinity |
 | visual-anomaly.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | visual-anomaly.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
