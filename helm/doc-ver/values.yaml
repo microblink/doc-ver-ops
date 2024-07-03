@@ -356,31 +356,10 @@ postgresql:
       requests:
         cpu: 6
         memory: "20Gi"
-    nodeSelector:
-      workload: postgre-db
-    tolerations:
-      - key: "kubernetes.io/workload"
-        operator: "Equal"
-        value: "storage"
-        effect: "NoSchedule"
-      - key: "kubernetes.io/workload"
-        operator: "Equal"
-        value: "postgre-db"
-        effect: "NoSchedule"
+    nodeSelector: {}
+    tolerations: []
     # Patch to prevent postgre chart bug
-    affinity:
-      podAntiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: postgresql
-                  app.kubernetes.io/instance: argo-wf
-                  app.kubernetes.io/component: primary
-              namespaces:
-                - "placeholder"
-              topologyKey: kubernetes.io/hostname
-            weight: 1
+    affinity: {}
     livenessProbe:
       failureThreshold: 600
     configuration: |
@@ -722,11 +701,7 @@ docver-runner:
     limits:
       cpu: 1500m
       memory: 1Gi
-  tolerations:
-    - key: "workload"
-      operator: "Equal"
-      value: "cpu32"
-      effect: "NoSchedule"
+  tolerations: []
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
