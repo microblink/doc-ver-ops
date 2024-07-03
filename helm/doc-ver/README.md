@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square)
+![Version: 0.5.4](https://img.shields.io/badge/Version-0.5.4-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -309,7 +309,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.containerSecurityContext.runAsUser | int | `65534` |  |
 | docver-runner.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | docver-runner.enabled | bool | `true` |  |
-| docver-runner.env.Executor__ApplicationId | string | `""` |  |
 | docver-runner.env.Executor__ModelServingSsl | string | `"false"` |  |
 | docver-runner.env.Executor__ModelServingUrl | string | `"bundle-doc-ver-core-versions-mp:8005"` |  |
 | docver-runner.extraSecrets[0] | string | `"license-key"` |  |
