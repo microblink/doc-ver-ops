@@ -682,6 +682,8 @@ docver-runner:
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
+    ## MUST add this ENV variable if VA is enabled
+    #Executor__GeneralAnomalyServerUrl: "doc-ver-visual-anomaly:8080"
   extraSecrets:
     - license-key
   autoscaling:
