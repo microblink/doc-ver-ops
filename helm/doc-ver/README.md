@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.5](https://img.shields.io/badge/Version-0.5.5-informational?style=flat-square)
+![Version: 0.5.6](https://img.shields.io/badge/Version-0.5.6-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
