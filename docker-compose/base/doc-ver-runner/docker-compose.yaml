@@ -11,7 +11,7 @@ services:
     environment:
       Executor__ApplicationId: ${APPLICATION_ID}
       Executor__LicenseKey: ${LICENSE_KEY}
-      Executor__GeneralAnomalyServerUrl: "visual-anomaly:8080"
+      Executor__GeneralAnomalyServerUrl: "${VA_URL}"
       Executor__ModelServingUrl: "model-proxy:8005"
       Executor__ModelServingSsl: false
     deploy:
