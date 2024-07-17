@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.1.0"
+    tag: "3.2.1"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -430,7 +430,7 @@ bundle-visual-anomaly-core-versions:
       containerSecurityContext: {}
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.17.7
+        tag: v0.19.2
       minLimits:
         cpu: 500m
         memory: "1Gi"
@@ -535,7 +535,7 @@ bundle-doc-ver-core-versions:
                   enabled: false
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-              tag: v0.17.7
+              tag: v0.19.2
               pullPolicy: IfNotPresent
           service:
               type: ClusterIP
@@ -638,36 +638,27 @@ bundle-doc-ver-core-versions:
           labels: {}
           replicaCount: ""
   models:
-      664f60da83f1d72d549f88f3:
+      667a8f0b76c3ea3a32fcd565:
           model:
               repository: photocopy-classifier-contextual-unified
               project: doc-ver
-              version: 7.0.1
+              version: 7.1.0
           engine:
               type: tfServing
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
-      664f60f083f1d72d549f88f4:
-          model:
-              repository: photocopy-classifier-per-pixel-unified
-              project: doc-ver
-              version: 7.0.1
-          engine:
-              type: tfServing
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0
-      6647158183f1d72d549f88e4:
+      6684168e04248f708c1e0c93:
           model:
               repository: photo-fraud-classifier
               project: doc-ver
-              version: 7.0.2
+              version: 7.1.3
           engine:
               type: tfServing
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
+
 
 docver-runner:
   enabled: true
@@ -678,7 +669,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.1.0"
+    tag: "3.2.1"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
