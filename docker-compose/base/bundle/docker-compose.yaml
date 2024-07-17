@@ -75,7 +75,7 @@ services:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu:v2.13.0-broadwell
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0
     networks:
       - doc-ver-network
     volumes:
@@ -101,7 +101,7 @@ services:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu:v2.13.0-broadwell
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0
     networks:
       - doc-ver-network
     volumes:
