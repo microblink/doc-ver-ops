@@ -5,7 +5,7 @@ services:
     depends_on:
       visual-anomaly-nginx:
         condition: service_healthy
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.17.7
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.19.2
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "model-proxy:8005"]
       interval: 15s
@@ -29,11 +29,9 @@ services:
     depends_on:
       s6478fcb410dcce6d3b037199s:
         condition: service_healthy
-      s664f60f083f1d72d549f88f4s:
+      s6684168e04248f708c1e0c93s:
         condition: service_healthy
-      s6647158183f1d72d549f88e4s:
-        condition: service_healthy
-      s664f60da83f1d72d549f88f3s:
+      s667a8f0b76c3ea3a32fcd565s:
         condition: service_healthy
     image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
     healthcheck:
@@ -72,86 +70,59 @@ services:
           cpus: ${SERVING_6478fcb410dcce6d3b037199_CPU_RESERVATION}
           memory: ${SERVING_6478fcb410dcce6d3b037199_MEM_RESERVATION}
 
-  s664f60f083f1d72d549f88f4s:
-    depends_on:
-      model_download:
-        condition: service_completed_successfully
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2
-    networks:
-      - doc-ver-network
-    volumes:
-      - ./model-serving/model-download/models/664f60f083f1d72d549f88f4:/models/664f60f083f1d72d549f88f4
-    command:
-      - --enable_model_warmup
-      - --model_name=664f60f083f1d72d549f88f4
-      - --model_base_path=/models/664f60f083f1d72d549f88f4
-    healthcheck:
-      test: ["CMD", "tfs_model_status_probe", "-addr", "s664f60f083f1d72d549f88f4s:8500", "-model-name", "664f60f083f1d72d549f88f4", "-model-version", "1", "|", "grep", "AVAILABLE"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: ${SERVING_664f60f083f1d72d549f88f4_CPU_LIMIT}
-          memory: ${SERVING_664f60f083f1d72d549f88f4_MEM_LIMIT}
-        reservations:
-          cpus: ${SERVING_664f60f083f1d72d549f88f4_CPU_RESERVATION}
-          memory: ${SERVING_664f60f083f1d72d549f88f4_MEM_RESERVATION}
 
-  s6647158183f1d72d549f88e4s:
+  s6684168e04248f708c1e0c93s:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2
+    image: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu:v2.13.0-broadwell
     networks:
       - doc-ver-network
     volumes:
-      - ./model-serving/model-download/models/6647158183f1d72d549f88e4:/models/6647158183f1d72d549f88e4
+      - ./model-serving/model-download/models/6684168e04248f708c1e0c93:/models/6684168e04248f708c1e0c93
     command:
       - --enable_model_warmup
-      - --model_name=6647158183f1d72d549f88e4
-      - --model_base_path=/models/6647158183f1d72d549f88e4
+      - --model_name=6684168e04248f708c1e0c93
+      - --model_base_path=/models/6684168e04248f708c1e0c93
     healthcheck:
-      test: ["CMD", "tfs_model_status_probe", "-addr", "s6647158183f1d72d549f88e4s:8500", "-model-name", "6647158183f1d72d549f88e4", "-model-version", "1", "|", "grep", "AVAILABLE"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s6684168e04248f708c1e0c93s:8500", "-model-name", "6684168e04248f708c1e0c93", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
     deploy:
       resources:
         limits:
-          cpus: ${SERVING_6647158183f1d72d549f88e4_CPU_LIMIT}
-          memory: ${SERVING_6647158183f1d72d549f88e4_MEM_LIMIT}
+          cpus: ${SERVING_6684168e04248f708c1e0c93_CPU_LIMIT}
+          memory: ${SERVING_6684168e04248f708c1e0c93_MEM_LIMIT}
         reservations:
-          cpus: ${SERVING_6647158183f1d72d549f88e4_CPU_RESERVATION}
-          memory: ${SERVING_6647158183f1d72d549f88e4_MEM_RESERVATION}
-
-  s664f60da83f1d72d549f88f3s:
+          cpus: ${SERVING_6684168e04248f708c1e0c93_CPU_RESERVATION}
+          memory: ${SERVING_6684168e04248f708c1e0c93_MEM_RESERVATION}
+  s667a8f0b76c3ea3a32fcd565s:
     depends_on:
       model_download:
         condition: service_completed_successfully
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aeee2
+    image: eu.gcr.io/driven-saga-88012/tf-serving-kira-native-cpu:v2.13.0-broadwell
     networks:
       - doc-ver-network
     volumes:
-      - ./model-serving/model-download/models/664f60da83f1d72d549f88f3:/models/664f60da83f1d72d549f88f3
+      - ./model-serving/model-download/models/667a8f0b76c3ea3a32fcd565:/models/667a8f0b76c3ea3a32fcd565
     command:
       - --enable_model_warmup
-      - --model_name=664f60da83f1d72d549f88f3
-      - --model_base_path=/models/664f60da83f1d72d549f88f3
+      - --model_name=667a8f0b76c3ea3a32fcd565
+      - --model_base_path=/models/667a8f0b76c3ea3a32fcd565
     healthcheck:
-      test: ["CMD", "tfs_model_status_probe", "-addr", "s664f60da83f1d72d549f88f3s:8500", "-model-name", "664f60da83f1d72d549f88f3", "-model-version", "1", "|", "grep", "AVAILABLE"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s667a8f0b76c3ea3a32fcd565s:8500", "-model-name", "667a8f0b76c3ea3a32fcd565", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
     deploy:
       resources:
         limits:
-          cpus: ${SERVING_664f60da83f1d72d549f88f3_CPU_LIMIT}
-          memory: ${SERVING_664f60da83f1d72d549f88f3_MEM_LIMIT}
+          cpus: ${SERVING_667a8f0b76c3ea3a32fcd565_CPU_LIMIT}
+          memory: ${SERVING_667a8f0b76c3ea3a32fcd565_MEM_LIMIT}
         reservations:
-          cpus: ${SERVING_664f60da83f1d72d549f88f3_CPU_RESERVATION}
-          memory: ${SERVING_664f60da83f1d72d549f88f3_MEM_RESERVATION}
+          cpus: ${SERVING_667a8f0b76c3ea3a32fcd565_CPU_RESERVATION}
+          memory: ${SERVING_667a8f0b76c3ea3a32fcd565_MEM_RESERVATION}
 
 
   model_download:
