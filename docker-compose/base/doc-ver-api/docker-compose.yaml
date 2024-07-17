@@ -2,7 +2,7 @@ version: "3"
 
 services:
   doc-ver-api:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:3.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:3.2
     # depends_on:
     #   visual-anomaly:
     #     condition: service_healthy
@@ -16,7 +16,7 @@ services:
     environment:
       Api__CorsMethods: "GET,POST,OPTIONS"
       Api__CorsOrigins: ${ALLOWED_ORIGINS}
-      Runner__Pools__3.0__Address: "http://doc-ver-runner:8081"
+      Runner__Pools__3.2__Address: "http://doc-ver-runner:8081"
     deploy:
       resources:
         limits:
