@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.6](https://img.shields.io/badge/Version-0.5.6-informational?style=flat-square)
+![Version: 0.5.7](https://img.shields.io/badge/Version-0.5.7-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -30,7 +30,7 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.13.2 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.17.0 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
@@ -134,7 +134,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.17.7"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.19.2"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.className | string | `"nginx"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.host | string | `""` |  |
@@ -190,24 +190,18 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.serving.syncJob.podSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
 | bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.6647158183f1d72d549f88e4.model.version | string | `"7.0.2"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
-| bundle-doc-ver-core-versions.models.664f60da83f1d72d549f88f3.model.version | string | `"7.0.1"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.repository | string | `"photocopy-classifier-per-pixel-unified"` |  |
-| bundle-doc-ver-core-versions.models.664f60f083f1d72d549f88f4.model.version | string | `"7.0.1"` |  |
+| bundle-doc-ver-core-versions.models.667a8f0b76c3ea3a32fcd565.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.667a8f0b76c3ea3a32fcd565.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.667a8f0b76c3ea3a32fcd565.image.tag | string | `"v2.13.0"` |  |
+| bundle-doc-ver-core-versions.models.667a8f0b76c3ea3a32fcd565.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.667a8f0b76c3ea3a32fcd565.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
+| bundle-doc-ver-core-versions.models.667a8f0b76c3ea3a32fcd565.model.version | string | `"7.1.0"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.tag | string | `"v2.13.0"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.version | string | `"7.1.3"` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
@@ -224,7 +218,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.proxy.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.bundle.proxy.env.GOGC | string | `"50"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.17.7"` |  |
+| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.19.2"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
@@ -266,7 +260,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.1.0"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.2.1"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -315,7 +309,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.1.0"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.2.1"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | string | `"1500m"` |  |
 | docver-runner.resources.limits.memory | string | `"1Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
