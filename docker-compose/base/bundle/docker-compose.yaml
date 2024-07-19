@@ -22,8 +22,6 @@ services:
       - visual-anomaly-nginx:80
       - -c
       - /etc/bundle-signature.yaml
-    ports:
-      - 62010:8005 # todo: remove this port - used for debugging proxy communication
 
   visual-anomaly-nginx:
     depends_on:
