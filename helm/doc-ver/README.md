@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.7](https://img.shields.io/badge/Version-0.5.7-informational?style=flat-square)
+![Version: 0.5.8](https://img.shields.io/badge/Version-0.5.7-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -309,7 +309,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.2.1"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.2.2"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | string | `"1500m"` |  |
 | docver-runner.resources.limits.memory | string | `"1Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
