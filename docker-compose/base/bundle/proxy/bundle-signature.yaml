@@ -26,7 +26,7 @@ models:
     photo-fraud-classifier:
         backendInferenceEngine: tfServing
         models:
-            - id: 6647158183f1d72d549f88e4
+            - id: 6684168e04248f708c1e0c93
               modelSgn:
                 inputs:
                     - typeId: Image
@@ -41,7 +41,7 @@ models:
     photocopy-classifier-contextual-unified:
         backendInferenceEngine: tfServing
         models:
-            - id: 664f60da83f1d72d549f88f3
+            - id: 667a8f0b76c3ea3a32fcd565
               modelSgn:
                 inputs:
                     - typeId: Image
@@ -53,18 +53,5 @@ models:
                         classNameOutput: label
                         scoreOutput: probability
               backendInferenceEngine: tfServing
-    photocopy-classifier-per-pixel-unified:
-        backendInferenceEngine: tfServing
-        models:
-            - id: 664f60f083f1d72d549f88f4
-              modelSgn:
-                inputs:
-                    - typeId: Image
-                      params:
-                        imageInputKey: image_input
-                outputs:
-                    - typeId: MaxClassification
-                      params:
-                        classNameOutput: label
-                        scoreOutput: probability
-              backendInferenceEngine: tfServing
+
+
