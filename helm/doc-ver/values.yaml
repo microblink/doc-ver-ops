@@ -218,9 +218,9 @@ anomdet-intermediary:
 
   # -- do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release
   anomdetIntermediaryConfig:
-    model-id: "6478fcb410dcce6d3b037199"
+    model-id: "6687ad3b04248f708c1e0c95"
     model-name: "visual-anomaly"
-    collection-name: mdv-1519
+    collection-name: mdv-1818
     # -- each verification request will start ~200 queries, using 10000 to support have max of 50 RPS rate
     # -- without blocking the requests in a sequence
     parallel-queries: 10000
@@ -258,7 +258,7 @@ embedding-store:
         enabled: true
         isPublic: true
         bucket: "document-verification-va-releases"
-        prefix: "full-db-1519/6478fcb410dcce6d3b037199"
+        prefix: "6687ad3b04248f708c1e0c95/mdv_1818_release_reduce_f4b969d6b91e4a7d80d37d0355404ab0_768_best"
     resources:
       limits:
         cpu: 1
@@ -461,7 +461,7 @@ bundle-visual-anomaly-core-versions:
             bucket: identity-enc-models-public
             isPublic: true
   models:
-    6478fcb410dcce6d3b037199:
+    6687ad3b04248f708c1e0c95:
       # Model resources can be reduced, however, it is not recommended if
       # the model is used in production. 
       minLimits:
@@ -644,7 +644,19 @@ bundle-doc-ver-core-versions:
               project: doc-ver
               version: 7.1.0
           engine:
-              type: tfServing
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 2
+              inter_op: 2
+          env:
+            OMP_NUM_THREADS: 2
+          minLimits:
+            cpu: 2
+            memory: "1Gi"
+          maxLimits:
+            cpu: 3
+            memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
@@ -654,7 +666,19 @@ bundle-doc-ver-core-versions:
               project: doc-ver
               version: 7.1.3
           engine:
-              type: tfServing
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 1
+              inter_op: 1
+          env:
+            OMP_NUM_THREADS: 1
+          minLimits:
+            cpu: 1
+            memory: "1Gi"
+          maxLimits:
+            cpu: 2
+            memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
