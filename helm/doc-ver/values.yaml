@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.2.1"
+    tag: "3.3.1"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -638,23 +638,47 @@ bundle-doc-ver-core-versions:
           labels: {}
           replicaCount: ""
   models:
-      667a8f0b76c3ea3a32fcd565:
+      66a0a678fb85edd8517b6af5:
           model:
               repository: photocopy-classifier-contextual-unified
               project: doc-ver
-              version: 7.1.0
+              version: 8.1.0
           engine:
-              type: tfServing
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 2
+              inter_op: 1
+          env:
+            OMP_NUM_THREADS: 2
+          minLimits:
+            cpu: 2
+            memory: "2Gi"
+          maxLimits:
+            cpu: 3
+            memory: "2Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
-      6684168e04248f708c1e0c93:
+      66a00cd7fb85edd8517b6af3:
           model:
               repository: photo-fraud-classifier
               project: doc-ver
-              version: 7.1.3
+              version: 8.0.0
           engine:
-              type: tfServing
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 1
+              inter_op: 1
+          env:
+            OMP_NUM_THREADS: 1
+          minLimits:
+            cpu: 1
+            memory: "1Gi"
+          maxLimits:
+            cpu: 2
+            memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0

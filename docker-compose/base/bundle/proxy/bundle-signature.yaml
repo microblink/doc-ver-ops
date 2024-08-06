@@ -26,7 +26,7 @@ models:
     photo-fraud-classifier:
         backendInferenceEngine: tfServing
         models:
-            - id: 6684168e04248f708c1e0c93
+            - id: 66a00cd7fb85edd8517b6af3
               modelSgn:
                 inputs:
                     - typeId: Image
@@ -41,7 +41,7 @@ models:
     photocopy-classifier-contextual-unified:
         backendInferenceEngine: tfServing
         models:
-            - id: 667a8f0b76c3ea3a32fcd565
+            - id: 66a0a678fb85edd8517b6af5
               modelSgn:
                 inputs:
                     - typeId: Image
