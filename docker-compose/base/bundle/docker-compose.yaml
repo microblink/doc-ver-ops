@@ -27,9 +27,9 @@ services:
     depends_on:
       s6478fcb410dcce6d3b037199s:
         condition: service_healthy
-      s6684168e04248f708c1e0c93s:
+      s66a00cd7fb85edd8517b6af3s:
         condition: service_healthy
-      s667a8f0b76c3ea3a32fcd565s:
+      s66a0a678fb85edd8517b6af5s:
         condition: service_healthy
     image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
     healthcheck:
@@ -69,7 +69,7 @@ services:
           memory: ${SERVING_6478fcb410dcce6d3b037199_MEM_RESERVATION}
 
 
-  s6684168e04248f708c1e0c93s:
+  s66a00cd7fb85edd8517b6af3s:
     depends_on:
       model_download:
         condition: service_completed_successfully
@@ -77,25 +77,25 @@ services:
     networks:
       - doc-ver-network
     volumes:
-      - ./model-serving/model-download/models/6684168e04248f708c1e0c93:/models/6684168e04248f708c1e0c93
+      - ./model-serving/model-download/models/66a00cd7fb85edd8517b6af3:/models/66a00cd7fb85edd8517b6af3
     command:
       - --enable_model_warmup
-      - --model_name=6684168e04248f708c1e0c93
-      - --model_base_path=/models/6684168e04248f708c1e0c93
+      - --model_name=66a00cd7fb85edd8517b6af3
+      - --model_base_path=/models/66a00cd7fb85edd8517b6af3
     healthcheck:
-      test: ["CMD", "tfs_model_status_probe", "-addr", "s6684168e04248f708c1e0c93s:8500", "-model-name", "6684168e04248f708c1e0c93", "-model-version", "1", "|", "grep", "AVAILABLE"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s66a00cd7fb85edd8517b6af3s:8500", "-model-name", "66a00cd7fb85edd8517b6af3", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
     deploy:
       resources:
         limits:
-          cpus: ${SERVING_6684168e04248f708c1e0c93_CPU_LIMIT}
-          memory: ${SERVING_6684168e04248f708c1e0c93_MEM_LIMIT}
+          cpus: ${SERVING_66a00cd7fb85edd8517b6af3_CPU_LIMIT}
+          memory: ${SERVING_66a00cd7fb85edd8517b6af3_MEM_LIMIT}
         reservations:
-          cpus: ${SERVING_6684168e04248f708c1e0c93_CPU_RESERVATION}
-          memory: ${SERVING_6684168e04248f708c1e0c93_MEM_RESERVATION}
-  s667a8f0b76c3ea3a32fcd565s:
+          cpus: ${SERVING_66a00cd7fb85edd8517b6af3_CPU_RESERVATION}
+          memory: ${SERVING_66a00cd7fb85edd8517b6af3_MEM_RESERVATION}
+  s66a0a678fb85edd8517b6af5s:
     depends_on:
       model_download:
         condition: service_completed_successfully
@@ -103,24 +103,24 @@ services:
     networks:
       - doc-ver-network
     volumes:
-      - ./model-serving/model-download/models/667a8f0b76c3ea3a32fcd565:/models/667a8f0b76c3ea3a32fcd565
+      - ./model-serving/model-download/models/66a0a678fb85edd8517b6af5:/models/66a0a678fb85edd8517b6af5
     command:
       - --enable_model_warmup
-      - --model_name=667a8f0b76c3ea3a32fcd565
-      - --model_base_path=/models/667a8f0b76c3ea3a32fcd565
+      - --model_name=66a0a678fb85edd8517b6af5
+      - --model_base_path=/models/66a0a678fb85edd8517b6af5
     healthcheck:
-      test: ["CMD", "tfs_model_status_probe", "-addr", "s667a8f0b76c3ea3a32fcd565s:8500", "-model-name", "667a8f0b76c3ea3a32fcd565", "-model-version", "1", "|", "grep", "AVAILABLE"]
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s66a0a678fb85edd8517b6af5s:8500", "-model-name", "66a0a678fb85edd8517b6af5", "-model-version", "1", "|", "grep", "AVAILABLE"]
       interval: 30s
       timeout: 10s
       retries: 5
     deploy:
       resources:
         limits:
-          cpus: ${SERVING_667a8f0b76c3ea3a32fcd565_CPU_LIMIT}
-          memory: ${SERVING_667a8f0b76c3ea3a32fcd565_MEM_LIMIT}
+          cpus: ${SERVING_66a0a678fb85edd8517b6af5_CPU_LIMIT}
+          memory: ${SERVING_66a0a678fb85edd8517b6af5_MEM_LIMIT}
         reservations:
-          cpus: ${SERVING_667a8f0b76c3ea3a32fcd565_CPU_RESERVATION}
-          memory: ${SERVING_667a8f0b76c3ea3a32fcd565_MEM_RESERVATION}
+          cpus: ${SERVING_66a0a678fb85edd8517b6af5_CPU_RESERVATION}
+          memory: ${SERVING_66a0a678fb85edd8517b6af5_MEM_RESERVATION}
 
 
   model_download:
