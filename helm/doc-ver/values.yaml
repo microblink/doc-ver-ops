@@ -693,7 +693,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.2.2"
+    tag: "3.3.1"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
