@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.9](https://img.shields.io/badge/Version-0.5.9-informational?style=flat-square)
+![Version: 0.5.10](https://img.shields.io/badge/Version-0.5.10-informational?style=flat-square)
 
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
@@ -30,7 +30,7 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.17.0 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.20.1 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
@@ -276,7 +276,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.2.1"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.3.1"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
