@@ -660,11 +660,11 @@ bundle-doc-ver-core-versions:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
-      6684168e04248f708c1e0c93:
+      66a00cd7fb85edd8517b6af3:
           model:
               repository: photo-fraud-classifier
               project: doc-ver
-              version: 7.1.3
+              version: 8.0.0
           engine:
             type: tfServing
             parallelization:
