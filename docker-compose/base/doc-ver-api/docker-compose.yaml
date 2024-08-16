@@ -16,7 +16,7 @@ services:
     environment:
       Api__CorsMethods: "GET,POST,OPTIONS"
       Api__CorsOrigins: ${ALLOWED_ORIGINS}
-      Runner__Pools__3.2__Address: "http://doc-ver-runner:8081"
+      Runner__Pools__3.2__Address: "dns:///doc-ver-runner:8081"
     deploy:
       resources:
         limits:
