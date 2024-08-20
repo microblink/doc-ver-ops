@@ -50,14 +50,14 @@ doc-ver-api:
   resources:
     limits:
       # -- deployment resource cpu limit
-      cpu: 2
+      cpu: 500m
       # -- deployment resource memory limit
-      memory: 2Gi
+      memory: 1Gi
     requests:
       # -- deployment resource cpu requests
-      cpu: 1
+      cpu: 250m
       # -- deployment resource memory requests
-      memory: 1Gi
+      memory: 256Mi
   autoscaling:
     # -- if enabled, deployment will be autoscaled
     enabled: false
@@ -714,10 +714,10 @@ docver-runner:
   resources:
     requests:
       cpu: 500m
-      memory: 320Mi
+      memory: 512Mi
     limits:
-      cpu: 1500m
-      memory: 1Gi
+      cpu: 2
+      memory: 4Gi
   tolerations: []
   containerSecurityContext:
     allowPrivilegeEscalation: false
