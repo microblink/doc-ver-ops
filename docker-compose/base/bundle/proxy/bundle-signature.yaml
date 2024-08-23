@@ -26,7 +26,7 @@ models:
     photo-fraud-classifier:
         backendInferenceEngine: tfServing
         models:
-            - id: 66a00cd7fb85edd8517b6af3
+            - id: 6684168e04248f708c1e0c93
               modelSgn:
                 inputs:
                     - typeId: Image
