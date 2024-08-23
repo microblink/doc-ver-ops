@@ -1,6 +1,6 @@
 name: doc-ver
 apiVersion: v2
-version: 0.5.13
+version: 0.5.14
 dependencies:
 - name: doc-ver-api
   repository: https://helm.microblink.com/charts
@@ -32,7 +32,7 @@ dependencies:
   condition: bundle-visual-anomaly-core-versions.enabled
 - name: bundle-doc-ver-core-versions
   repository: https://helm.microblink.com/charts
-  version: 0.20.1
+  version: 0.22.0
   condition: bundle-doc-ver-core-versions.enabled
 - name: docver-runner
   repository: https://helm.microblink.com/charts
