@@ -29,7 +29,7 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.20.1 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.22.0 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
@@ -189,20 +189,20 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.serving.syncJob.podSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
 | bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.engine.parallelization.intra_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.env.OMP_NUM_THREADS | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.maxLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.maxLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.minLimits.cpu | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.minLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.66a00cd7fb85edd8517b6af3.model.version | string | `"8.0.0"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.tag | string | `"v2.13.0"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.version | string | `"7.1.3"` |  |
 | bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.enabled | bool | `true` |  |
 | bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.inter_op | int | `1` |  |
 | bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.intra_op | int | `2` |  |
