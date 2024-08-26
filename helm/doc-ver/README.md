@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.14](https://img.shields.io/badge/Version-0.5.14-informational?style=flat-square)
+![Version: 0.5.15](https://img.shields.io/badge/Version-0.5.15-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -22,6 +22,7 @@ Then you can install the chart using:
 ```bash
 helm install my-release -f <path to values file you want to use to configure the chart> microblink/doc-ver
 ```
+
 
 ## Requirements
 
@@ -275,7 +276,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.3.4"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.3.5"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
 | doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
@@ -324,7 +325,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.3.4"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.3.5"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
