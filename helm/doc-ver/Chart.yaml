@@ -1,6 +1,6 @@
 name: doc-ver
 apiVersion: v2
-version: 0.5.14
+version: 0.5.15
 dependencies:
 - name: doc-ver-api
   repository: https://helm.microblink.com/charts
