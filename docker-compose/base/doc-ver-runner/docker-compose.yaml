@@ -2,7 +2,7 @@ version: "3"
 
 services:
   doc-ver-runner:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.3.2
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.4.0
     healthcheck:
       test: ["CMD", "curl", "-f", "doc-ver-runner:8080/health/ready"]
       interval: 15s
@@ -11,7 +11,7 @@ services:
     environment:
       Executor__ApplicationId: ${APPLICATION_ID}
       Executor__LicenseKey: ${LICENSE_KEY}
-      Executor__GeneralAnomalyServerUrl: "visual-anomaly:8080"
+      Executor__GeneralAnomalyServerUrl: "${VA_URL}"
       Executor__ModelServingUrl: "model-proxy:8005"
       Executor__ModelServingSsl: false
     deploy:

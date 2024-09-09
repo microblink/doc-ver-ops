@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.3.2"
+    tag: "3.4.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -50,14 +50,14 @@ doc-ver-api:
   resources:
     limits:
       # -- deployment resource cpu limit
-      cpu: 2
+      cpu: 500m
       # -- deployment resource memory limit
-      memory: 2Gi
+      memory: 1Gi
     requests:
       # -- deployment resource cpu requests
-      cpu: 1
+      cpu: 250m
       # -- deployment resource memory requests
-      memory: 1Gi
+      memory: 256Mi
   autoscaling:
     # -- if enabled, deployment will be autoscaled
     enabled: false
@@ -660,11 +660,11 @@ bundle-doc-ver-core-versions:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
-      66a00cd7fb85edd8517b6af3:
+      6684168e04248f708c1e0c93:
           model:
               repository: photo-fraud-classifier
               project: doc-ver
-              version: 8.0.0
+              version: 7.1.3
           engine:
             type: tfServing
             parallelization:
@@ -693,7 +693,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.3.2"
+    tag: "3.4.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
@@ -714,10 +714,10 @@ docver-runner:
   resources:
     requests:
       cpu: 500m
-      memory: 320Mi
+      memory: 512Mi
     limits:
-      cpu: 1500m
-      memory: 1Gi
+      cpu: 2
+      memory: 4Gi
   tolerations: []
   containerSecurityContext:
     allowPrivilegeEscalation: false
