@@ -1,6 +1,6 @@
-# Document verification operations
+# BlinkID Verify
 
-This repository holds "operational" package deliveries for deploying Microblinks document verification solution.
+This repository holds deployment package deliveries for deploying Microblinks document verification solution.
 
 ## Pre-requisites
 ### Your licence key
@@ -22,3 +22,10 @@ If you are working within a:
 You can deploy the same service stack using `docker-compose`. The only depenency you need to
 have on the machine you wish to run our document verification solution is to have `docker` installed. For more information and install guideline plese follow the instructions in
 [docker-compose/README.md](docker-compose/README.md)
+
+
+## Product documentation
+The documentation for BlinkID Verify API is maintained [here](https://blinkidverify.docs.microblink.com/docs/category/introduction) and API reference is [here](https://blinkidverify.docs.microblink.com/docs/api/request/).
+
+## Release Notes
+Releases notes are published [here](https://blinkidverify.docs.microblink.com/docs/docver/release-notes)
