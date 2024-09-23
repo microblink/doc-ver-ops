@@ -79,15 +79,14 @@ doc-ver-api:
     # -- enable if you want to expose the service
     enabled: false
     className: ""
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: 100m
-      nginx.ingress.kubernetes.io/client-max-body-size: 50m
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-      cert-manager.io/cluster-issuer: letsencrypt-production
+    annotations: {}
+#      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+#      nginx.ingress.kubernetes.io/client-max-body-size: 50m
+#      nginx.ingress.kubernetes.io/enable-cors: "true"
+#      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+#      cert-manager.io/cluster-issuer: letsencrypt-production
     tls:
       - secretName: docver-tls
         hosts:
@@ -133,7 +132,7 @@ doc-ver-api:
   version: 2.7.0-cloud
 visual-anomaly:
   # -- enable visual-anomaly component
-  enabled: true
+  enabled: false
   # -- pod security context
   podSecurityContext: {}
   # -- container security context
@@ -181,7 +180,7 @@ visual-anomaly:
 
 anomdet-intermediary:
   # -- enable anomdet-intermediary component
-  enabled: true
+  enabled: false
   # -- pod security context
   podSecurityContext: {}
   # -- container security context
@@ -231,7 +230,7 @@ anomdet-intermediary:
 
 embedding-store:
   # -- enable embedding-store component
-  enabled: true
+  enabled: false
   seeder:
     enabled: false
     # -- pod security context
@@ -258,7 +257,7 @@ embedding-store:
         enabled: true
         isPublic: true
         bucket: "document-verification-va-releases"
-        prefix: "full-db-1519/6478fcb410dcce6d3b037199"
+        prefix: "full-db-2005/6687ad3b04248f708c1e0c95"
     resources:
       limits:
         cpu: 1
@@ -406,7 +405,7 @@ mlp-local-storage:
 
 bundle-visual-anomaly-core-versions:
   # -- enable bundle-visual-anomaly-core-versions component
-  enabled: true
+  enabled: false
   bundle:
     serving:
       # -- pod security context

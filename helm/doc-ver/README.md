@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.15](https://img.shields.io/badge/Version-0.5.15-informational?style=flat-square)
+![Version: 0.5.16](https://img.shields.io/badge/Version-0.5.16-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -33,7 +33,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.12 |
+| https://helm.microblink.com/charts | embedding-store | 0.26.0 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
@@ -50,7 +50,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target cpu usage percentage |
 | anomdet-intermediary.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | anomdet-intermediary.containerSecurityContext | object | `{}` | container security context |
-| anomdet-intermediary.enabled | bool | `true` | enable anomdet-intermediary component |
+| anomdet-intermediary.enabled | bool | `false` | enable anomdet-intermediary component |
 | anomdet-intermediary.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem"` |  |
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
 | anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
@@ -248,7 +248,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.podSecurityContext | object | `{}` | pod security context |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.podSecurityContext | object | `{}` | pod security context |
-| bundle-visual-anomaly-core-versions.enabled | bool | `true` | enable bundle-visual-anomaly-core-versions component |
+| bundle-visual-anomaly-core-versions.enabled | bool | `false` | enable bundle-visual-anomaly-core-versions component |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
 | bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
@@ -276,14 +276,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
 | doc-ver-api.image.tag | string | `"3.4.0"` | deployment docker image tag, if not set, version will be used as tag |
-| doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
-| doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/cors-allow-origin" | string | `"*"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/enable-cors" | string | `"true"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/force-ssl-redirect" | string | `"true"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"100m"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/ssl-redirect" | string | `"true"` |  |
+| doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
 | doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver/","/api/"]}` | if you want to expose the service, set the host name |
@@ -330,7 +323,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
 | docver-runner.resources.requests.memory | string | `"512Mi"` |  |
 | docver-runner.tolerations | list | `[]` |  |
-| embedding-store.enabled | bool | `true` | enable embedding-store component |
+| embedding-store.enabled | bool | `false` | enable embedding-store component |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
 | embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
@@ -348,7 +341,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.seedStore.gc.bucket | string | `"document-verification-va-releases"` |  |
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
 | embedding-store.seeder.seedStore.gc.isPublic | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-1519/6478fcb410dcce6d3b037199"` |  |
+| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-2005/6687ad3b04248f708c1e0c95"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
 | embedding-store.server.affinity | object | `{}` | server deployment affinity   |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
@@ -416,7 +409,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | visual-anomaly.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | visual-anomaly.containerSecurityContext | object | `{}` | container security context |
-| visual-anomaly.enabled | bool | `true` | enable visual-anomaly component |
+| visual-anomaly.enabled | bool | `false` | enable visual-anomaly component |
 | visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
 | visual-anomaly.image.tag | string | `"1.2.1"` |  |
 | visual-anomaly.ingress.className | string | `""` |  |

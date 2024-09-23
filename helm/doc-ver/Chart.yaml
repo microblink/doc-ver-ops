@@ -1,6 +1,6 @@
 name: doc-ver
 apiVersion: v2
-version: 0.5.15
+version: 0.5.16
 dependencies:
 - name: doc-ver-api
   repository: https://helm.microblink.com/charts
@@ -16,7 +16,7 @@ dependencies:
   condition: anomdet-intermediary.enabled
 - name: embedding-store
   repository: https://helm.microblink.com/charts
-  version: 0.3.12
+  version: 0.26.0
   condition: embedding-store.enabled
 - name: postgresql
   version: 13.2.27
