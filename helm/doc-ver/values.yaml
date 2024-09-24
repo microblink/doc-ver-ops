@@ -217,9 +217,9 @@ anomdet-intermediary:
 
   # -- do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release
   anomdetIntermediaryConfig:
-    model-id: "6478fcb410dcce6d3b037199"
+    model-id: "6687ad3b04248f708c1e0c95"
     model-name: "visual-anomaly"
-    collection-name: mdv-1519
+    collection-name: mdv-2005
     # -- each verification request will start ~200 queries, using 10000 to support have max of 50 RPS rate
     # -- without blocking the requests in a sequence
     parallel-queries: 10000

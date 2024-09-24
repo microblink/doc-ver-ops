@@ -42,7 +42,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | anomdet-intermediary.affinity | object | `{}` | deployment affinity |
-| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-1519","model-id":"6478fcb410dcce6d3b037199","model-name":"visual-anomaly","parallel-queries":10000}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
+| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-2005","model-id":"6687ad3b04248f708c1e0c95","model-name":"visual-anomaly","parallel-queries":10000}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
 | anomdet-intermediary.anomdetIntermediaryConfig.parallel-queries | int | `10000` | without blocking the requests in a sequence |
 | anomdet-intermediary.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
 | anomdet-intermediary.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
