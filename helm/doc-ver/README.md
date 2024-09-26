@@ -275,7 +275,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.4.0"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.5.1"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
@@ -317,7 +317,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.4.0"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.5.1"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
@@ -411,7 +411,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.containerSecurityContext | object | `{}` | container security context |
 | visual-anomaly.enabled | bool | `false` | enable visual-anomaly component |
 | visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
-| visual-anomaly.image.tag | string | `"1.2.1"` |  |
+| visual-anomaly.image.tag | string | `"1.3.0"` |  |
 | visual-anomaly.ingress.className | string | `""` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
 | visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
