@@ -29,8 +29,8 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.22.0 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.27.1 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.9.1 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
 | https://helm.microblink.com/charts | embedding-store | 0.26.0 |
@@ -133,7 +133,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.19.2"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.20.0"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.className | string | `"nginx"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.host | string | `""` |  |
@@ -189,34 +189,34 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.serving.syncJob.podSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
 | bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.intra_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.env.OMP_NUM_THREADS | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.maxLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.maxLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.minLimits.cpu | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.minLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.version | string | `"7.1.3"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.intra_op | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.env.OMP_NUM_THREADS | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.maxLimits.cpu | int | `3` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.minLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.minLimits.memory | string | `"2Gi"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.model.version | string | `"8.1.0"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.inter_op | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.intra_op | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.env.OMP_NUM_THREADS | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.tag | string | `"v2.13.0"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.cpu | int | `3` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.version | string | `"8.1.0"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.version | string | `"9.0.1"` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
@@ -233,7 +233,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.proxy.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.bundle.proxy.env.GOGC | string | `"50"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.19.2"` |  |
+| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.20.0"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
@@ -249,16 +249,16 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.podSecurityContext | object | `{}` | pod security context |
 | bundle-visual-anomaly-core-versions.enabled | bool | `false` | enable bundle-visual-anomaly-core-versions component |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.containerSecurityContext | object | `{}` | container security context |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.initContainerSecurityContext | object | `{}` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.podSecurityContext | object | `{}` | pod security context |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.containerSecurityContext | object | `{}` | container security context |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.engine.type | string | `"triton"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.image.tag | string | `"23.06"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.initContainerSecurityContext | object | `{}` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.maxLimits.cpu | int | `2` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.minLimits.cpu | int | `2` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.minLimits.memory | string | `"2Gi"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.podSecurityContext | object | `{}` | pod security context |
 | doc-ver-api.affinity | object | `{}` | deployment affinity |
 | doc-ver-api.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | doc-ver-api.autoscaling.cpu.target | int | `80` | target cpu usage percentage |

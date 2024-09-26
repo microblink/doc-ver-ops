@@ -429,7 +429,7 @@ bundle-visual-anomaly-core-versions:
       containerSecurityContext: {}
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.19.2
+        tag: v0.20.0
       minLimits:
         cpu: 500m
         memory: "1Gi"
@@ -460,7 +460,7 @@ bundle-visual-anomaly-core-versions:
             bucket: identity-enc-models-public
             isPublic: true
   models:
-    6478fcb410dcce6d3b037199:
+    6687ad3b04248f708c1e0c95:
       # Model resources can be reduced, however, it is not recommended if
       # the model is used in production. 
       minLimits:
@@ -534,7 +534,7 @@ bundle-doc-ver-core-versions:
                   enabled: false
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-              tag: v0.19.2
+              tag: v0.20.0
               pullPolicy: IfNotPresent
           service:
               type: ClusterIP
@@ -637,33 +637,11 @@ bundle-doc-ver-core-versions:
           labels: {}
           replicaCount: ""
   models:
-      66a0a678fb85edd8517b6af5:
+      66e2b36788703787163f0ecf:
           model:
               repository: photocopy-classifier-contextual-unified
               project: doc-ver
-              version: 8.1.0
-          engine:
-            type: tfServing
-            parallelization:
-              enabled: true
-              intra_op: 2
-              inter_op: 1
-          env:
-            OMP_NUM_THREADS: 2
-          minLimits:
-            cpu: 2
-            memory: "2Gi"
-          maxLimits:
-            cpu: 3
-            memory: "2Gi"
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0
-      6684168e04248f708c1e0c93:
-          model:
-              repository: photo-fraud-classifier
-              project: doc-ver
-              version: 7.1.3
+              version: 9.0.1
           engine:
             type: tfServing
             parallelization:
@@ -678,6 +656,28 @@ bundle-doc-ver-core-versions:
           maxLimits:
             cpu: 2
             memory: "1Gi"
+          image:
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0
+      66b61951fb85edd8517b6af6:
+          model:
+              repository: photo-fraud-classifier
+              project: doc-ver
+              version: 8.1.0
+          engine:
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 2
+              inter_op: 2
+          env:
+            OMP_NUM_THREADS: 2
+          minLimits:
+            cpu: 2
+            memory: "2Gi"
+          maxLimits:
+            cpu: 3
+            memory: "2Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0
