@@ -27,7 +27,7 @@ services:
       - "/usr/bin/intermediary"
       - "server"
       - --model-id
-      - "6478fcb410dcce6d3b037199"
+      - "6687ad3b04248f708c1e0c95"
       - --model-name
       - "visual-anomaly"
       - --model-proxy-addr

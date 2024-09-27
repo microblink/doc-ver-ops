@@ -3,7 +3,7 @@ models:
     visual-anomaly:
         backendInferenceEngine: triton
         models:
-            - id: 6478fcb410dcce6d3b037199
+            - id: 6687ad3b04248f708c1e0c95
               modelSgn:
                 inputs:
                     - typeId: Image
@@ -26,7 +26,7 @@ models:
     photo-fraud-classifier:
         backendInferenceEngine: tfServing
         models:
-            - id: 6684168e04248f708c1e0c93
+            - id: 66b61951fb85edd8517b6af6
               modelSgn:
                 inputs:
                     - typeId: Image
@@ -41,7 +41,7 @@ models:
     photocopy-classifier-contextual-unified:
         backendInferenceEngine: tfServing
         models:
-            - id: 66a0a678fb85edd8517b6af5
+            - id: 66e2b36788703787163f0ecf
               modelSgn:
                 inputs:
                     - typeId: Image
