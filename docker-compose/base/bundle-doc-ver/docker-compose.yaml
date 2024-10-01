@@ -38,7 +38,7 @@ services:
     networks:
       - doc-ver-network
     volumes:
-      - ${REL_DIR}/conf/bundle/nginx.conf:/etc/nginx/nginx.conf
+      - ${REL_DIR}/conf/bundle-doc-ver/nginx.conf:/etc/nginx/nginx.conf
 
   s66b61951fb85edd8517b6af6s:
     depends_on:
