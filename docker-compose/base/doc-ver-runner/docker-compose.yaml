@@ -12,7 +12,7 @@ services:
       Executor__ApplicationId: ${APPLICATION_ID}
       Executor__LicenseKey: ${LICENSE_KEY}
       Executor__GeneralAnomalyServerUrl: "${VA_URL}"
-#      Executor__ModelServingUrl: ""
+      Executor__ModelServingUrl: "doc-ver-model-proxy:8005"
       Executor__ModelServingSsl: false
     deploy:
       replicas: ${REPLICAS}
