@@ -1,57 +1,40 @@
-
-models:
-    visual-anomaly:
-        backendInferenceEngine: triton
-        models:
-            - id: 6687ad3b04248f708c1e0c95
-              modelSgn:
-                inputs:
-                    - typeId: Image
-                      params:
-                        decodeJpeg:
-                            channelFirstRaster: true
-                            channelOrder: RGB
-                            resize:
-                                height: 224
-                                width: 224
-                        imageInputKey: input
-                outputs:
-                    - typeId: GridEmbedding
-                      params:
-                        cols: 14
-                        keyName: output
-                        numChannels: 768
-                        rows: 14
-              backendInferenceEngine: triton
-    photo-fraud-classifier:
-        backendInferenceEngine: tfServing
-        models:
-            - id: 66b61951fb85edd8517b6af6
-              modelSgn:
-                inputs:
-                    - typeId: Image
-                      params:
-                        imageInputKey: image_input
-                outputs:
-                    - typeId: MaxClassification
-                      params:
-                        classNameOutput: label
-                        scoreOutput: probability
+models:                                                                                                                                             
+    photo-fraud-classifier:                                                                                                                         
+        backendInferenceEngine: tfServing                                                                                                           
+        models:                                                                                                                                     
+            - id: 66b61951fb85edd8517b6af6                                                                                                          
+              modelSgn:                                                                                                                             
+                inputs:                                                                                                                             
+                    - typeId: Image                                                                                                                 
+                      params:                                                                                                                       
+                        imageInputKey: image_input                                                                                                  
+                outputs:                                                                                                                            
+                    - typeId: MaxClassification                                                                                                     
+                      params:                                                                                                                       
+                        classNameOutput: label                                                                                                      
+                        scoreOutput: probability                                                                                                    
+              backendInferenceEngine: tfServing                                                                                                     
+    photocopy-classifier-contextual-unified:                                                                                                        
+        backendInferenceEngine: tfServing                                                                                                           
+        models:                                                                                                                                     
+            - id: 66e2b36788703787163f0ecf                                                                                                          
+              modelSgn:                                                                                                                             
+                inputs:                                                                                                                             
+                    - typeId: Image                                                                                                                 
+                      params:                                                                                                                       
+                        imageInputKey: image_input                                                                                                  
+                      name: image_input                                                                                                             
+                    - typeId: Quad                                                                                                                  
+                      params:                                                                                                                       
+                        quadInputKey: card_edges                                                                                                    
+                      name: card_edges                                                                                                              
+                    - typeId: Scalar                                                                                                                
+                      params:                                                                                                                       
+                        scalarInputKey: aspect_ratio                                                                                                
+                      name: aspect_ratio                                                                                                            
+                outputs:                                                                                                                            
+                    - typeId: MaxClassification                                                                                                     
+                      params:                                                                                                                       
+                        classNameOutput: label                                                                                                      
+                        scoreOutput: probability                                                                                                    
               backendInferenceEngine: tfServing
-    photocopy-classifier-contextual-unified:
-        backendInferenceEngine: tfServing
-        models:
-            - id: 66e2b36788703787163f0ecf
-              modelSgn:
-                inputs:
-                    - typeId: Image
-                      params:
-                        imageInputKey: image_input
-                outputs:
-                    - typeId: MaxClassification
-                      params:
-                        classNameOutput: label
-                        scoreOutput: probability
-              backendInferenceEngine: tfServing
-
-
