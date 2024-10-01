@@ -2,12 +2,19 @@ version: "3"
 
 include:
 
-  - path: ../base/bundle/docker-compose.yaml
-    project_directory: ../base/bundle
+  - path: ../base/bundle-va/docker-compose.yaml
+    project_directory: ../base/bundle-va
     # add service account data for model bucket to creds/bundle/gcs.json
     # https://cloud.google.com/iam/docs/service-accounts-create#creating
     env_file: 
-      - conf/bundle/.env
+      - conf/bundle-va/.env
+
+  - path: ../base/bundle-doc-ver/docker-compose.yaml
+    project_directory: ../base/bundle-doc-ver
+    # add service account data for model bucket to creds/bundle/gcs.json
+    # https://cloud.google.com/iam/docs/service-accounts-create#creating
+    env_file: 
+      - conf/bundle-doc-ver/.env
 
   - path: ../base/embedding-store/docker-compose.yaml
     project_directory: ../base/embedding-store

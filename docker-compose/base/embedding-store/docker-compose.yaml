@@ -47,13 +47,13 @@ services:
       embedding-store-server:
         condition: service_healthy
     # Comment 'command' out to disable seeder
-    command:
-      - /usr/bin/embeddingstore
-      - seeder
-      - --embedding-store-addr
-      - embedding-store-server:8005
-      - --embedding-store-secure
-      - "false"
+    #  command:
+    #  - /usr/bin/embeddingstore
+    #  - seeder
+    #  - --embedding-store-addr
+    #  - embedding-store-server:8005
+    #  - --embedding-store-secure
+    #  - "false"
     volumes:
       - ${REL_DIR}/conf/embedding-store/seeder.yaml:/var/run/embedding_store.yml
     networks:
