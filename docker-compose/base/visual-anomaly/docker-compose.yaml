@@ -2,7 +2,7 @@ version: '3'
 
 services:
   visual-anomaly:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly:1.2.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly:1.3.0
     depends_on:
       retrieval-intermediary:
         condition: service_healthy
