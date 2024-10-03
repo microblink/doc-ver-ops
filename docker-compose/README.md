@@ -140,7 +140,7 @@ RESERVATIONS_MEM=<string_value>
 Not needed for doc-ver-api
 
 ### [doc-ver-runner](https://bitbucket.org/microblink/docver-api/src/)
-doc-ver-runner docker-compose.yaml will start one longrunning doc-ver-api server service
+doc-ver-runner docker-compose.yaml will start longrunning doc-ver-runner server service. By default one process will be started, you can increase number by setting `REPLICAS` parameter.
 #### conf
 To configure doc-ver-runner, an .env file should be added to /<deployment_dir>/conf/doc-ver-runner, with the following values:
 ```
@@ -149,6 +149,7 @@ LIMITS_CPUS=<int_value>
 LIMITS_MEM=<string_value>
 RESERVATIONS_CPUS=<int_value>
 RESERVATIONS_MEM=<string_value>
+REPLICAS=<int_value>
 ```
 #### creds
 To be able to work, doc-ver-runner needs a license key that you can provide in /<deployment_dir>/creds/doc-ver-runner:

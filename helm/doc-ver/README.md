@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.15](https://img.shields.io/badge/Version-0.5.15-informational?style=flat-square)
+![Version: 0.5.16](https://img.shields.io/badge/Version-0.5.16-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -28,12 +28,12 @@ helm install my-release -f <path to values file you want to use to configure the
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
-| https://helm.microblink.com/charts | anomdet-intermediary | 0.0.10 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.22.0 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.5.2 |
+| https://helm.microblink.com/charts | anomdet-intermediary | 0.1.1 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.27.1 |
+| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.9.1 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
-| https://helm.microblink.com/charts | embedding-store | 0.3.12 |
+| https://helm.microblink.com/charts | embedding-store | 0.26.0 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
@@ -42,7 +42,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | anomdet-intermediary.affinity | object | `{}` | deployment affinity |
-| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-1519","model-id":"6478fcb410dcce6d3b037199","model-name":"visual-anomaly","parallel-queries":10000}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
+| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-2005","model-id":"6687ad3b04248f708c1e0c95","model-name":"visual-anomaly","parallel-queries":10000}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
 | anomdet-intermediary.anomdetIntermediaryConfig.parallel-queries | int | `10000` | without blocking the requests in a sequence |
 | anomdet-intermediary.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
 | anomdet-intermediary.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
@@ -50,7 +50,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target cpu usage percentage |
 | anomdet-intermediary.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
 | anomdet-intermediary.containerSecurityContext | object | `{}` | container security context |
-| anomdet-intermediary.enabled | bool | `true` | enable anomdet-intermediary component |
+| anomdet-intermediary.enabled | bool | `false` | enable anomdet-intermediary component |
 | anomdet-intermediary.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem"` |  |
 | anomdet-intermediary.ingress.enabled | bool | `false` |  |
 | anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
@@ -97,7 +97,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-aa3b3"` |  |
 | bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
@@ -133,7 +133,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.19.2"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.20.0"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.className | string | `"nginx"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.host | string | `""` |  |
@@ -189,34 +189,34 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.serving.syncJob.podSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
 | bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.parallelization.intra_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.env.OMP_NUM_THREADS | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.maxLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.maxLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.minLimits.cpu | int | `1` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.minLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.6684168e04248f708c1e0c93.model.version | string | `"7.1.3"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.parallelization.intra_op | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.env.OMP_NUM_THREADS | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.image.tag | string | `"v2.13.0"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.maxLimits.cpu | int | `3` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.minLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.minLimits.memory | string | `"2Gi"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
-| bundle-doc-ver-core-versions.models.66a0a678fb85edd8517b6af5.model.version | string | `"8.1.0"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.inter_op | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.intra_op | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.env.OMP_NUM_THREADS | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.tag | string | `"v2.13.0-aa3b3"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.cpu | int | `3` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.version | string | `"8.1.0"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-aa3b3"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.version | string | `"9.0.1"` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
@@ -233,7 +233,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.proxy.containerSecurityContext | object | `{}` | container security context |
 | bundle-visual-anomaly-core-versions.bundle.proxy.env.GOGC | string | `"50"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.19.2"` |  |
+| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.20.0"` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.cpu | int | `2` |  |
 | bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
@@ -248,17 +248,17 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.podSecurityContext | object | `{}` | pod security context |
 | bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
 | bundle-visual-anomaly-core-versions.bundle.serving.podSecurityContext | object | `{}` | pod security context |
-| bundle-visual-anomaly-core-versions.enabled | bool | `true` | enable bundle-visual-anomaly-core-versions component |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.containerSecurityContext | object | `{}` | container security context |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.engine.type | string | `"triton"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.image.tag | string | `"23.06"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.initContainerSecurityContext | object | `{}` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.minLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.models.6478fcb410dcce6d3b037199.podSecurityContext | object | `{}` | pod security context |
+| bundle-visual-anomaly-core-versions.enabled | bool | `false` | enable bundle-visual-anomaly-core-versions component |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.containerSecurityContext | object | `{}` | container security context |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.engine.type | string | `"triton"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.image.tag | string | `"23.06-12df9e90"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.initContainerSecurityContext | object | `{}` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.maxLimits.cpu | int | `2` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.minLimits.cpu | int | `2` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.minLimits.memory | string | `"2Gi"` |  |
+| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.podSecurityContext | object | `{}` | pod security context |
 | doc-ver-api.affinity | object | `{}` | deployment affinity |
 | doc-ver-api.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | doc-ver-api.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
@@ -275,15 +275,8 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.4.0"` | deployment docker image tag, if not set, version will be used as tag |
-| doc-ver-api.ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-production"` |  |
-| doc-ver-api.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/client-max-body-size" | string | `"50m"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/cors-allow-origin" | string | `"*"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/enable-cors" | string | `"true"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/force-ssl-redirect" | string | `"true"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"100m"` |  |
-| doc-ver-api.ingress.annotations."nginx.ingress.kubernetes.io/ssl-redirect" | string | `"true"` |  |
+| doc-ver-api.image.tag | string | `"3.5.2"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
 | doc-ver-api.ingress.hosts[0] | object | `{"host":"docver.microblink.com","paths":["/docver/","/api/"]}` | if you want to expose the service, set the host name |
@@ -324,13 +317,13 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.4.0"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.5.2"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
 | docver-runner.resources.requests.memory | string | `"512Mi"` |  |
 | docver-runner.tolerations | list | `[]` |  |
-| embedding-store.enabled | bool | `true` | enable embedding-store component |
+| embedding-store.enabled | bool | `false` | enable embedding-store component |
 | embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
 | embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
 | embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
@@ -348,7 +341,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.seedStore.gc.bucket | string | `"document-verification-va-releases"` |  |
 | embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
 | embedding-store.seeder.seedStore.gc.isPublic | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-1519/6478fcb410dcce6d3b037199"` |  |
+| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-2005/6687ad3b04248f708c1e0c95"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
 | embedding-store.server.affinity | object | `{}` | server deployment affinity   |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
@@ -416,9 +409,9 @@ helm install my-release -f <path to values file you want to use to configure the
 | visual-anomaly.autoscaling.memory.target | int | `80` | target memory usage percentage |
 | visual-anomaly.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | visual-anomaly.containerSecurityContext | object | `{}` | container security context |
-| visual-anomaly.enabled | bool | `true` | enable visual-anomaly component |
+| visual-anomaly.enabled | bool | `false` | enable visual-anomaly component |
 | visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
-| visual-anomaly.image.tag | string | `"1.2.1"` |  |
+| visual-anomaly.image.tag | string | `"1.3.0"` |  |
 | visual-anomaly.ingress.className | string | `""` |  |
 | visual-anomaly.ingress.enabled | bool | `false` |  |
 | visual-anomaly.nodeSelector | object | `{}` | deployment node selector |

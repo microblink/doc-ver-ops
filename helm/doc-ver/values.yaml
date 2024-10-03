@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.4.0"
+    tag: "3.5.2"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -79,15 +79,14 @@ doc-ver-api:
     # -- enable if you want to expose the service
     enabled: false
     className: ""
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: 100m
-      nginx.ingress.kubernetes.io/client-max-body-size: 50m
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-      cert-manager.io/cluster-issuer: letsencrypt-production
+    annotations: {}
+#      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+#      nginx.ingress.kubernetes.io/client-max-body-size: 50m
+#      nginx.ingress.kubernetes.io/enable-cors: "true"
+#      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+#      cert-manager.io/cluster-issuer: letsencrypt-production
     tls:
       - secretName: docver-tls
         hosts:
@@ -133,7 +132,7 @@ doc-ver-api:
   version: 2.7.0-cloud
 visual-anomaly:
   # -- enable visual-anomaly component
-  enabled: true
+  enabled: false
   # -- pod security context
   podSecurityContext: {}
   # -- container security context
@@ -159,7 +158,7 @@ visual-anomaly:
       target: 80
   image:
     repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly
-    tag: "1.2.1"
+    tag: "1.3.0"
   resources:
     limits:
       cpu: 1
@@ -181,7 +180,7 @@ visual-anomaly:
 
 anomdet-intermediary:
   # -- enable anomdet-intermediary component
-  enabled: true
+  enabled: false
   # -- pod security context
   podSecurityContext: {}
   # -- container security context
@@ -218,9 +217,9 @@ anomdet-intermediary:
 
   # -- do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release
   anomdetIntermediaryConfig:
-    model-id: "6478fcb410dcce6d3b037199"
+    model-id: "6687ad3b04248f708c1e0c95"
     model-name: "visual-anomaly"
-    collection-name: mdv-1519
+    collection-name: mdv-2005
     # -- each verification request will start ~200 queries, using 10000 to support have max of 50 RPS rate
     # -- without blocking the requests in a sequence
     parallel-queries: 10000
@@ -231,7 +230,7 @@ anomdet-intermediary:
 
 embedding-store:
   # -- enable embedding-store component
-  enabled: true
+  enabled: false
   seeder:
     enabled: false
     # -- pod security context
@@ -258,7 +257,7 @@ embedding-store:
         enabled: true
         isPublic: true
         bucket: "document-verification-va-releases"
-        prefix: "full-db-1519/6478fcb410dcce6d3b037199"
+        prefix: "full-db-2005/6687ad3b04248f708c1e0c95"
     resources:
       limits:
         cpu: 1
@@ -406,7 +405,7 @@ mlp-local-storage:
 
 bundle-visual-anomaly-core-versions:
   # -- enable bundle-visual-anomaly-core-versions component
-  enabled: true
+  enabled: false
   bundle:
     serving:
       # -- pod security context
@@ -430,7 +429,7 @@ bundle-visual-anomaly-core-versions:
       containerSecurityContext: {}
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.19.2
+        tag: v0.20.0
       minLimits:
         cpu: 500m
         memory: "1Gi"
@@ -461,7 +460,7 @@ bundle-visual-anomaly-core-versions:
             bucket: identity-enc-models-public
             isPublic: true
   models:
-    6478fcb410dcce6d3b037199:
+    6687ad3b04248f708c1e0c95:
       # Model resources can be reduced, however, it is not recommended if
       # the model is used in production. 
       minLimits:
@@ -479,7 +478,7 @@ bundle-visual-anomaly-core-versions:
       initContainerSecurityContext: {}
       image:
         repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"
-        tag: "23.06"
+        tag: "23.06-12df9e90"
 
 bundle-doc-ver-core-versions:
   # -- enable bundle-doc-ver-core-versions component
@@ -535,7 +534,7 @@ bundle-doc-ver-core-versions:
                   enabled: false
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-              tag: v0.19.2
+              tag: v0.20.0
               pullPolicy: IfNotPresent
           service:
               type: ClusterIP
@@ -573,7 +572,7 @@ bundle-doc-ver-core-versions:
       models:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0
+              tag: v2.13.0-aa3b3
               pullPolicy: IfNotPresent
           autoscaling:
               enabled: true
@@ -638,33 +637,11 @@ bundle-doc-ver-core-versions:
           labels: {}
           replicaCount: ""
   models:
-      66a0a678fb85edd8517b6af5:
+      66e2b36788703787163f0ecf:
           model:
               repository: photocopy-classifier-contextual-unified
               project: doc-ver
-              version: 8.1.0
-          engine:
-            type: tfServing
-            parallelization:
-              enabled: true
-              intra_op: 2
-              inter_op: 1
-          env:
-            OMP_NUM_THREADS: 2
-          minLimits:
-            cpu: 2
-            memory: "2Gi"
-          maxLimits:
-            cpu: 3
-            memory: "2Gi"
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0
-      6684168e04248f708c1e0c93:
-          model:
-              repository: photo-fraud-classifier
-              project: doc-ver
-              version: 7.1.3
+              version: 9.0.1
           engine:
             type: tfServing
             parallelization:
@@ -681,7 +658,29 @@ bundle-doc-ver-core-versions:
             memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0
+              tag: v2.13.0-aa3b3
+      66b61951fb85edd8517b6af6:
+          model:
+              repository: photo-fraud-classifier
+              project: doc-ver
+              version: 8.1.0
+          engine:
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 2
+              inter_op: 2
+          env:
+            OMP_NUM_THREADS: 2
+          minLimits:
+            cpu: 2
+            memory: "2Gi"
+          maxLimits:
+            cpu: 3
+            memory: "2Gi"
+          image:
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0-aa3b3
 
 
 docver-runner:
@@ -693,7 +692,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.4.0"
+    tag: "3.5.2"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"

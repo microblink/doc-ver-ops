@@ -11,13 +11,13 @@ services:
           cpus: ${RESERVATIONS_CPUS}
           memory: ${RESERVATIONS_MEM}
     depends_on:
-      model-proxy:
+      va-model-proxy:
         condition: service_healthy
       embedding-store-server:
         condition: service_healthy
-      seeder:
-        condition: service_completed_successfully
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem:v0.11.4
+      #seeder:
+      #  condition: service_completed_successfully
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem:v0.11.6
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "retrieval-intermediary:8005"]
       interval: 15s
@@ -27,11 +27,11 @@ services:
       - "/usr/bin/intermediary"
       - "server"
       - --model-id
-      - "6478fcb410dcce6d3b037199"
+      - "6687ad3b04248f708c1e0c95"
       - --model-name
       - "visual-anomaly"
       - --model-proxy-addr
-      - model-proxy:8005  
+      - va-model-proxy:8005  
       - --embedding-store-addr
       - embedding-store-server:8005 
       - --collection-name
