@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.16](https://img.shields.io/badge/Version-0.5.16-informational?style=flat-square)
+![Version: 0.5.17](https://img.shields.io/badge/Version-0.5.17-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -29,7 +29,7 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.1.1 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.27.1 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.29.2 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.9.1 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
@@ -97,7 +97,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-aa3b3"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.6.0"` |  |
 | bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
@@ -195,7 +195,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.env.OMP_NUM_THREADS | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.tag | string | `"v2.13.0-aa3b3"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.tag | string | `"v2.13.0-3.6.0"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.cpu | int | `3` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.memory | string | `"2Gi"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.cpu | int | `2` |  |
@@ -209,7 +209,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `1` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-aa3b3"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.6.0"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `1` |  |
@@ -275,7 +275,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.5.2"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.6.0"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
@@ -317,7 +317,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.5.2"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.6.0"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
 | docver-runner.resources.requests.cpu | string | `"500m"` |  |
