@@ -682,7 +682,6 @@ bundle-doc-ver-core-versions:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0-3.6.0
 
-
 docver-runner:
   enabled: true
   fullnameOverride: docver-runner
