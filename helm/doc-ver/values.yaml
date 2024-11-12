@@ -646,16 +646,16 @@ bundle-doc-ver-core-versions:
             type: tfServing
             parallelization:
               enabled: true
-              intra_op: 1
-              inter_op: 1
+              intra_op: 2
+              inter_op: 2
           env:
-            OMP_NUM_THREADS: 1
+            OMP_NUM_THREADS: 2
           minLimits:
-            cpu: 1
-            memory: "1Gi"
-          maxLimits:
             cpu: 2
-            memory: "1Gi"
+            memory: "2Gi"
+          maxLimits:
+            cpu: 3
+            memory: "2Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0-3.6.0
@@ -668,16 +668,16 @@ bundle-doc-ver-core-versions:
             type: tfServing
             parallelization:
               enabled: true
-              intra_op: 2
-              inter_op: 2
+              intra_op: 1
+              inter_op: 1
           env:
-            OMP_NUM_THREADS: 2
+            OMP_NUM_THREADS: 1
           minLimits:
-            cpu: 2
-            memory: "2Gi"
+            cpu: 1
+            memory: "1Gi"
           maxLimits:
-            cpu: 3
-            memory: "2Gi"
+            cpu: 2
+            memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0-3.6.0
