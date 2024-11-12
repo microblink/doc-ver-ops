@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.17](https://img.shields.io/badge/Version-0.5.17-informational?style=flat-square)
+![Version: 0.5.18](https://img.shields.io/badge/Version-0.5.18-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -190,30 +190,30 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.enabled | bool | `true` | enable bundle-doc-ver-core-versions component |
 | bundle-doc-ver-core-versions.fullnameOverride | string | `"bundle-doc-ver-core-versions"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.inter_op | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.intra_op | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.parallelization.intra_op | int | `1` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.env.OMP_NUM_THREADS | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.env.OMP_NUM_THREADS | int | `1` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.image.tag | string | `"v2.13.0-3.6.0"` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.cpu | int | `3` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.minLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.repository | string | `"photo-fraud-classifier"` |  |
 | bundle-doc-ver-core-versions.models.66b61951fb85edd8517b6af6.model.version | string | `"8.1.0"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.inter_op | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.parallelization.intra_op | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.6.0"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `1` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `3` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"2Gi"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.memory | string | `"2Gi"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.version | string | `"9.0.1"` |  |
