@@ -274,7 +274,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.6.0"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.7.0"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
