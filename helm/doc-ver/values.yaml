@@ -655,7 +655,7 @@ bundle-doc-ver-core-versions:
             memory: "2Gi"
           maxLimits:
             cpu: 3
-            memory: "2Gi"
+            memory: "3Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
               tag: v2.13.0-3.6.0
@@ -692,7 +692,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.6.0"
+    tag: "3.7.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
