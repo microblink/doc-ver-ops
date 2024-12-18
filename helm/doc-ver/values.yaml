@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.7.0"
+    tag: "3.8.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -478,7 +478,7 @@ bundle-visual-anomaly-core-versions:
       initContainerSecurityContext: {}
       image:
         repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"
-        tag: "23.06-12df9e90"
+        tag: "23.06-3.8.0"
 
 bundle-doc-ver-core-versions:
   # -- enable bundle-doc-ver-core-versions component
@@ -492,7 +492,7 @@ bundle-doc-ver-core-versions:
               httpPort: "8501"
           nginx:
               enabled: true
-              resolver: coredns.kube-system
+              resolver: kube-dns.kube-system.svc.cluster.local
               timeout: 600s
               keepaliveRequests: "1000"
               keepalive: "320"
@@ -572,7 +572,7 @@ bundle-doc-ver-core-versions:
       models:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.6.0
+              tag: v2.13.0-3.8.0
               pullPolicy: IfNotPresent
           autoscaling:
               enabled: true
@@ -658,12 +658,12 @@ bundle-doc-ver-core-versions:
             memory: "3Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.6.0
-      66b61951fb85edd8517b6af6:
+              tag: v2.13.0-3.8.0
+      675617eaf2b370625691522f:
           model:
               repository: photo-fraud-classifier
               project: doc-ver
-              version: 8.1.0
+              version: 8.2.0
           engine:
             type: tfServing
             parallelization:
@@ -680,7 +680,7 @@ bundle-doc-ver-core-versions:
             memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.6.0
+              tag: v2.13.0-3.8.0
 
 
 docver-runner:
@@ -692,7 +692,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.7.0"
+    tag: "3.8.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
