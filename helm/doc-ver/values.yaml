@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.9.0"
+    tag: "3.10.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -100,6 +100,8 @@ doc-ver-api:
 
   env:
     Runner__Pools__3.0__Address: "dns:///docver-runner:8081"
+    Api__PermitLimit: "1"
+    Api__QueueLimit: "10"
   # -- deployment node selector
   nodeSelector: {}
   # -- deployment tolerations
@@ -692,10 +694,14 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.9.0"
+    tag: "3.10.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
+    Api__PermitLimit: "1"
+    Api__QueueLimit: "0"
+    Executor__RetryCount: "50"
+    Executor__RetryBackOff: "100"
     ## MUST add this ENV variable if VA is enabled
     #Executor__GeneralAnomalyServerUrl: "doc-ver-visual-anomaly:8080"
   extraSecrets:
@@ -706,13 +712,13 @@ docver-runner:
     maxReplicas: 16
     cpu:
       enabled: true
-      target: 70
+      target: 80
     memory:
       enabled: true
       target: 70
   resources:
     requests:
-      cpu: 500m
+      cpu: 1
       memory: 512Mi
     limits:
       cpu: 2

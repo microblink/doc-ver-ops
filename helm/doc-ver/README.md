@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.21](https://img.shields.io/badge/Version-0.5.21-informational?style=flat-square)
+![Version: 0.5.22](https://img.shields.io/badge/Version-0.5.22-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -268,13 +268,15 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | doc-ver-api.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | container security context |
 | doc-ver-api.env."Runner__Pools__3.0__Address" | string | `"dns:///docver-runner:8081"` |  |
+| doc-ver-api.env.Api__PermitLimit | string | `"1"` |  |
+| doc-ver-api.env.Api__QueueLimit | string | `"10"` |  |
 | doc-ver-api.extraCMS | list | `[]` | list of configmap names to be added to deployment environment |
 | doc-ver-api.extraSecrets | list | `["license-key"]` | list of secret names to be added to deployment environment |
 | doc-ver-api.fullnameOverride | string | `""` | if set, overrides deployment, hpa, ingress, and service metadata.name |
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.9.0"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.10.0"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
@@ -297,7 +299,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.topologySpreadConstraints | list | `[]` | deployment topologySpreadConstraints |
 | doc-ver-api.version | string | `"2.7.0-cloud"` | app version |
 | docver-runner.autoscaling.cpu.enabled | bool | `true` |  |
-| docver-runner.autoscaling.cpu.target | int | `70` |  |
+| docver-runner.autoscaling.cpu.target | int | `80` |  |
 | docver-runner.autoscaling.enabled | bool | `true` |  |
 | docver-runner.autoscaling.maxReplicas | int | `16` |  |
 | docver-runner.autoscaling.memory.enabled | bool | `true` |  |
@@ -310,16 +312,20 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.containerSecurityContext.runAsUser | int | `65534` |  |
 | docver-runner.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | docver-runner.enabled | bool | `true` |  |
+| docver-runner.env.Api__PermitLimit | string | `"1"` |  |
+| docver-runner.env.Api__QueueLimit | string | `"0"` |  |
 | docver-runner.env.Executor__ModelServingSsl | string | `"false"` |  |
 | docver-runner.env.Executor__ModelServingUrl | string | `"bundle-doc-ver-core-versions-mp:8005"` |  |
+| docver-runner.env.Executor__RetryBackOff | string | `"100"` |  |
+| docver-runner.env.Executor__RetryCount | string | `"50"` |  |
 | docver-runner.extraSecrets[0] | string | `"license-key"` |  |
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.9.0"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.10.0"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
-| docver-runner.resources.requests.cpu | string | `"500m"` |  |
+| docver-runner.resources.requests.cpu | int | `1` |  |
 | docver-runner.resources.requests.memory | string | `"512Mi"` |  |
 | docver-runner.tolerations | list | `[]` |  |
 | embedding-store.enabled | bool | `false` | enable embedding-store component |
