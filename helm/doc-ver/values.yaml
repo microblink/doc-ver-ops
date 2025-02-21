@@ -617,7 +617,7 @@ bundle-doc-ver-core-versions:
       models:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
+              tag: v2.13.0-3.8.0-warmstart
               pullPolicy: IfNotPresent
           autoscaling:
               enabled: true
@@ -703,7 +703,7 @@ bundle-doc-ver-core-versions:
             memory: "3Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
+              tag: v2.13.0-3.8.0-warmstart
       675617eaf2b370625691522f:
           model:
               repository: photo-fraud-classifier
@@ -725,7 +725,7 @@ bundle-doc-ver-core-versions:
             memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
+              tag: v2.13.0-3.8.0-warmstart
 
 
 docver-runner:
