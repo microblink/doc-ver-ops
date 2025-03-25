@@ -30,9 +30,10 @@ dependencies:
   repository: https://helm.microblink.com/charts
   version: 0.9.2
   condition: bundle-visual-anomaly-core-versions.enabled
-- name: bundle-doc-ver-core-versions
+- name: model-serving
+  alias: bundle-doc-ver-core-versions
   repository: https://helm.microblink.com/charts
-  version: 0.32.2
+  version: 1.4.2
   condition: bundle-doc-ver-core-versions.enabled
 - name: docver-runner
   repository: https://helm.microblink.com/charts

@@ -523,6 +523,7 @@ bundle-doc-ver-core-versions:
           syncJob:
               podSecurityContext: {}
               containerSecurityContext: {}
+          downloadModels: false
       proxy:
           ingress:
               enabled: false
@@ -571,6 +572,48 @@ bundle-doc-ver-core-versions:
           affinity: {}
           tolerations: []
           env: {}
+          signatures:
+            signatureDefinitions:
+              photo-fraud-classifier-signature:
+                inputs:
+                  - typeId: Image
+                    params:
+                      imageInputKey: image_input
+                outputs:
+                  - typeId: MaxClassification
+                    params:
+                      classNameOutput: label
+                      scoreOutput: probability
+              photocopy-classifier-contextual-unified-signature:
+                inputs:
+                  - typeId: Image
+                    params:
+                      imageInputKey: image_input
+                    name: image_input
+                  - typeId: Quad
+                    params:
+                      quadInputKey: card_edges
+                    name: card_edges
+                  - typeId: Scalar
+                    params:
+                      scalarInputKey: aspect_ratio
+                    name: aspect_ratio
+                outputs:
+                  - typeId: MaxClassification
+                    params:
+                      classNameOutput: label
+                      scoreOutput: probability
+            modelDefinitions:
+              photo-fraud-classifier:
+                backendInferenceEngine: tfServing
+                models:
+                  - id: 675617eaf2b370625691522f
+                    signatureId: photo-fraud-classifier-signature
+              photocopy-classifier-contextual-unified:
+                backendInferenceEngine: tfServing
+                models:
+                - id: 66e2b36788703787163f0ecf
+                  signatureId: photocopy-classifier-contextual-unified-signature
       models:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
@@ -604,6 +647,7 @@ bundle-doc-ver-core-versions:
               monitoring:
                   enabled: false
               grpc_max_threads: 0
+              warmStart: false
           model:
             globalStorage:
                 type: gs
