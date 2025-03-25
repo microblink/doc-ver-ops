@@ -607,7 +607,9 @@ bundle-doc-ver-core-versions:
               photo-fraud-classifier:
                 backendInferenceEngine: tfServing
                 models:
-                  - id: 675617eaf2b370625691522f
+                  - id: 679bb8eca6b919056c62a425
+                    signatureId: photo-fraud-classifier-signature
+                  - id: 67dad517a7b8d3605d0242fe
                     signatureId: photo-fraud-classifier-signature
               photocopy-classifier-contextual-unified:
                 backendInferenceEngine: tfServing
@@ -617,7 +619,7 @@ bundle-doc-ver-core-versions:
       models:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
+              tag: v2.13.0-3.11.0
               pullPolicy: IfNotPresent
           autoscaling:
               enabled: true
@@ -704,12 +706,12 @@ bundle-doc-ver-core-versions:
             memory: "3Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
-      675617eaf2b370625691522f:
+              tag: v2.13.0-3.11.0
+      679bb8eca6b919056c62a425:
           model:
               repository: photo-fraud-classifier
               project: doc-ver
-              version: 8.2.0
+              version: 8.3.0
           engine:
             type: tfServing
             parallelization:
@@ -726,7 +728,17 @@ bundle-doc-ver-core-versions:
             memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
+              tag: v2.13.0-3.11.0
+      67dad517a7b8d3605d0242fe:
+          model:
+              repository: photo-fraud-classifier-intl
+              project: doc-ver
+              version: 1.0.0-rc.2
+          engine:
+              type: tfServing
+          image:
+              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+              tag: v2.13.0-3.11.0
 
 
 docver-runner:
