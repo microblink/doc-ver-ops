@@ -612,7 +612,7 @@ bundle-doc-ver-core-versions:
               photo-fraud-classifier-intl:
                 backendInferenceEngine: tfServing
                 models:
-                  - id: 67dad517a7b8d3605d0242fe
+                  - id: 67e56611a7b8d3605d024303
                     signatureId: photo-fraud-classifier-signature
               photocopy-classifier-contextual-unified:
                 backendInferenceEngine: tfServing
@@ -622,7 +622,7 @@ bundle-doc-ver-core-versions:
       models:
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.11.2
+              tag: v2.13.0-3.11.3
               pullPolicy: IfNotPresent
           autoscaling:
               enabled: true
@@ -709,7 +709,7 @@ bundle-doc-ver-core-versions:
             memory: "3Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.11.2
+              tag: v2.13.0-3.11.3
       675617eaf2b370625691522f:
           model:
               repository: photo-fraud-classifier
@@ -731,17 +731,29 @@ bundle-doc-ver-core-versions:
             memory: "1Gi"
           image:
               repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.11.2
-      67dad517a7b8d3605d0242fe:
+              tag: v2.13.0-3.11.3
+      67e56611a7b8d3605d024303:
           model:
-              repository: photo-fraud-classifier-intl
-              project: doc-ver
-              version: 1.0.0-rc.2
+            repository: photo-fraud-classifier-intl
+            project: doc-ver
+            version: 1.0.0
           engine:
-              type: tfServing
+            type: tfServing
+            parallelization:
+              enabled: true
+              intra_op: 1
+              inter_op: 1
+          env:
+            OMP_NUM_THREADS: 1
+          minLimits:
+            cpu: 1
+            memory: "1Gi"
+          maxLimits:
+            cpu: 2
+            memory: "1Gi"
           image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.11.2
+            repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+            tag: v2.13.0-3.11.3
 
 
 docver-runner:
