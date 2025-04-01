@@ -61,9 +61,9 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
 | anomdet-intermediary.tolerations | list | `[]` | deployment tolerations |
 | auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release) |
-| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields  `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password  of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
+| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
 | auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
-| auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled).  if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
+| auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled). if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
 | auth.license.applicationId | string | `""` | App identifier from microblink developer hub |
 | auth.license.createSecret | bool | `false` | enable if you want to create license secret as part of this charts deployment |
 | auth.license.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
@@ -97,7 +97,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.11.0"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.11.3"` |  |
 | bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
@@ -157,11 +157,12 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.service.grpcPort | string | `"8005"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.service.httpPort | string | `"8000"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.service.type | string | `"ClusterIP"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.backendInferenceEngine | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.models[0].id | string | `"67e56611a7b8d3605d024303"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.models[0].signatureId | string | `"photo-fraud-classifier-signature"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.backendInferenceEngine | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].id | string | `"679bb8eca6b919056c62a425"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].id | string | `"675617eaf2b370625691522f"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].signatureId | string | `"photo-fraud-classifier-signature"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[1].id | string | `"67dad517a7b8d3605d0242fe"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[1].signatureId | string | `"photo-fraud-classifier-signature"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.backendInferenceEngine | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.models[0].id | string | `"66e2b36788703787163f0ecf"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.models[0].signatureId | string | `"photocopy-classifier-contextual-unified-signature"` |  |
@@ -221,7 +222,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.11.0"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.11.3"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `3` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"3Gi"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `2` |  |
@@ -229,26 +230,34 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.version | string | `"9.0.1"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.parallelization.intra_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.env.OMP_NUM_THREADS | int | `1` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.image.tag | string | `"v2.13.0-3.11.0"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.maxLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.maxLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.minLimits.cpu | int | `1` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.minLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.model.version | string | `"8.3.0"` |  |
-| bundle-doc-ver-core-versions.models.67dad517a7b8d3605d0242fe.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.67dad517a7b8d3605d0242fe.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.67dad517a7b8d3605d0242fe.image.tag | string | `"v2.13.0-3.11.0"` |  |
-| bundle-doc-ver-core-versions.models.67dad517a7b8d3605d0242fe.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.67dad517a7b8d3605d0242fe.model.repository | string | `"photo-fraud-classifier-intl"` |  |
-| bundle-doc-ver-core-versions.models.67dad517a7b8d3605d0242fe.model.version | string | `"1.0.0-rc.2"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.tag | string | `"v2.13.0-3.11.3"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.version | string | `"8.3.0"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.tag | string | `"v2.13.0-3.11.3"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.model.repository | string | `"photo-fraud-classifier-intl"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.model.version | string | `"1.0.0"` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
@@ -381,7 +390,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.seedStore.gc.isPublic | bool | `true` |  |
 | embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-2005/6687ad3b04248f708c1e0c95"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
-| embedding-store.server.affinity | object | `{}` | server deployment affinity   |
+| embedding-store.server.affinity | object | `{}` | server deployment affinity |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
 | embedding-store.server.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
 | embedding-store.server.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
