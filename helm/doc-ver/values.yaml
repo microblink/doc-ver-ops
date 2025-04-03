@@ -100,8 +100,8 @@ doc-ver-api:
 
   env:
     Runner__Pools__3.0__Address: "dns:///docver-runner:8081"
-    Api__PermitLimit: "1"
-    Api__QueueLimit: "10"
+    Api__PermitLimit: "100"
+    Api__QueueLimit: "100"
   # -- deployment node selector
   nodeSelector: {}
   # -- deployment tolerations
