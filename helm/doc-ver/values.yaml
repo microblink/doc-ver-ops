@@ -15,13 +15,13 @@ auth:
     # used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release)
     createSecret: true
     # -- if createSecret is set to true, set the database username here, if you update this value, make sure to update
-    # the value in the postgresql section as well (if postgresql is enabled). 
+    # the value in the postgresql section as well (if postgresql is enabled).
     # if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database
     username: "embedding-store-sa"
     # -- if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so
     # we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret
-    # with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields 
-    # `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password 
+    # with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields
+    # `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password
     # of the database user you want our service to use.
     # Check out the templates/db-creds.yaml for more details on the content of the secret
     password: "x9xv1mw0td"
@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.10.1"
+    tag: "3.11.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -80,13 +80,13 @@ doc-ver-api:
     enabled: false
     className: ""
     annotations: {}
-#      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-#      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#      nginx.ingress.kubernetes.io/proxy-body-size: 100m
-#      nginx.ingress.kubernetes.io/client-max-body-size: 50m
-#      nginx.ingress.kubernetes.io/enable-cors: "true"
-#      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-#      cert-manager.io/cluster-issuer: letsencrypt-production
+    #      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    #      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    #      nginx.ingress.kubernetes.io/client-max-body-size: 50m
+    #      nginx.ingress.kubernetes.io/enable-cors: "true"
+    #      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    #      cert-manager.io/cluster-issuer: letsencrypt-production
     tls:
       - secretName: docver-tls
         hosts:
@@ -100,8 +100,8 @@ doc-ver-api:
 
   env:
     Runner__Pools__3.0__Address: "dns:///docver-runner:8081"
-    Api__PermitLimit: "1"
-    Api__QueueLimit: "10"
+    Api__PermitLimit: "100"
+    Api__QueueLimit: "100"
   # -- deployment node selector
   nodeSelector: {}
   # -- deployment tolerations
@@ -240,7 +240,7 @@ embedding-store:
     # -- container security context
     containerSecurityContext: {}
     runAsPostUpgradeJob: false
-    image: 
+    image:
       repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"
     grpc:
       grpcRecvSize: "52428800"
@@ -272,7 +272,7 @@ embedding-store:
     podSecurityContext: {}
     # -- container security context
     containerSecurityContext: {}
-    image: 
+    image:
       repository: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"
     database:
       pgvector:
@@ -309,16 +309,15 @@ embedding-store:
       requests:
         cpu: 500m
         memory: 1Gi
-    
+
     # -- server deployment node selector
     nodeSelector: {}
     # -- server deployment tolerations
     tolerations: []
-    # -- server deployment affinity  
+    # -- server deployment affinity
     affinity: {}
 
     secret: mb-docver-db-creds
-
 
 postgresql:
   # -- hosting postgres as part of this helm release is disabled by default, if you want to enable it, set enabled to true
@@ -338,11 +337,11 @@ postgresql:
     # -- must be fixed to this value, do not change
     username: embedding-store-sa
   # volumePermissions:
-    # enabled: true
+  # enabled: true
   primary:
-    args: 
-     - -c
-     - config_file=/bitnami/postgresql/conf/postgresql.conf
+    args:
+      - -c
+      - config_file=/bitnami/postgresql/conf/postgresql.conf
     persistence:
       enabled: true
       ## -- change the storeage class to the one that is available in your kubernetes cluster
@@ -381,7 +380,7 @@ postgresql:
       max_parallel_workers_per_gather = 4
       max_parallel_workers = 10
       max_parallel_maintenance_workers = 4
-      
+
       wal_level = minimal
       max_wal_senders = 0
 
@@ -454,17 +453,17 @@ bundle-visual-anomaly-core-versions:
         maxReplicas: 3
       model:
         globalStorage:
-            type: gs
-            bucket: identity-enc-models-public
-            isPublic: true
+          type: gs
+          bucket: identity-enc-models-public
+          isPublic: true
         storage:
-            type: gs
-            bucket: identity-enc-models-public
-            isPublic: true
+          type: gs
+          bucket: identity-enc-models-public
+          isPublic: true
   models:
     6687ad3b04248f708c1e0c95:
       # Model resources can be reduced, however, it is not recommended if
-      # the model is used in production. 
+      # the model is used in production.
       minLimits:
         cpu: 2
         memory: "2Gi"
@@ -487,203 +486,273 @@ bundle-doc-ver-core-versions:
   enabled: true
   fullnameOverride: "bundle-doc-ver-core-versions"
   bundle:
-      serving:
-          service:
-              type: ClusterIP
-              grpcPort: "80"
-              httpPort: "8501"
-          nginx:
-              enabled: true
-              resolver: kube-dns.kube-system.svc.cluster.local
-              timeout: 600s
-              keepaliveRequests: "1000"
-              keepalive: "320"
-              liveness:
-                  initialDelaySeconds: 15
-                  periodSeconds: 15
-              replicaCount: 1
-              dnsPolicy: ""
-              dnsConfig: {}
-              podSecurityContext: {}
-              containerSecurityContext: {}
-              containerPort: "8080"
-              port: "80"
-          envoy:
-              enabled: false
-              liveness:
-                  initialDelaySeconds: 15
-                  periodSeconds: 15
-              replicaCount: 1
-              dnsPolicy: ""
-              dnsConfig: {}
-              podSecurityContext: {}
-              containerSecurityContext: {}
-              containerPort: "8080"
-              port: "80"
-          syncJob:
-              podSecurityContext: {}
-              containerSecurityContext: {}
-      proxy:
-          ingress:
-              enabled: false
-              host: ""
-              className: nginx
-              ssl:
-                  enabled: true
-                  redirect: true
-                  force: false
-              tls:
-                  enabled: false
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-              tag: v0.20.0
-              pullPolicy: IfNotPresent
-          service:
-              type: ClusterIP
-              grpcPort: "8005"
-              httpPort: "8000"
-          args:
-              printfServiceNameFormat: ""
-          autoscaling:
-              enabled: false
-              minReplicas: 0
-              maxReplicas: 0
-              targetCPUUtilizationPercentage: ""
-              targetMemoryUtilizationPercentage: ""
-          maxLimits:
-              cpu: "2"
-              memory: 2Gi
-          minLimits:
-              cpu: "1"
-              memory: 1Gi
-          labels: {}
-          replicaCount: ""
-          podAnnotations: {}
-          podSecurityContext: {}
-          containerSecurityContext: {}
-          liveness:
-              initialDelaySeconds: 15
-              periodSeconds: 15
-          readiness:
-              initialDelaySeconds: 15
-              periodSeconds: 15
-          nodeSelector: {}
-          affinity: {}
-          tolerations: []
-          env: {}
-      models:
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
-              pullPolicy: IfNotPresent
-          autoscaling:
-              enabled: true
-              type: hpa
-              minReplicas: 1
-              maxReplicas: 2
-              targetCPUUtilizationPercentage: "80"
-              targetMemoryUtilizationPercentage: ""
-              targetRPS: ""
-              targetConcurrency: ""
-              initialScale: 1
-              scaleDownDelay: 5m
-              scaleStableWindow: 60s
-          engine:
-              type: tfServing
-              batching:
-                  enabled: false
-                  max_enqueued_batches: ""
-                  pad_variable_length_inputs: false
-                  max_batch_size: ""
-                  num_batch_threads: ""
-                  batch_timeout_micros: ""
-              parallelization:
-                  enabled: true
-                  intra_op: 0
-                  inter_op: 0
-              monitoring:
-                  enabled: false
-              grpc_max_threads: 0
-          model:
-            globalStorage:
-                type: gs
-                bucket: identity-enc-models-public
-                isPublic: true
-            storage:
-                type: gs
-                bucket: identity-enc-models-public
-                isPublic: true
-          liveness:
-              initialDelaySeconds: 30
-              periodSeconds: 30
-          startup:
-              failureThreshold: 30
-              periodSeconds: 16
-          maxLimits:
-              cpu: "3"
-              memory: 2Gi
-              gpu: ""
-          minLimits:
-              cpu: "3"
-              memory: 2Gi
-              gpu: ""
-          podAnnotations: {}
-          podSecurityContext: {}
-          containerSecurityContext: {}
-          initContainerSecurityContext: {}
-          env: {}
-          readiness: {}
-          nodeSelector: {}
-          affinity: {}
-          tolerations: []
-          labels: {}
-          replicaCount: ""
+    serving:
+      service:
+        type: ClusterIP
+        grpcPort: "80"
+        httpPort: "8501"
+      nginx:
+        enabled: true
+        resolver: kube-dns.kube-system.svc.cluster.local
+        timeout: 600s
+        keepaliveRequests: "1000"
+        keepalive: "320"
+        liveness:
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        replicaCount: 1
+        dnsPolicy: ""
+        dnsConfig: {}
+        podSecurityContext: {}
+        containerSecurityContext: {}
+        containerPort: "8080"
+        port: "80"
+      envoy:
+        enabled: false
+        liveness:
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        replicaCount: 1
+        dnsPolicy: ""
+        dnsConfig: {}
+        podSecurityContext: {}
+        containerSecurityContext: {}
+        containerPort: "8080"
+        port: "80"
+      syncJob:
+        podSecurityContext: {}
+        containerSecurityContext: {}
+      downloadModels: false
+    proxy:
+      ingress:
+        enabled: false
+        host: ""
+        className: nginx
+        ssl:
+          enabled: true
+          redirect: true
+          force: false
+        tls:
+          enabled: false
+      image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
+        tag: v0.20.0
+        pullPolicy: IfNotPresent
+      service:
+        type: ClusterIP
+        grpcPort: "8005"
+        httpPort: "8000"
+      args:
+        printfServiceNameFormat: ""
+      autoscaling:
+        enabled: false
+        minReplicas: 0
+        maxReplicas: 0
+        targetCPUUtilizationPercentage: ""
+        targetMemoryUtilizationPercentage: ""
+      maxLimits:
+        cpu: "2"
+        memory: 2Gi
+      minLimits:
+        cpu: "1"
+        memory: 1Gi
+      labels: {}
+      replicaCount: ""
+      podAnnotations: {}
+      podSecurityContext: {}
+      containerSecurityContext: {}
+      liveness:
+        initialDelaySeconds: 15
+        periodSeconds: 15
+      readiness:
+        initialDelaySeconds: 15
+        periodSeconds: 15
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+      env: {}
+      signatures:
+        signatureDefinitions:
+          photo-fraud-classifier-signature:
+            inputs:
+              - typeId: Image
+                params:
+                  imageInputKey: image_input
+            outputs:
+              - typeId: MaxClassification
+                params:
+                  classNameOutput: label
+                  scoreOutput: probability
+          photocopy-classifier-contextual-unified-signature:
+            inputs:
+              - typeId: Image
+                params:
+                  imageInputKey: image_input
+                name: image_input
+              - typeId: Quad
+                params:
+                  quadInputKey: card_edges
+                name: card_edges
+              - typeId: Scalar
+                params:
+                  scalarInputKey: aspect_ratio
+                name: aspect_ratio
+            outputs:
+              - typeId: MaxClassification
+                params:
+                  classNameOutput: label
+                  scoreOutput: probability
+        modelDefinitions:
+          photo-fraud-classifier:
+            backendInferenceEngine: tfServing
+            models:
+              - id: 675617eaf2b370625691522f
+                signatureId: photo-fraud-classifier-signature
+          photo-fraud-classifier-intl:
+            backendInferenceEngine: tfServing
+            models:
+              - id: 67e56611a7b8d3605d024303
+                signatureId: photo-fraud-classifier-signature
+          photocopy-classifier-contextual-unified:
+            backendInferenceEngine: tfServing
+            models:
+              - id: 66e2b36788703787163f0ecf
+                signatureId: photocopy-classifier-contextual-unified-signature
+    models:
+      image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+        tag: v2.13.0-3.11.3
+        pullPolicy: IfNotPresent
+      autoscaling:
+        enabled: true
+        type: hpa
+        minReplicas: 1
+        maxReplicas: 2
+        targetCPUUtilizationPercentage: "80"
+        targetMemoryUtilizationPercentage: ""
+        targetRPS: ""
+        targetConcurrency: ""
+        initialScale: 1
+        scaleDownDelay: 5m
+        scaleStableWindow: 60s
+      engine:
+        type: tfServing
+        batching:
+          enabled: false
+          max_enqueued_batches: ""
+          pad_variable_length_inputs: false
+          max_batch_size: ""
+          num_batch_threads: ""
+          batch_timeout_micros: ""
+        parallelization:
+          enabled: true
+          intra_op: 0
+          inter_op: 0
+        monitoring:
+          enabled: false
+        grpc_max_threads: 0
+        warmStart: false
+      model:
+        globalStorage:
+          type: gs
+          bucket: identity-enc-models-public
+          isPublic: true
+        storage:
+          type: gs
+          bucket: identity-enc-models-public
+          isPublic: true
+      liveness:
+        initialDelaySeconds: 30
+        periodSeconds: 30
+      startup:
+        failureThreshold: 30
+        periodSeconds: 16
+      maxLimits:
+        cpu: "3"
+        memory: 2Gi
+        gpu: ""
+      minLimits:
+        cpu: "3"
+        memory: 2Gi
+        gpu: ""
+      podAnnotations: {}
+      podSecurityContext: {}
+      containerSecurityContext: {}
+      initContainerSecurityContext: {}
+      env: {}
+      readiness: {}
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+      labels: {}
+      replicaCount: ""
   models:
-      66e2b36788703787163f0ecf:
-          model:
-              repository: photocopy-classifier-contextual-unified
-              project: doc-ver
-              version: 9.0.1
-          engine:
-            type: tfServing
-            parallelization:
-              enabled: true
-              intra_op: 2
-              inter_op: 2
-          env:
-            OMP_NUM_THREADS: 2
-          minLimits:
-            cpu: 2
-            memory: "2Gi"
-          maxLimits:
-            cpu: 3
-            memory: "3Gi"
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
-      675617eaf2b370625691522f:
-          model:
-              repository: photo-fraud-classifier
-              project: doc-ver
-              version: 8.2.0
-          engine:
-            type: tfServing
-            parallelization:
-              enabled: true
-              intra_op: 1
-              inter_op: 1
-          env:
-            OMP_NUM_THREADS: 1
-          minLimits:
-            cpu: 1
-            memory: "1Gi"
-          maxLimits:
-            cpu: 2
-            memory: "1Gi"
-          image:
-              repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-              tag: v2.13.0-3.8.0
-
+    66e2b36788703787163f0ecf:
+      model:
+        repository: photocopy-classifier-contextual-unified
+        project: doc-ver
+        version: 9.0.1
+      engine:
+        type: tfServing
+        parallelization:
+          enabled: true
+          intra_op: 2
+          inter_op: 2
+      env:
+        OMP_NUM_THREADS: 2
+      minLimits:
+        cpu: 2
+        memory: "2Gi"
+      maxLimits:
+        cpu: 3
+        memory: "3Gi"
+      image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+        tag: v2.13.0-3.11.3
+    675617eaf2b370625691522f:
+      model:
+        repository: photo-fraud-classifier
+        project: doc-ver
+        version: 8.3.0
+      engine:
+        type: tfServing
+        parallelization:
+          enabled: true
+          intra_op: 1
+          inter_op: 1
+      env:
+        OMP_NUM_THREADS: 1
+      minLimits:
+        cpu: 1
+        memory: "1Gi"
+      maxLimits:
+        cpu: 2
+        memory: "1Gi"
+      image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+        tag: v2.13.0-3.11.3
+    67e56611a7b8d3605d024303:
+      model:
+        repository: photo-fraud-classifier-intl
+        project: doc-ver
+        version: 1.0.0
+      engine:
+        type: tfServing
+        parallelization:
+          enabled: true
+          intra_op: 1
+          inter_op: 1
+      env:
+        OMP_NUM_THREADS: 1
+      minLimits:
+        cpu: 1
+        memory: "1Gi"
+      maxLimits:
+        cpu: 2
+        memory: "1Gi"
+      image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+        tag: v2.13.0-3.11.3
 
 docver-runner:
   enabled: true
@@ -694,7 +763,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.10.1"
+    tag: "3.11.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"

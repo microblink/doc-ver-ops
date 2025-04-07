@@ -1,40 +1,55 @@
-models:                                                                                                                                             
-    photo-fraud-classifier:                                                                                                                         
-        backendInferenceEngine: tfServing                                                                                                           
-        models:                                                                                                                                     
-            - id: 675617eaf2b370625691522f                                                                                                          
-              modelSgn:                                                                                                                             
-                inputs:                                                                                                                             
-                    - typeId: Image                                                                                                                 
-                      params:                                                                                                                       
-                        imageInputKey: image_input                                                                                                  
-                outputs:                                                                                                                            
-                    - typeId: MaxClassification                                                                                                     
-                      params:                                                                                                                       
-                        classNameOutput: label                                                                                                      
-                        scoreOutput: probability                                                                                                    
-              backendInferenceEngine: tfServing                                                                                                     
-    photocopy-classifier-contextual-unified:                                                                                                        
-        backendInferenceEngine: tfServing                                                                                                           
-        models:                                                                                                                                     
-            - id: 66e2b36788703787163f0ecf                                                                                                          
-              modelSgn:                                                                                                                             
-                inputs:                                                                                                                             
-                    - typeId: Image                                                                                                                 
-                      params:                                                                                                                       
-                        imageInputKey: image_input                                                                                                  
-                      name: image_input                                                                                                             
-                    - typeId: Quad                                                                                                                  
-                      params:                                                                                                                       
-                        quadInputKey: card_edges                                                                                                    
-                      name: card_edges                                                                                                              
-                    - typeId: Scalar                                                                                                                
-                      params:                                                                                                                       
-                        scalarInputKey: aspect_ratio                                                                                                
-                      name: aspect_ratio                                                                                                            
-                outputs:                                                                                                                            
-                    - typeId: MaxClassification                                                                                                     
-                      params:                                                                                                                       
-                        classNameOutput: label                                                                                                      
-                        scoreOutput: probability                                                                                                    
-              backendInferenceEngine: tfServing
+models:
+  photo-fraud-classifier:
+    backendInferenceEngine: tfServing
+    models:
+    - backendInferenceEngine: tfServing
+      id: 675617eaf2b370625691522f
+      modelSgn:
+        inputs:
+        - params:
+            imageInputKey: image_input
+          typeId: Image
+        outputs:
+        - params:
+            classNameOutput: label
+            scoreOutput: probability
+          typeId: MaxClassification
+  photo-fraud-classifier-intl:
+    backendInferenceEngine: tfServing
+    models:
+    - backendInferenceEngine: tfServing
+      id: 67e56611a7b8d3605d024303
+      modelSgn:
+        inputs:
+        - params:
+            imageInputKey: image_input
+          typeId: Image
+        outputs:
+        - params:
+            classNameOutput: label
+            scoreOutput: probability
+          typeId: MaxClassification
+  photocopy-classifier-contextual-unified:
+    backendInferenceEngine: tfServing
+    models:
+    - backendInferenceEngine: tfServing
+      id: 66e2b36788703787163f0ecf
+      modelSgn:
+        inputs:
+        - name: image_input
+          params:
+            imageInputKey: image_input
+          typeId: Image
+        - name: card_edges
+          params:
+            quadInputKey: card_edges
+          typeId: Quad
+        - name: aspect_ratio
+          params:
+            scalarInputKey: aspect_ratio
+          typeId: Scalar
+        outputs:
+        - params:
+            classNameOutput: label
+            scoreOutput: probability
+          typeId: MaxClassification

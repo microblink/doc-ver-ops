@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.23](https://img.shields.io/badge/Version-0.5.23-informational?style=flat-square)
+![Version: 0.5.24](https://img.shields.io/badge/Version-0.5.24-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -28,12 +28,12 @@ helm install my-release -f <path to values file you want to use to configure the
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
 | https://helm.microblink.com/charts | anomdet-intermediary | 0.1.1 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions | 0.32.2 |
 | https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.9.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
 | https://helm.microblink.com/charts | embedding-store | 0.26.0 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions(model-serving) | 1.4.2 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
 ## Values
@@ -61,9 +61,9 @@ helm install my-release -f <path to values file you want to use to configure the
 | anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
 | anomdet-intermediary.tolerations | list | `[]` | deployment tolerations |
 | auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release) |
-| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields  `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password  of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
+| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
 | auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
-| auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled).  if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
+| auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled). if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
 | auth.license.applicationId | string | `""` | App identifier from microblink developer hub |
 | auth.license.createSecret | bool | `false` | enable if you want to create license secret as part of this charts deployment |
 | auth.license.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
@@ -93,10 +93,11 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.engine.parallelization.inter_op | int | `0` |  |
 | bundle-doc-ver-core-versions.bundle.models.engine.parallelization.intra_op | int | `0` |  |
 | bundle-doc-ver-core-versions.bundle.models.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.bundle.models.engine.warmStart | bool | `false` |  |
 | bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.8.0"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.11.3"` |  |
 | bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
@@ -156,7 +157,34 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.service.grpcPort | string | `"8005"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.service.httpPort | string | `"8000"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.service.type | string | `"ClusterIP"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.backendInferenceEngine | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.models[0].id | string | `"67e56611a7b8d3605d024303"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.models[0].signatureId | string | `"photo-fraud-classifier-signature"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.backendInferenceEngine | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].id | string | `"675617eaf2b370625691522f"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].signatureId | string | `"photo-fraud-classifier-signature"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.backendInferenceEngine | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.models[0].id | string | `"66e2b36788703787163f0ecf"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.models[0].signatureId | string | `"photocopy-classifier-contextual-unified-signature"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photo-fraud-classifier-signature.inputs[0].params.imageInputKey | string | `"image_input"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photo-fraud-classifier-signature.inputs[0].typeId | string | `"Image"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photo-fraud-classifier-signature.outputs[0].params.classNameOutput | string | `"label"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photo-fraud-classifier-signature.outputs[0].params.scoreOutput | string | `"probability"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photo-fraud-classifier-signature.outputs[0].typeId | string | `"MaxClassification"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[0].name | string | `"image_input"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[0].params.imageInputKey | string | `"image_input"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[0].typeId | string | `"Image"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[1].name | string | `"card_edges"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[1].params.quadInputKey | string | `"card_edges"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[1].typeId | string | `"Quad"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[2].name | string | `"aspect_ratio"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[2].params.scalarInputKey | string | `"aspect_ratio"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.inputs[2].typeId | string | `"Scalar"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.outputs[0].params.classNameOutput | string | `"label"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.outputs[0].params.scoreOutput | string | `"probability"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.signatureDefinitions.photocopy-classifier-contextual-unified-signature.outputs[0].typeId | string | `"MaxClassification"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.tolerations | list | `[]` |  |
+| bundle-doc-ver-core-versions.bundle.serving.downloadModels | bool | `false` |  |
 | bundle-doc-ver-core-versions.bundle.serving.envoy.containerPort | string | `"8080"` |  |
 | bundle-doc-ver-core-versions.bundle.serving.envoy.containerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.serving.envoy.dnsConfig | object | `{}` |  |
@@ -194,7 +222,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.8.0"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.11.3"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `3` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"3Gi"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `2` |  |
@@ -208,14 +236,28 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.env.OMP_NUM_THREADS | int | `1` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.tag | string | `"v2.13.0-3.8.0"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.tag | string | `"v2.13.0-3.11.3"` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.maxLimits.cpu | int | `2` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.maxLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.minLimits.cpu | int | `1` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.minLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.version | string | `"8.2.0"` |  |
+| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.version | string | `"8.3.0"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.tag | string | `"v2.13.0-3.11.3"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.model.repository | string | `"photo-fraud-classifier-intl"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.model.version | string | `"1.0.0"` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
 | bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
@@ -268,15 +310,15 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
 | doc-ver-api.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | container security context |
 | doc-ver-api.env."Runner__Pools__3.0__Address" | string | `"dns:///docver-runner:8081"` |  |
-| doc-ver-api.env.Api__PermitLimit | string | `"1"` |  |
-| doc-ver-api.env.Api__QueueLimit | string | `"10"` |  |
+| doc-ver-api.env.Api__PermitLimit | string | `"100"` |  |
+| doc-ver-api.env.Api__QueueLimit | string | `"100"` |  |
 | doc-ver-api.extraCMS | list | `[]` | list of configmap names to be added to deployment environment |
 | doc-ver-api.extraSecrets | list | `["license-key"]` | list of secret names to be added to deployment environment |
 | doc-ver-api.fullnameOverride | string | `""` | if set, overrides deployment, hpa, ingress, and service metadata.name |
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.10.1"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.11.0"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
@@ -322,7 +364,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.10.1"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.11.0"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
 | docver-runner.resources.requests.cpu | int | `1` |  |
@@ -348,7 +390,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | embedding-store.seeder.seedStore.gc.isPublic | bool | `true` |  |
 | embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-2005/6687ad3b04248f708c1e0c95"` |  |
 | embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
-| embedding-store.server.affinity | object | `{}` | server deployment affinity   |
+| embedding-store.server.affinity | object | `{}` | server deployment affinity |
 | embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
 | embedding-store.server.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
 | embedding-store.server.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
