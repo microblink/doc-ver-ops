@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 0.5.24](https://img.shields.io/badge/Version-0.5.24-informational?style=flat-square)
+![Version: 0.5.25](https://img.shields.io/badge/Version-0.5.25-informational?style=flat-square)
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -33,7 +33,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
 | https://helm.microblink.com/charts | embedding-store | 0.26.0 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions(model-serving) | 1.4.2 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions(model-serving) | 1.5.3 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
 ## Values
@@ -161,7 +161,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.models[0].id | string | `"67e56611a7b8d3605d024303"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier-intl.models[0].signatureId | string | `"photo-fraud-classifier-signature"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.backendInferenceEngine | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].id | string | `"675617eaf2b370625691522f"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].id | string | `"679bb8eca6b919056c62a425"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photo-fraud-classifier.models[0].signatureId | string | `"photo-fraud-classifier-signature"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.backendInferenceEngine | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.signatures.modelDefinitions.photocopy-classifier-contextual-unified.models[0].id | string | `"66e2b36788703787163f0ecf"` |  |
@@ -230,20 +230,20 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.repository | string | `"photocopy-classifier-contextual-unified"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.model.version | string | `"9.0.1"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.parallelization.enabled | bool | `true` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.parallelization.inter_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.parallelization.intra_op | int | `1` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.engine.type | string | `"tfServing"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.env.OMP_NUM_THREADS | int | `1` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.image.tag | string | `"v2.13.0-3.11.3"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.maxLimits.cpu | int | `2` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.maxLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.minLimits.cpu | int | `1` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.minLimits.memory | string | `"1Gi"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.project | string | `"doc-ver"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.repository | string | `"photo-fraud-classifier"` |  |
-| bundle-doc-ver-core-versions.models.675617eaf2b370625691522f.model.version | string | `"8.3.0"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.parallelization.enabled | bool | `true` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.parallelization.inter_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.parallelization.intra_op | int | `1` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.engine.type | string | `"tfServing"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.env.OMP_NUM_THREADS | int | `1` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.image.tag | string | `"v2.13.0-3.12.0"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.maxLimits.cpu | int | `2` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.maxLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.minLimits.cpu | int | `1` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.minLimits.memory | string | `"1Gi"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.model.project | string | `"doc-ver"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.model.repository | string | `"photo-fraud-classifier"` |  |
+| bundle-doc-ver-core-versions.models.679bb8eca6b919056c62a425.model.version | string | `"8.3.0"` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.enabled | bool | `true` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.inter_op | int | `1` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.parallelization.intra_op | int | `1` |  |

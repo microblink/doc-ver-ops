@@ -606,7 +606,7 @@ bundle-doc-ver-core-versions:
           photo-fraud-classifier:
             backendInferenceEngine: tfServing
             models:
-              - id: 675617eaf2b370625691522f
+              - id: 679bb8eca6b919056c62a425
                 signatureId: photo-fraud-classifier-signature
           photo-fraud-classifier-intl:
             backendInferenceEngine: tfServing
@@ -709,7 +709,7 @@ bundle-doc-ver-core-versions:
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
         tag: v2.13.0-3.11.3
-    675617eaf2b370625691522f:
+    679bb8eca6b919056c62a425:
       model:
         repository: photo-fraud-classifier
         project: doc-ver
@@ -730,7 +730,7 @@ bundle-doc-ver-core-versions:
         memory: "1Gi"
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.11.3
+        tag: v2.13.0-3.12.0
     67e56611a7b8d3605d024303:
       model:
         repository: photo-fraud-classifier-intl
