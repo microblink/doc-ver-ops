@@ -33,7 +33,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
 | https://helm.microblink.com/charts | embedding-store | 0.26.0 |
 | https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
-| https://helm.microblink.com/charts | bundle-doc-ver-core-versions(model-serving) | 1.5.3 |
+| https://helm.microblink.com/charts | bundle-doc-ver-core-versions(model-serving) | 1.4.2 |
 | https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
 ## Values
