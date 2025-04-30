@@ -3,7 +3,7 @@ models:
     backendInferenceEngine: tfServing
     models:
     - backendInferenceEngine: tfServing
-      id: 675617eaf2b370625691522f
+      id: 679bb8eca6b919056c62a425
       modelSgn:
         inputs:
         - params:
