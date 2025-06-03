@@ -3,7 +3,7 @@ models:
     backendInferenceEngine: tfServing
     models:
     - backendInferenceEngine: tfServing
-      id: 679bb8eca6b919056c62a425
+      id: 682b4988437e2714e4aec140
       modelSgn:
         inputs:
         - params:
@@ -19,6 +19,18 @@ models:
     models:
     - backendInferenceEngine: tfServing
       id: 67e56611a7b8d3605d024303
+      modelSgn:
+        inputs:
+        - params:
+            imageInputKey: image_input
+          typeId: Image
+        outputs:
+        - params:
+            classNameOutput: label
+            scoreOutput: probability
+          typeId: MaxClassification
+    - backendInferenceEngine: tfServing
+      id: 68361556437e2714e4aec14b
       modelSgn:
         inputs:
         - params:

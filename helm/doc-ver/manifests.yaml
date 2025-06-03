@@ -1,0 +1,1269 @@
+---
+# Source: doc-ver/templates/db-creds.yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: mb-docver-db-creds
+  labels:
+    chart: "doc-ver-0.5.26"
+    release: release-name
+type: Opaque
+stringData:
+  # values used by the embedding store server
+  EMBEDDING_STORE_PGVECTOR_USERNAME: embedding-store-sa
+  EMBEDDING_STORE_PGVECTOR_PASSWORD: x9xv1mw0td
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-proxy/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bundle-doc-ver-core-versions-mp
+  labels:
+    name: bundle-doc-ver-core-versions-mp
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+data:
+  config.yaml: |
+    models:
+      photo-fraud-classifier:
+        backendInferenceEngine: tfServing
+        models:
+        - backendInferenceEngine: tfServing
+          id: 682b4988437e2714e4aec140
+          modelSgn:
+            inputs:
+            - params:
+                imageInputKey: image_input
+              typeId: Image
+            outputs:
+            - params:
+                classNameOutput: label
+                scoreOutput: probability
+              typeId: MaxClassification
+      photo-fraud-classifier-intl:
+        backendInferenceEngine: tfServing
+        models:
+        - backendInferenceEngine: tfServing
+          id: 67e56611a7b8d3605d024303
+          modelSgn:
+            inputs:
+            - params:
+                imageInputKey: image_input
+              typeId: Image
+            outputs:
+            - params:
+                classNameOutput: label
+                scoreOutput: probability
+              typeId: MaxClassification
+        - backendInferenceEngine: tfServing
+          id: 68361556437e2714e4aec14b
+          modelSgn:
+            inputs:
+            - params:
+                imageInputKey: image_input
+              typeId: Image
+            outputs:
+            - params:
+                classNameOutput: label
+                scoreOutput: probability
+              typeId: MaxClassification
+      photocopy-classifier-contextual-unified:
+        backendInferenceEngine: tfServing
+        models:
+        - backendInferenceEngine: tfServing
+          id: 66e2b36788703787163f0ecf
+          modelSgn:
+            inputs:
+            - name: image_input
+              params:
+                imageInputKey: image_input
+              typeId: Image
+            - name: card_edges
+              params:
+                quadInputKey: card_edges
+              typeId: Quad
+            - name: aspect_ratio
+              params:
+                scalarInputKey: aspect_ratio
+              typeId: Scalar
+            outputs:
+            - params:
+                classNameOutput: label
+                scoreOutput: probability
+              typeId: MaxClassification
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/nginx/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bundle-doc-ver-core-versions-nginx-91083e081e
+  labels:
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+data:
+  nginx.conf: |
+  
+    user nginx;
+    worker_processes  1;
+    events {
+      worker_connections  10240;
+    }
+
+    pid        /tmp/nginx.pid;
+
+    http {
+
+      client_body_temp_path /tmp/client_temp;
+      proxy_temp_path       /tmp/proxy_temp_path;
+      fastcgi_temp_path     /tmp/fastcgi_temp;
+      uwsgi_temp_path       /tmp/uwsgi_temp;
+      scgi_temp_path        /tmp/scgi_temp;
+      resolver kube-dns.kube-system.svc.cluster.local valid=30s ipv6=off;
+
+      access_log /dev/stdout;
+      error_log /dev/stderr debug;
+
+      upstream upstream_balancer {
+
+        server 0.0.0.1; # placeholder
+
+        balancer_by_lua_block {
+          balancer.balance()
+        }
+
+        keepalive 320;
+
+        keepalive_timeout  600s;
+        keepalive_requests 1000;
+
+      }
+
+      server {
+        listen       8080;
+        http2 on;
+        server_name  localhost;
+
+        location / {
+
+          #header_filter_by_lua_block {
+          #  local h = ngx.req.get_headers()
+          #  for k, v in pairs(h) do
+          #    ngx.log(ngx.ERR, "Got header "..k..": "..tostring(v)..";")
+          #  end
+          #}
+
+          set_by_lua $loc '
+            local routeMap = {
+              s66e2b36788703787163f0ecf = "s66e2b36788703787163f0ecfss.default.svc.cluster.local:80",
+              s67e56611a7b8d3605d024303 = "s67e56611a7b8d3605d024303ss.default.svc.cluster.local:80",
+              s682b4988437e2714e4aec140 = "s682b4988437e2714e4aec140ss.default.svc.cluster.local:80",
+              s68361556437e2714e4aec14b = "s68361556437e2714e4aec14bss.default.svc.cluster.local:80",
+            }
+            local modelId = ngx.req.get_headers()["model-id"]
+            return routeMap["s" .. modelId]
+          ';
+
+          client_max_body_size 0;
+
+          proxy_read_timeout 600s;
+          proxy_connect_timeout 600s;
+          proxy_send_timeout 600s;
+
+          grpc_connect_timeout 600s;
+          grpc_read_timeout 600s;
+          grpc_send_timeout 600s;
+
+          grpc_set_header Host $loc;
+          grpc_pass $loc;
+        }
+        location = /health {
+            access_log off;
+            add_header 'Content-Type' 'application/json';
+            return 200 '{"status":"UP"}';
+        }
+      }
+    }
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-proxy/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: bundle-doc-ver-core-versions-mp
+  labels:
+    name: bundle-doc-ver-core-versions-mp
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+    - port: 8005
+      targetPort: 8005
+      protocol: TCP
+      name: grpc
+  selector:
+    name: bundle-doc-ver-core-versions-mp
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-proxy/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: bundle-doc-ver-core-versions-mph
+  labels:
+    name: bundle-doc-ver-core-versions-mph
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  clusterIP: None
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+    - port: 8005
+      targetPort: 8005
+      protocol: TCP
+      name: grpc
+  selector:
+    name: bundle-doc-ver-core-versions-mp
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s66e2b36788703787163f0ecfss
+  labels:
+    name: s66e2b36788703787163f0ecfss
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photocopy-classifier-contextual-unified
+    model-version: 9.0.1
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s66e2b36788703787163f0ecfs
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s66e2b36788703787163f0ecfhs
+  labels:
+    name: s66e2b36788703787163f0ecfhs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photocopy-classifier-contextual-unified
+    model-version: 9.0.1
+spec:
+  clusterIP: None
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s66e2b36788703787163f0ecfs
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s67e56611a7b8d3605d024303ss
+  labels:
+    name: s67e56611a7b8d3605d024303ss
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier-intl
+    model-version: 1.0.0
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s67e56611a7b8d3605d024303s
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s67e56611a7b8d3605d024303hs
+  labels:
+    name: s67e56611a7b8d3605d024303hs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier-intl
+    model-version: 1.0.0
+spec:
+  clusterIP: None
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s67e56611a7b8d3605d024303s
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s682b4988437e2714e4aec140ss
+  labels:
+    name: s682b4988437e2714e4aec140ss
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier
+    model-version: 8.4.0
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s682b4988437e2714e4aec140s
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s682b4988437e2714e4aec140hs
+  labels:
+    name: s682b4988437e2714e4aec140hs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier
+    model-version: 8.4.0
+spec:
+  clusterIP: None
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s682b4988437e2714e4aec140s
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s68361556437e2714e4aec14bss
+  labels:
+    name: s68361556437e2714e4aec14bss
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier-intl
+    model-version: 1.0.0
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s68361556437e2714e4aec14bs
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s68361556437e2714e4aec14bhs
+  labels:
+    name: s68361556437e2714e4aec14bhs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier-intl
+    model-version: 1.0.0
+spec:
+  clusterIP: None
+  ports:
+    - port: 8501
+      targetPort: 8501
+      protocol: TCP
+      name: http
+    - port: 80
+      targetPort: 8500
+      protocol: TCP
+      name: grpc
+  selector:
+    name: s68361556437e2714e4aec14bs
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/nginx/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: bundle-doc-ver-core-versions-nginx
+  labels:
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+  - name: grpc
+    port: 80
+    targetPort: 8080
+  selector:
+    app: bundle-doc-ver-core-versions-nginx
+---
+# Source: doc-ver/charts/doc-ver-api/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-doc-ver-api
+  labels:
+    helm.sh/chart: doc-ver-api-0.0.14
+    app.kubernetes.io/name: doc-ver-api
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: doc-ver-api
+    app.kubernetes.io/instance: release-name
+---
+# Source: doc-ver/charts/docver-runner/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: docver-runner
+  labels:
+    helm.sh/chart: docver-runner-0.0.2
+    app.kubernetes.io/name: docver-runner
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  clusterIP: None
+  ports:
+    - port: 8081
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    app.kubernetes.io/name: docver-runner
+    app.kubernetes.io/instance: release-name
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-proxy/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bundle-doc-ver-core-versions-mp
+  labels:
+    name: bundle-doc-ver-core-versions-mp
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    signature-hash: "00f915d408b68f81"
+spec:
+  selector:
+    matchLabels:
+      name: bundle-doc-ver-core-versions-mp
+  template:
+    metadata:
+      labels:
+        name: bundle-doc-ver-core-versions-mp
+        helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+        app.kubernetes.io/managed-by: Helm
+        signature-hash: "00f915d408b68f81"
+    spec:
+      imagePullSecrets:
+        - name: eu.gcr.io
+      containers:
+        - name: api
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.20.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+            - name: grpc
+              containerPort: 8005
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /healthz
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /healthz
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          volumeMounts:
+            - name: bundle-signature
+              mountPath: /etc/bundle-signature.yaml
+              subPath: config.yaml
+          command:
+            - mproxy
+          args:
+            - "server"
+            - "-c"
+            - "/etc/bundle-signature.yaml"
+            - "--tf-serving-connection-string"
+            - "bundle-doc-ver-core-versions-nginx:80"
+      volumes:
+        - name: bundle-signature
+          configMap:
+            name: bundle-doc-ver-core-versions-mp
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s66e2b36788703787163f0ecfs
+  labels:
+    name: s66e2b36788703787163f0ecfs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photocopy-classifier-contextual-unified
+    model-version: 9.0.1
+spec:
+  strategy:
+    
+  selector:
+    matchLabels:
+      name: s66e2b36788703787163f0ecfs
+  template:
+    metadata:
+      labels:
+        name: s66e2b36788703787163f0ecfs
+        helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      imagePullSecrets:
+        - name: eu.gcr.io
+      containers:
+        - name: api
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.12.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            
+            - name: OMP_NUM_THREADS
+              value: "2"
+          ports:
+            - name: http
+              containerPort: 8501
+              protocol: TCP
+            - name: grpc
+              containerPort: 8500
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "66e2b36788703787163f0ecf"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          startupProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "66e2b36788703787163f0ecf"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            failureThreshold: 30
+            periodSeconds: 16
+          resources:
+            limits:
+              cpu: "3"
+              memory: "3Gi"
+            requests:
+              cpu: "2"
+              memory: "2Gi"
+          args:
+            - --enable_model_warmup
+            - --model_name=66e2b36788703787163f0ecf
+            - --model_base_path=/models/66e2b36788703787163f0ecf
+            - --tensorflow_inter_op_parallelism=2
+            - --tensorflow_intra_op_parallelism=2
+            - --file_system_poll_wait_seconds=0
+            - --grpc_max_threads=18
+      initContainers:
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s67e56611a7b8d3605d024303s
+  labels:
+    name: s67e56611a7b8d3605d024303s
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier-intl
+    model-version: 1.0.0
+spec:
+  strategy:
+    
+  selector:
+    matchLabels:
+      name: s67e56611a7b8d3605d024303s
+  template:
+    metadata:
+      labels:
+        name: s67e56611a7b8d3605d024303s
+        helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      imagePullSecrets:
+        - name: eu.gcr.io
+      containers:
+        - name: api
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.12.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            
+            - name: OMP_NUM_THREADS
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8501
+              protocol: TCP
+            - name: grpc
+              containerPort: 8500
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "67e56611a7b8d3605d024303"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          startupProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "67e56611a7b8d3605d024303"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            failureThreshold: 30
+            periodSeconds: 16
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          args:
+            - --enable_model_warmup
+            - --model_name=67e56611a7b8d3605d024303
+            - --model_base_path=/models/67e56611a7b8d3605d024303
+            - --tensorflow_inter_op_parallelism=1
+            - --tensorflow_intra_op_parallelism=1
+            - --file_system_poll_wait_seconds=0
+            - --grpc_max_threads=12
+      initContainers:
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s682b4988437e2714e4aec140s
+  labels:
+    name: s682b4988437e2714e4aec140s
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier
+    model-version: 8.4.0
+spec:
+  strategy:
+    
+  selector:
+    matchLabels:
+      name: s682b4988437e2714e4aec140s
+  template:
+    metadata:
+      labels:
+        name: s682b4988437e2714e4aec140s
+        helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      imagePullSecrets:
+        - name: eu.gcr.io
+      containers:
+        - name: api
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.12.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            
+            - name: OMP_NUM_THREADS
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8501
+              protocol: TCP
+            - name: grpc
+              containerPort: 8500
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "682b4988437e2714e4aec140"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          startupProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "682b4988437e2714e4aec140"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            failureThreshold: 30
+            periodSeconds: 16
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          args:
+            - --enable_model_warmup
+            - --model_name=682b4988437e2714e4aec140
+            - --model_base_path=/models/682b4988437e2714e4aec140
+            - --tensorflow_inter_op_parallelism=1
+            - --tensorflow_intra_op_parallelism=1
+            - --file_system_poll_wait_seconds=0
+            - --grpc_max_threads=12
+      initContainers:
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s68361556437e2714e4aec14bs
+  labels:
+    name: s68361556437e2714e4aec14bs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+    model-project: doc-ver
+    model-repository: photo-fraud-classifier-intl
+    model-version: 1.0.0
+spec:
+  strategy:
+    
+  selector:
+    matchLabels:
+      name: s68361556437e2714e4aec14bs
+  template:
+    metadata:
+      labels:
+        name: s68361556437e2714e4aec14bs
+        helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      imagePullSecrets:
+        - name: eu.gcr.io
+      containers:
+        - name: api
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.12.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            
+            - name: OMP_NUM_THREADS
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8501
+              protocol: TCP
+            - name: grpc
+              containerPort: 8500
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "68361556437e2714e4aec14b"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          startupProbe:
+            exec:
+              command:
+                - "/bin/tfs_model_status_probe"
+                - "-addr"
+                - "localhost:8500"
+                - "-model-name"
+                - "68361556437e2714e4aec14b"
+                - "-model-version"
+                - "1"
+                - "|"
+                - "grep"
+                - "AVAILABLE"
+            failureThreshold: 30
+            periodSeconds: 16
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          args:
+            - --enable_model_warmup
+            - --model_name=68361556437e2714e4aec14b
+            - --model_base_path=/models/68361556437e2714e4aec14b
+            - --tensorflow_inter_op_parallelism=1
+            - --tensorflow_intra_op_parallelism=1
+            - --file_system_poll_wait_seconds=0
+            - --grpc_max_threads=12
+      initContainers:
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/nginx/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bundle-doc-ver-core-versions-nginx
+  labels:
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app: bundle-doc-ver-core-versions-nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bundle-doc-ver-core-versions-nginx
+        helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      containers:
+      - name: bundle-doc-ver-core-versions-nginx
+        image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        ports:
+        - containerPort: 8080
+          name: grpc
+        volumeMounts:
+          - name: nginx-conf
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            readOnly: true
+          - name: tmp-volume
+            mountPath: /tmp
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: bundle-doc-ver-core-versions-nginx-91083e081e
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+      - name: tmp-volume
+        emptyDir: {}
+---
+# Source: doc-ver/charts/doc-ver-api/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-doc-ver-api
+  labels:
+    helm.sh/chart: doc-ver-api-0.0.14
+    app.kubernetes.io/name: doc-ver-api
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: doc-ver-api
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      annotations:
+      labels:
+        app.kubernetes.io/name: doc-ver-api
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+        - name: doc-ver-api
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:3.12.1"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: Api__PermitLimit
+              value: "100"
+            - name: Api__QueueLimit
+              value: "100"
+            - name: Runner__Pools__3.0__Address
+              value: "dns:///docver-runner:8081"
+          envFrom:
+            - secretRef:
+                name: license-key
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+---
+# Source: doc-ver/charts/docver-runner/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docver-runner
+  labels:
+    helm.sh/chart: docver-runner-0.0.2
+    app.kubernetes.io/name: docver-runner
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: docver-runner
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      annotations:
+      labels:
+        app.kubernetes.io/name: docver-runner
+        app.kubernetes.io/instance: release-name
+    spec:
+      containers:
+        - name: docver-runner
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          image: "us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.12.1"
+          imagePullPolicy: Always
+          ports:
+            - name: grpc
+              containerPort: 8081
+              protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: Api__PermitLimit
+              value: "1"
+            - name: Api__QueueLimit
+              value: "0"
+            - name: Executor__ModelServingSsl
+              value: "false"
+            - name: Executor__ModelServingUrl
+              value: "bundle-doc-ver-core-versions-mp:8005"
+            - name: Executor__RetryBackOff
+              value: "100"
+            - name: Executor__RetryCount
+              value: "50"
+          envFrom:
+            - secretRef:
+                name: license-key
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 2
+              memory: 4Gi
+            requests:
+              cpu: 1
+              memory: 512Mi
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: s66e2b36788703787163f0ecfs
+  labels:
+    name: s66e2b36788703787163f0ecfs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: s66e2b36788703787163f0ecfs
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: s67e56611a7b8d3605d024303s
+  labels:
+    name: s67e56611a7b8d3605d024303s
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: s67e56611a7b8d3605d024303s
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: s682b4988437e2714e4aec140s
+  labels:
+    name: s682b4988437e2714e4aec140s
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: s682b4988437e2714e4aec140s
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+# Source: doc-ver/charts/bundle-doc-ver-core-versions/templates/model-serving/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: s68361556437e2714e4aec14bs
+  labels:
+    name: s68361556437e2714e4aec14bs
+    helm.sh/chart: bundle-doc-ver-core-versions-1.4.2
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: s68361556437e2714e4aec14bs
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+# Source: doc-ver/charts/docver-runner/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: docver-runner
+  labels:
+    helm.sh/chart: docver-runner-0.0.2
+    app.kubernetes.io/name: docver-runner
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "3.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: docver-runner
+  minReplicas: 2
+  maxReplicas: 16
+  metrics:
+  
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 70
+  
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
