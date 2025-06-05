@@ -2,7 +2,7 @@ version: "3"
 
 services:
   doc-ver-runner:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.12.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.13.0
     healthcheck:
       test: ["CMD", "curl", "-f", "doc-ver-runner:8080/health/ready"]
       interval: 15s
