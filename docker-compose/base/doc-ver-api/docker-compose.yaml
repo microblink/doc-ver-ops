@@ -2,7 +2,7 @@ version: "3"
 
 services:
   doc-ver-api:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:3.12.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver:3.13.0
     # depends_on:
     #   visual-anomaly:
     #     condition: service_healthy
