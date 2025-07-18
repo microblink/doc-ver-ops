@@ -2,12 +2,7 @@ version: "3"
 
 services:
   doc-ver-runner:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.13.2
-    healthcheck:
-      test: ["CMD", "curl", "-f", "doc-ver-runner:8080/health/ready"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.14.0
     environment:
       Executor__ApplicationId: ${APPLICATION_ID}
       Executor__LicenseKey: ${LICENSE_KEY}
