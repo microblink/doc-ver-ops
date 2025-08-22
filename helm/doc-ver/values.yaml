@@ -606,7 +606,7 @@ bundle-doc-ver-core-versions:
           photo-fraud-classifier:
             backendInferenceEngine: tfServing
             models:
-              - id: 682b4988437e2714e4aec140
+              - id: 6890c881923c027093c71e05
                 signatureId: photo-fraud-classifier-signature
           photo-fraud-classifier-intl:
             backendInferenceEngine: tfServing
@@ -711,7 +711,7 @@ bundle-doc-ver-core-versions:
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
         tag: v2.13.0-3.13.0
-    682b4988437e2714e4aec140:
+    6890c881923c027093c71e05:
       model:
         repository: photo-fraud-classifier
         project: doc-ver
