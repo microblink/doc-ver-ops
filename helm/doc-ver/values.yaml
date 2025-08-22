@@ -430,7 +430,7 @@ bundle-visual-anomaly-core-versions:
       containerSecurityContext: {}
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.20.0
+        tag: v0.25.2
       minLimits:
         cpu: 500m
         memory: "1Gi"
@@ -536,7 +536,7 @@ bundle-doc-ver-core-versions:
           enabled: false
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.20.0
+        tag: v0.25.2
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP

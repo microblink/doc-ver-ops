@@ -4,7 +4,7 @@ services:
     depends_on:
       doc-ver-model-nginx:
         condition: service_healthy
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.20.0
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.25.2
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "doc-ver-model-proxy:8005"]
       interval: 15s
