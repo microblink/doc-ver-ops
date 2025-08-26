@@ -2,7 +2,7 @@ version: "3"
 
 services:
   doc-ver-runner:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.14.0
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner:3.15.0
     environment:
       Executor__ApplicationId: ${APPLICATION_ID}
       Executor__LicenseKey: ${LICENSE_KEY}
