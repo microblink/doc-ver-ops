@@ -1,6 +1,6 @@
 name: doc-ver
 apiVersion: v2
-version: 0.5.28
+version: 0.5.29
 dependencies:
   - name: doc-ver-api
     repository: https://helm.microblink.com/charts
@@ -33,7 +33,7 @@ dependencies:
   - name: model-serving
     alias: bundle-doc-ver-core-versions
     repository: https://helm.microblink.com/charts
-    version: 1.5.4
+    version: 1.5.5
     condition: bundle-doc-ver-core-versions.enabled
   - name: docver-runner
     repository: https://helm.microblink.com/charts

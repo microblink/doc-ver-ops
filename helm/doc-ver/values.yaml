@@ -39,7 +39,7 @@ doc-ver-api:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.14.0"
+    tag: "3.15.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -430,7 +430,7 @@ bundle-visual-anomaly-core-versions:
       containerSecurityContext: {}
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.20.0
+        tag: v0.25.2
       minLimits:
         cpu: 500m
         memory: "1Gi"
@@ -536,7 +536,7 @@ bundle-doc-ver-core-versions:
           enabled: false
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.20.0
+        tag: v0.25.2
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP
@@ -606,7 +606,7 @@ bundle-doc-ver-core-versions:
           photo-fraud-classifier:
             backendInferenceEngine: tfServing
             models:
-              - id: 682b4988437e2714e4aec140
+              - id: 6890c881923c027093c71e05
                 signatureId: photo-fraud-classifier-signature
           photo-fraud-classifier-intl:
             backendInferenceEngine: tfServing
@@ -623,7 +623,7 @@ bundle-doc-ver-core-versions:
     models:
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.13.0
+        tag: v2.13.0-3.15.1
         pullPolicy: IfNotPresent
       autoscaling:
         enabled: true
@@ -710,8 +710,8 @@ bundle-doc-ver-core-versions:
         memory: "3Gi"
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.13.0
-    682b4988437e2714e4aec140:
+        tag: v2.13.0-3.15.1
+    6890c881923c027093c71e05:
       model:
         repository: photo-fraud-classifier
         project: doc-ver
@@ -732,7 +732,7 @@ bundle-doc-ver-core-versions:
         memory: "1Gi"
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.13.0
+        tag: v2.13.0-3.15.1
     67e56611a7b8d3605d024303:
       model:
         repository: photo-fraud-classifier-intl
@@ -754,7 +754,7 @@ bundle-doc-ver-core-versions:
         memory: "1Gi"
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.13.0
+        tag: v2.13.0-3.15.1
     68361556437e2714e4aec14b:
       model:
         repository: photo-fraud-classifier-intl
@@ -776,7 +776,7 @@ bundle-doc-ver-core-versions:
         memory: "1Gi"
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.13.0
+        tag: v2.13.0-3.15.1
 
 docver-runner:
   enabled: true
@@ -787,7 +787,7 @@ docver-runner:
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.14.0"
+    tag: "3.15.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
