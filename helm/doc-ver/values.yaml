@@ -430,8 +430,6 @@ docver-runner:
     Api__QueueLimit: "0"
     Executor__RetryCount: "50"
     Executor__RetryBackOff: "100"
-    ## MUST add this ENV variable if VA is enabled
-    #Executor__GeneralAnomalyServerUrl: "doc-ver-visual-anomaly:8080"
   extraSecrets:
     - license-key
   autoscaling:
