@@ -25,7 +25,7 @@ have on the machine you wish to run our document verification solution is to hav
 
 
 ## Product documentation
-The documentation for BlinkID Verify API is maintained [here](https://blinkidverify.docs.microblink.com/docs/category/introduction) and API reference is [here](https://blinkidverify.docs.microblink.com/docs/api/request/).
+The documentation for BlinkID Verify API is maintained [here](https://blinkidverify.docs.microblink.com) and API reference is [here](https://blinkidverify.docs.microblink.com/docs/docver/api-reference/api-reference-v2).
 
 ## Release Notes
-Releases notes are published [here](https://blinkidverify.docs.microblink.com/docs/docver/release-notes)
+Releases notes are published [here](https://blinkidverify.docs.microblink.com/docs/docver/release-notes/release-notes)
