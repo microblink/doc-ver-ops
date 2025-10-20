@@ -18,11 +18,11 @@ doc-ver-api:
   fullnameOverride: ""
   image:
     # -- deployment docker image repository
-    repository: europe-docker.pkg.dev/microblink-identity/docver/api
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.16.0-a07c395"
+    tag: "3.16.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -418,11 +418,11 @@ docver-runner:
   fullnameOverride: docver-runner
   image:
     # -- deployment docker image repository
-    repository: europe-docker.pkg.dev/microblink-identity/docver/runner
+    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner
     # -- deployment docker image pull policy
     pullPolicy: Always
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.16.0-a07c395"
+    tag: "3.16.0"
   env:
     Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
     Executor__ModelServingSsl: "false"
