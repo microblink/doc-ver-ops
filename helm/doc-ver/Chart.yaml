@@ -1,35 +1,12 @@
 name: doc-ver
 apiVersion: v2
-version: 0.5.30
+version: 0.6.0
+appVersion: 3.16.0
 dependencies:
   - name: doc-ver-api
     repository: https://helm.microblink.com/charts
     version: 0.0.14
     condition: doc-ver-api.enabled
-  - name: visual-anomaly
-    repository: https://helm.microblink.com/charts
-    version: 0.0.11
-    condition: visual-anomaly.enabled
-  - name: anomdet-intermediary
-    repository: https://helm.microblink.com/charts
-    version: 0.1.1
-    condition: anomdet-intermediary.enabled
-  - name: embedding-store
-    repository: https://helm.microblink.com/charts
-    version: 0.26.0
-    condition: embedding-store.enabled
-  - name: postgresql
-    version: 13.2.27
-    repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled
-  - name: mlp-local-storage
-    version: 2.1.0
-    repository: https://helm.microblink.com/charts
-    condition: mlp-local-storage.enabled
-  - name: bundle-visual-anomaly-core-versions
-    repository: https://helm.microblink.com/charts
-    version: 0.9.2
-    condition: bundle-visual-anomaly-core-versions.enabled
   - name: model-serving
     alias: bundle-doc-ver-core-versions
     repository: https://helm.microblink.com/charts

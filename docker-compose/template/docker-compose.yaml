@@ -1,36 +1,12 @@
 version: "3"
 
 include:
-
-  # - path: ../base/bundle-va/docker-compose.yaml
-  #   project_directory: ../base/bundle-va
-  #   # add service account data for model bucket to creds/bundle/gcs.json
-  #   # https://cloud.google.com/iam/docs/service-accounts-create#creating
-  #   env_file: 
-  #     - conf/bundle-va/.env
-
   - path: ../base/bundle-doc-ver/docker-compose.yaml
     project_directory: ../base/bundle-doc-ver
     # add service account data for model bucket to creds/bundle/gcs.json
     # https://cloud.google.com/iam/docs/service-accounts-create#creating
     env_file: 
       - conf/bundle-doc-ver/.env
-
-  # - path: ../base/embedding-store/docker-compose.yaml
-  #   project_directory: ../base/embedding-store
-  #   env_file: 
-  #     - conf/embedding-store/.env
-  #     # - creds/embedding-store/.env
-
-  # - path: ../base/retrieval-intermediary/docker-compose.yaml
-  #   project_directory: ../base/retrieval-intermediary
-  #   env_file: 
-  #     - conf/retrieval-intermediary/.env
-
-  # - path: ../base/visual-anomaly/docker-compose.yaml
-  #   project_directory: ../base/visual-anomaly
-  #   env_file: 
-  #     - conf/visual-anomaly/.env
 
   - path: ../base/doc-ver-runner/docker-compose.yaml
     project_directory: ../base/doc-ver-runner

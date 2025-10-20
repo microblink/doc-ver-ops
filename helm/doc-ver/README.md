@@ -1,6 +1,7 @@
 # doc-ver
 
-![Version: 0.5.30](https://img.shields.io/badge/Version-0.5.30-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square)
+
 ## C4 Model
 ![Scheme](docs/tmpl/docver-deployment.svg)
 
@@ -26,44 +27,14 @@ helm install my-release -f <path to values file you want to use to configure the
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | postgresql | 13.2.27 |
-| https://helm.microblink.com/charts | anomdet-intermediary | 0.1.1 |
-| https://helm.microblink.com/charts | bundle-visual-anomaly-core-versions | 0.9.2 |
 | https://helm.microblink.com/charts | doc-ver-api | 0.0.14 |
 | https://helm.microblink.com/charts | docver-runner | 0.0.2 |
-| https://helm.microblink.com/charts | embedding-store | 0.26.0 |
-| https://helm.microblink.com/charts | mlp-local-storage | 2.1.0 |
 | https://helm.microblink.com/charts | bundle-doc-ver-core-versions(model-serving) | 1.5.5 |
-| https://helm.microblink.com/charts | visual-anomaly | 0.0.11 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| anomdet-intermediary.affinity | object | `{}` | deployment affinity |
-| anomdet-intermediary.anomdetIntermediaryConfig | object | `{"collection-name":"mdv-2005","model-id":"6687ad3b04248f708c1e0c95","model-name":"visual-anomaly","parallel-queries":10000}` | do not update anomdetIntermediaryConfig values, they are fixed for a specific docver release |
-| anomdet-intermediary.anomdetIntermediaryConfig.parallel-queries | int | `10000` | without blocking the requests in a sequence |
-| anomdet-intermediary.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
-| anomdet-intermediary.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
-| anomdet-intermediary.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
-| anomdet-intermediary.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target cpu usage percentage |
-| anomdet-intermediary.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
-| anomdet-intermediary.containerSecurityContext | object | `{}` | container security context |
-| anomdet-intermediary.enabled | bool | `false` | enable anomdet-intermediary component |
-| anomdet-intermediary.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/anomaly-detection-intermediary/onprem"` |  |
-| anomdet-intermediary.ingress.enabled | bool | `false` |  |
-| anomdet-intermediary.nodeSelector | object | `{}` | deployment node selector |
-| anomdet-intermediary.podSecurityContext | object | `{}` | pod security context |
-| anomdet-intermediary.replicaCount | int | `1` |  |
-| anomdet-intermediary.resources.limits.cpu | int | `1` | deployment resource cpu limit |
-| anomdet-intermediary.resources.limits.memory | string | `"1Gi"` | deployment resource memory limit |
-| anomdet-intermediary.resources.requests.cpu | string | `"300m"` | deployment resource cpu requests |
-| anomdet-intermediary.resources.requests.memory | string | `"512Mi"` | deployment resource memory requests |
-| anomdet-intermediary.tolerations | list | `[]` | deployment tolerations |
-| auth.dbCreds.createSecret | bool | `true` | if you do not expect multiple database users and db will not be exposed to any external traffic, set this to true and it will create secret used by both embedding-store and postgresql (if postgresql is deployed as part of this helm release) |
-| auth.dbCreds.password | string | `"x9xv1mw0td"` | if createSecret is set to true, set the database password here, we don't expect to have external traffic to the database, so we can use fixed password. If you want to manage user credentials password outside of this helm release simply create a secret with the name you specified under secretName, and disable createSecret. Contents of this secret are just two fields `EMBEDDING_STORE_PGVECTOR_USERNAME` and `EMBEDDING_STORE_PGVECTOR_PASSWORD` - first holding the username and second holding the password of the database user you want our service to use. Check out the templates/db-creds.yaml for more details on the content of the secret |
-| auth.dbCreds.secretName | string | `"mb-docver-db-creds"` | name of the secret, this string value must be updated in both postgresql and embedding-store |
-| auth.dbCreds.username | string | `"embedding-store-sa"` | if createSecret is set to true, set the database username here, if you update this value, make sure to update the value in the postgresql section as well (if postgresql is enabled). if you are using "external db" like cloud SQL or RDS, set this to the username you have created in the database |
 | auth.license.applicationId | string | `""` | App identifier from microblink developer hub |
 | auth.license.createSecret | bool | `false` | enable if you want to create license secret as part of this charts deployment |
 | auth.license.licenseKey | string | `""` | if createSecret is set to true, set the license key here |
@@ -274,48 +245,6 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.model.project | string | `"doc-ver"` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.model.repository | string | `"photo-fraud-classifier"` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.model.version | string | `"8.4.0"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.autoscaling.maxReplicas | int | `3` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.autoscaling.minReplicas | int | `1` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.autoscaling.type | string | `"hpa"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.bucket | string | `"identity-enc-models-public"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.isPublic | bool | `true` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.globalStorage.type | string | `"gs"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.storage.bucket | string | `"identity-enc-models-public"` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.storage.isPublic | bool | `true` |  |
-| bundle-visual-anomaly-core-versions.bundle.models.model.storage.type | string | `"gs"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.enabled | bool | `true` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.maxReplicas | int | `3` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.minReplicas | int | `1` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.autoscaling.targetCPUUtilizationPercentage | string | `"80"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.containerSecurityContext | object | `{}` | container security context |
-| bundle-visual-anomaly-core-versions.bundle.proxy.env.GOGC | string | `"50"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.image.tag | string | `"v0.25.2"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.cpu | string | `"500m"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.minLimits.memory | string | `"1Gi"` |  |
-| bundle-visual-anomaly-core-versions.bundle.proxy.podSecurityContext | object | `{}` | pod security context |
-| bundle-visual-anomaly-core-versions.bundle.serving.containerSecurityContext | object | `{}` | container security context |
-| bundle-visual-anomaly-core-versions.bundle.serving.nginx.containerSecurityContext | object | `{}` | container security context |
-| bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsConfig | object | `{}` |  |
-| bundle-visual-anomaly-core-versions.bundle.serving.nginx.dnsPolicy | string | `""` |  |
-| bundle-visual-anomaly-core-versions.bundle.serving.nginx.podAnnotations | object | `{}` | pod annotations |
-| bundle-visual-anomaly-core-versions.bundle.serving.nginx.podSecurityContext | object | `{}` | pod security context |
-| bundle-visual-anomaly-core-versions.bundle.serving.nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
-| bundle-visual-anomaly-core-versions.bundle.serving.podSecurityContext | object | `{}` | pod security context |
-| bundle-visual-anomaly-core-versions.enabled | bool | `false` | enable bundle-visual-anomaly-core-versions component |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.containerSecurityContext | object | `{}` | container security context |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.engine.type | string | `"triton"` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tritonserver-cpu-onnxruntime/onprem"` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.image.tag | string | `"23.06-3.8.0"` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.initContainerSecurityContext | object | `{}` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.maxLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.maxLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.minLimits.cpu | int | `2` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.minLimits.memory | string | `"2Gi"` |  |
-| bundle-visual-anomaly-core-versions.models.6687ad3b04248f708c1e0c95.podSecurityContext | object | `{}` | pod security context |
 | doc-ver-api.affinity | object | `{}` | deployment affinity |
 | doc-ver-api.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
 | doc-ver-api.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
@@ -334,7 +263,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | doc-ver-api.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | doc-ver-api.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | doc-ver-api.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver"` | deployment docker image repository |
-| doc-ver-api.image.tag | string | `"3.15.2"` | deployment docker image tag, if not set, version will be used as tag |
+| doc-ver-api.image.tag | string | `"3.16.0"` | deployment docker image tag, if not set, version will be used as tag |
 | doc-ver-api.ingress.annotations | object | `{}` |  |
 | doc-ver-api.ingress.className | string | `""` |  |
 | doc-ver-api.ingress.enabled | bool | `false` | enable if you want to expose the service |
@@ -380,112 +309,12 @@ helm install my-release -f <path to values file you want to use to configure the
 | docver-runner.fullnameOverride | string | `"docver-runner"` |  |
 | docver-runner.image.pullPolicy | string | `"Always"` | deployment docker image pull policy |
 | docver-runner.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner"` | deployment docker image repository |
-| docver-runner.image.tag | string | `"3.15.2"` | deployment docker image tag, if not set, version will be used as tag |
+| docver-runner.image.tag | string | `"3.16.0"` | deployment docker image tag, if not set, version will be used as tag |
 | docver-runner.resources.limits.cpu | int | `2` |  |
 | docver-runner.resources.limits.memory | string | `"4Gi"` |  |
 | docver-runner.resources.requests.cpu | int | `1` |  |
 | docver-runner.resources.requests.memory | string | `"512Mi"` |  |
 | docver-runner.tolerations | list | `[]` |  |
-| embedding-store.enabled | bool | `false` | enable embedding-store component |
-| embedding-store.seeder.config.collectionCreateWorkers | int | `200` |  |
-| embedding-store.seeder.config.collectionInsertBatch | int | `1` |  |
-| embedding-store.seeder.config.collectionInsertWorkers | int | `20` | make sure the database can handle the load to prevent the database from crashing |
-| embedding-store.seeder.containerSecurityContext | object | `{}` | container security context |
-| embedding-store.seeder.enabled | bool | `false` |  |
-| embedding-store.seeder.grpc.grpcRecvSize | string | `"52428800"` |  |
-| embedding-store.seeder.grpc.grpcSendSize | string | `"52428800"` |  |
-| embedding-store.seeder.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"` |  |
-| embedding-store.seeder.podSecurityContext | object | `{}` | pod security context |
-| embedding-store.seeder.resources.limits.cpu | int | `1` |  |
-| embedding-store.seeder.resources.limits.memory | string | `"2Gi"` |  |
-| embedding-store.seeder.resources.requests.cpu | string | `"500m"` |  |
-| embedding-store.seeder.resources.requests.memory | string | `"1Gi"` |  |
-| embedding-store.seeder.runAsPostUpgradeJob | bool | `false` |  |
-| embedding-store.seeder.seedStore.gc.bucket | string | `"document-verification-va-releases"` |  |
-| embedding-store.seeder.seedStore.gc.enabled | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.isPublic | bool | `true` |  |
-| embedding-store.seeder.seedStore.gc.prefix | string | `"full-db-2005/6687ad3b04248f708c1e0c95"` |  |
-| embedding-store.seeder.seedStore.s3.enabled | bool | `false` |  |
-| embedding-store.server.affinity | object | `{}` | server deployment affinity |
-| embedding-store.server.autoscaling.enabled | bool | `false` | if enabled, server deployment will be autoscaled |
-| embedding-store.server.autoscaling.maxReplicas | int | `2` | max replicas hpa will scale up to |
-| embedding-store.server.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
-| embedding-store.server.autoscaling.targetCPUUtilizationPercentage | int | `80` | if set, hpa will scale based on cpu usage, target memory usage percentage |
-| embedding-store.server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | if set, hpa will scale based on memory usage, target memory usage percentage |
-| embedding-store.server.containerSecurityContext | object | `{}` | container security context |
-| embedding-store.server.database.pgvector.addr | string | `"postgresql:5432"` |  |
-| embedding-store.server.database.pgvector.addrPrepandReleaseName | bool | `true` | set this to false if you are using an "external" SaaS database |
-| embedding-store.server.database.pgvector.connectionStringParams | string | `"pool_max_conns=1000&pool_max_conn_idle_time=30s&pool_max_conn_lifetime=60s"` |  |
-| embedding-store.server.database.pgvector.database | string | `"postgres"` | name of the database, if you are using an external database, set this to the name of the database |
-| embedding-store.server.database.pgvector.enabled | bool | `true` |  |
-| embedding-store.server.grpc.grpcRecvSize | string | `"52428800"` |  |
-| embedding-store.server.grpc.grpcSendSize | string | `"52428800"` |  |
-| embedding-store.server.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/embedding-store/onprem"` |  |
-| embedding-store.server.nodeSelector | object | `{}` | server deployment node selector |
-| embedding-store.server.podSecurityContext | object | `{}` | pod security context |
-| embedding-store.server.resources.limits.cpu | int | `2` |  |
-| embedding-store.server.resources.limits.memory | string | `"2Gi"` |  |
-| embedding-store.server.resources.requests.cpu | string | `"500m"` |  |
-| embedding-store.server.resources.requests.memory | string | `"1Gi"` |  |
-| embedding-store.server.secret | string | `"mb-docver-db-creds"` |  |
-| embedding-store.server.tolerations | list | `[]` | server deployment tolerations |
-| mlp-local-storage.PersistentVolume[0].capacity | string | `"1300Gi"` |  |
-| mlp-local-storage.PersistentVolume[0].nodes[0] | string | `"s1"` |  |
-| mlp-local-storage.PersistentVolume[0].owner | int | `1001` |  |
-| mlp-local-storage.PersistentVolume[0].storageClass.name | string | `"microblink-docver"` |  |
-| mlp-local-storage.PersistentVolume[0].storageClass.reclaimPolicy | string | `"Delete"` |  |
-| mlp-local-storage.PersistentVolume[0].storageType | string | `"ssd"` |  |
-| mlp-local-storage.PersistentVolume[0].volumenameprefix | string | `"test-tmp-delete-when-seen-"` |  |
-| mlp-local-storage.StorageClass[0].create | bool | `true` |  |
-| mlp-local-storage.StorageClass[0].name | string | `"microblink-docver"` |  |
-| mlp-local-storage.StorageClass[0].provisioner | string | `"kubernetes.io/no-provisioner"` |  |
-| mlp-local-storage.enabled | bool | `false` | enable this ONLY if you do not have dynamic storage provisioning in k8s cluster, likely using on-prem, baremetal k8s |
-| postgresql.auth.username | string | `"embedding-store-sa"` | must be fixed to this value, do not change |
-| postgresql.enabled | bool | `false` | Disabled, as we expect that the database will be hosted outside of this helm release, e.g in AWS RDS or GCP CloudSQL |
-| postgresql.global.postgresql.auth.existingSecret | string | `"mb-docver-db-creds"` |  |
-| postgresql.global.postgresql.auth.postgresqlDatabase | string | `"postgres"` |  |
-| postgresql.image.pullPolicy | string | `"IfNotPresent"` |  |
-| postgresql.image.registry | string | `"docker.io"` |  |
-| postgresql.image.repository | string | `"ankane/pgvector"` |  |
-| postgresql.image.tag | string | `"v0.5.1"` |  |
-| postgresql.primary.affinity | object | `{}` |  |
-| postgresql.primary.args[0] | string | `"-c"` |  |
-| postgresql.primary.args[1] | string | `"config_file=/bitnami/postgresql/conf/postgresql.conf"` |  |
-| postgresql.primary.configuration | string | `"max_connections = 1000\nshared_buffers = 18GB\neffective_cache_size = 24GB\nmaintenance_work_mem = 1GB\ncheckpoint_completion_target = 0.9\nwal_buffers = 16MB\ndefault_statistics_target = 1000\nrandom_page_cost = 1.1\neffective_io_concurrency = 300\nwork_mem = 2MB\nhuge_pages = off\nmin_wal_size = 2GB\nmax_wal_size = 4GB\nmax_worker_processes = 10\nmax_parallel_workers_per_gather = 4\nmax_parallel_workers = 10\nmax_parallel_maintenance_workers = 4\n\nwal_level = minimal\nmax_wal_senders = 0\n\nlisten_addresses = '*'\n"` |  |
-| postgresql.primary.livenessProbe.failureThreshold | int | `600` |  |
-| postgresql.primary.nodeSelector | object | `{}` |  |
-| postgresql.primary.persistence.enabled | bool | `true` |  |
-| postgresql.primary.persistence.size | string | `"500Gi"` |  |
-| postgresql.primary.persistence.storageClass | string | `"default"` |  |
-| postgresql.primary.resources.limits.cpu | int | `10` |  |
-| postgresql.primary.resources.limits.memory | string | `"24Gi"` |  |
-| postgresql.primary.resources.requests.cpu | int | `6` |  |
-| postgresql.primary.resources.requests.memory | string | `"20Gi"` |  |
-| postgresql.primary.service.type | string | `"ClusterIP"` |  |
-| postgresql.primary.tolerations | list | `[]` |  |
-| visual-anomaly.affinity | object | `{}` | deployment affinity |
-| visual-anomaly.autoscaling.cpu.enabled | bool | `true` | if enabled, hpa will scale based on cpu usage |
-| visual-anomaly.autoscaling.cpu.target | int | `80` | target cpu usage percentage |
-| visual-anomaly.autoscaling.enabled | bool | `false` | if enabled, deployment will be autoscaled |
-| visual-anomaly.autoscaling.maxReplicas | int | `1` | max replicas hpa will scale up to |
-| visual-anomaly.autoscaling.memory.enabled | bool | `false` | if enabled, hpa will scale based on memory usage |
-| visual-anomaly.autoscaling.memory.target | int | `80` | target memory usage percentage |
-| visual-anomaly.autoscaling.minReplicas | int | `1` | min replicas hpa will scale down to |
-| visual-anomaly.containerSecurityContext | object | `{}` | container security context |
-| visual-anomaly.enabled | bool | `false` | enable visual-anomaly component |
-| visual-anomaly.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-visual-anomaly"` |  |
-| visual-anomaly.image.tag | string | `"1.3.0"` |  |
-| visual-anomaly.ingress.className | string | `""` |  |
-| visual-anomaly.ingress.enabled | bool | `false` |  |
-| visual-anomaly.nodeSelector | object | `{}` | deployment node selector |
-| visual-anomaly.podAnnotations | object | `{}` | deployment podAnnotations |
-| visual-anomaly.podSecurityContext | object | `{}` | pod security context |
-| visual-anomaly.replicaCount | int | `1` | using fixed number of replicas if autoscaling is not enabled |
-| visual-anomaly.resources.limits.cpu | int | `1` |  |
-| visual-anomaly.resources.limits.memory | string | `"1Gi"` |  |
-| visual-anomaly.resources.requests.cpu | string | `"300m"` |  |
-| visual-anomaly.resources.requests.memory | string | `"0.5Gi"` |  |
-| visual-anomaly.tolerations | list | `[]` | deployment tolerations |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

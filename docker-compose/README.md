@@ -67,20 +67,7 @@ To inspect the logs of a specific service, run `docker-compose logs <service_nam
 Available services
 * doc-ver-api
 * doc-ver-runner
-* visual-anomaly
-* retrieval-intermediary
-* embedding-store-server
-* seeder
-* pgvector
 
-# Startup 
-
-To successfully startup, our solution needs to initialize its database. Depending on the database size this can be a 
-lengthy process. The database initialization is done by the `seeder` service. The `seeder` service will run once and
-initialize the database. After the database is initialized, the `seeder` service will exit.
-
-To track the progress simply use `docker-compose logs seeder`, there you will see the logs on percentage of the database
-that is initialized.
 
 ## Where is the Document verification endpoint available?
 
@@ -90,15 +77,6 @@ you started this docker-compose deployment on, on port `8080`.
 If you wish to change the port, you can do so by updating the configuration of the `doc-ver-api` service in the
 in the `config/doc-ver-api/.env` file, by updating the value of `DOC_VER_API_PORT` variable.
 
-# Available databases
-
-The database used can be configured at `conf/embedding-store-server/seeder.yaml` by changing the 
-`gc-seed-store-prefix` field. By default we use `full-db` as the prefix.
-
-Right now, we only have the `full-db` and `croatia-db` databases available. 
-Using `croatia-db` is helpful to confirm that the deployment is initializing and working as
-expected as it is by an order of magnitude smaller than `full-db`. Do not use `croatia-db` for production
-environments as it is likely not representative of the real-world use case.
 
 # Resource requirements
 
@@ -156,81 +134,6 @@ To be able to work, doc-ver-runner needs a license key that you can provide in /
 ```
 LICENSE_KEY=<string_value>
 ```
-
-### [visual-anomaly](https://bitbucket.org/microblink/web-api-visual-anomaly/src/master/)
-visual-anomaly docker-compose.yaml will start one longrunning visual-anomaly server service
-#### conf
-To configure visual-anomaly, an .env file should be added to /<deployment_dir>/conf/visual-anomaly, with the following values:
-```
-ALLOW_CORS=false
-LIMITS_CPUS=2
-LIMITS_MEM=2Gb
-RESERVATIONS_CPUS=1
-RESERVATIONS_MEM=1Gb
-```
-#### creds
-Not needed for visual-anomaly
-
-### [retrieval-intermediary](https://bitbucket.org/microblink/retrieval-intermediary/src/master/)
-retrieval-intermediary docker-compose.yaml will start one longrunning retrieval-intermediary server service
-#### conf
-To configure retrieval-intermediary, an .env file should be added to /<deployment_dir>/conf/retrieval-intermediary, with the following values:
-```
-COLLECTION_NAME=mdv
-PARALLEL_QUERIES=100
-```
-#### creds
-Not needed for retrieval-intermediary
-
-### [embedding-store](https://bitbucket.org/microblink/embedding-store/src/master/)
-embedding-store docker-compose.yaml will start three services, pgvector database, seeder and embedding-store-server. 
-seeder inserts predefined data to server database and exits when done.
-embedding-store-server and pgvector are longrunning services.
-#### seeder
-##### conf
-To configure seeder for s3, seeder.yaml should be added to /<deployment_dir>/conf/embedding-store, with the following values:
-```
-grpc-recv-size: <int_val>
-grpc-send-size: <int_val>
-
-col-create-workers: <int_val>
-col-insert-workers: <int_val>
-col-insert-batch: <int_val>
-
-s3-seed-store: <bool_val>
-s3-seed-store-endpoint: <string_val>
-s3-seed-store-secure: <bool_val>
-s3-seed-store-bucket: <string_val>
-s3-seed-store-prefix: <string_val>
-```
-
-To configure seeder for gcs, seeder.yaml shold be added to /<deployment_dir>/conf/embedding-store, with the following values:
-```
-grpc-recv-size: <int_val>
-grpc-send-size: <int_val>
-
-col-create-workers: <int_val>
-col-insert-workers: <int_val>
-col-insert-batch: <int_val>
-
-gc-seed-store: <bool_val>
-gc-seed-store-bucket: <string_val>
-gc-seed-store-prefix: <string_val>
-```
-#### server
-##### conf
-To configure server and db, .env file should be added to /<deployment_dir>/creds/embedding-store, with following values:
-```
-GRPC_RECV_SIZE=<int_value>
-GRPC_SEND_SIZE=<int_value>
-GRPC_TIMEOUT=<string_value>
-
-PG_VECTOR_CMX_CONN=<int_value>
-PG_VECTOR_LIMITS_MEM=<string_value>
-PG_VECTOR_RESERVATIONS_MEM=<string_value>
-```
-##### creds
-Not needed for embedding-store server
 
 ### bundle
 To configure bundle services, see [base/bundle/README.md](base/bundle/README.md) (Services section)
