@@ -218,6 +218,21 @@ bundle-doc-ver-core-versions:
                 params:
                   classNameOutput: label
                   scoreOutput: probability
+          photo-fraud-classifier-category-signature:
+            inputs:
+              - typeId: Image
+                params:
+                  imageInputKey: jpeg__default
+                name: image_input
+              - typeId: String
+                params:
+                  stringInputKey: string__default
+                name: string_input
+            outputs:
+              - typeId: MaxClassification
+                params:
+                  classNameOutput: single_label_classification.class_name.default
+                  scoreOutput: single_label_classification.class_score.default
           photocopy-classifier-contextual-unified-signature:
             inputs:
               - typeId: Image
@@ -237,19 +252,20 @@ bundle-doc-ver-core-versions:
                 params:
                   classNameOutput: label
                   scoreOutput: probability
+
         modelDefinitions:
           photo-fraud-classifier:
             backendInferenceEngine: tfServing
             models:
-              - id: 6890c881923c027093c71e05
+              - id: f4b53ebd1fa544c9bd528f374bd53a62
                 signatureId: photo-fraud-classifier-signature
+
           photo-fraud-classifier-intl:
             backendInferenceEngine: tfServing
             models:
-              - id: 67e56611a7b8d3605d024303
-                signatureId: photo-fraud-classifier-signature
-              - id: 68361556437e2714e4aec14b
-                signatureId: photo-fraud-classifier-signature
+              - id: 4369153988fe407aa184beaff9bb8f8e
+                signatureId: photo-fraud-classifier-category-signature
+
           photocopy-classifier-contextual-unified:
             backendInferenceEngine: tfServing
             models:
@@ -323,7 +339,7 @@ bundle-doc-ver-core-versions:
       tolerations: []
       labels: {}
       replicaCount: ""
-  models:
+   models:
     66e2b36788703787163f0ecf:
       model:
         repository: photocopy-classifier-contextual-unified
@@ -335,28 +351,33 @@ bundle-doc-ver-core-versions:
           enabled: true
           intra_op: 2
           inter_op: 2
+			image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+        tag: v2.13.0-3.17.0
       env:
         OMP_NUM_THREADS: 2
       minLimits:
         cpu: 2
         memory: "2Gi"
+        gpu: ""
       maxLimits:
         cpu: 3
         memory: "3Gi"
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
-    6890c881923c027093c71e05:
+        gpu: ""
+    f4b53ebd1fa544c9bd528f374bd53a62:
       model:
         repository: photo-fraud-classifier
         project: doc-ver
-        version: 8.4.0
+        version: 8.6.0
       engine:
         type: tfServing
         parallelization:
           enabled: true
           intra_op: 1
           inter_op: 1
+      image:
+        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
+        tag: v2.13.0-3.17.0
       env:
         OMP_NUM_THREADS: 1
       minLimits:
@@ -365,53 +386,28 @@ bundle-doc-ver-core-versions:
       maxLimits:
         cpu: 2
         memory: "1Gi"
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
-    67e56611a7b8d3605d024303:
+    4369153988fe407aa184beaff9bb8f8e:
       model:
         repository: photo-fraud-classifier-intl
         project: doc-ver
-        version: 1.0.0
+        version: 3.0.0
       engine:
         type: tfServing
         parallelization:
           enabled: true
-          intra_op: 1
-          inter_op: 1
-      env:
-        OMP_NUM_THREADS: 1
-      minLimits:
-        cpu: 1
-        memory: "1Gi"
-      maxLimits:
-        cpu: 2
-        memory: "1Gi"
+          intra_op: 2
+          inter_op: 2
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
         tag: v2.13.0-3.17.0
-    68361556437e2714e4aec14b:
-      model:
-        repository: photo-fraud-classifier-intl
-        project: doc-ver
-        version: 1.0.0
-      engine:
-        type: tfServing
-        parallelization:
-          enabled: true
-          intra_op: 1
-          inter_op: 1
       env:
-        OMP_NUM_THREADS: 1
+        OMP_NUM_THREADS: 2
       minLimits:
-        cpu: 1
-        memory: "1Gi"
+        cpu: 4
+        memory: "2Gi"
       maxLimits:
-        cpu: 2
-        memory: "1Gi"
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
+        cpu: 4
+        memory: "2Gi"
 
 docver-runner:
   enabled: true

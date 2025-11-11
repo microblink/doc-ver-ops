@@ -1,3 +1,4 @@
 helm/doc-ver/Chart.lock
 helm/doc-ver/charts/
 docker-compose/.DS_Store
+.DS_Store
