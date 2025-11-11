@@ -339,7 +339,7 @@ bundle-doc-ver-core-versions:
       tolerations: []
       labels: {}
       replicaCount: ""
-   models:
+  models:
     66e2b36788703787163f0ecf:
       model:
         repository: photocopy-classifier-contextual-unified
@@ -351,7 +351,7 @@ bundle-doc-ver-core-versions:
           enabled: true
           intra_op: 2
           inter_op: 2
-			image:
+      image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
         tag: v2.13.0-3.17.0
       env:
