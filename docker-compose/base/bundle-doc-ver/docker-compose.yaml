@@ -40,7 +40,7 @@ services:
       - ${REL_DIR}/conf/bundle-doc-ver/nginx.conf:/etc/nginx/nginx.conf
 
   s6890c881923c027093c71e05s:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:
@@ -80,7 +80,7 @@ services:
           cpus: ${SERVING_6890c881923c027093c71e05_CPU_RESERVATION}
           memory: ${SERVING_6890c881923c027093c71e05_MEM_RESERVATION}
   s66e2b36788703787163f0ecfs:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:
@@ -120,7 +120,7 @@ services:
           cpus: ${SERVING_66e2b36788703787163f0ecf_CPU_RESERVATION}
           memory: ${SERVING_66e2b36788703787163f0ecf_MEM_RESERVATION}
   s67e56611a7b8d3605d024303s:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:
@@ -160,7 +160,7 @@ services:
           cpus: ${SERVING_67e56611a7b8d3605d024303_CPU_RESERVATION}
           memory: ${SERVING_67e56611a7b8d3605d024303_MEM_RESERVATION}
   s68361556437e2714e4aec14bs:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:

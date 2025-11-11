@@ -68,7 +68,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.models.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.models.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.15.1"` |  |
+| bundle-doc-ver-core-versions.bundle.models.image.tag | string | `"v2.13.0-3.17.0"` |  |
 | bundle-doc-ver-core-versions.bundle.models.initContainerSecurityContext | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.labels | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.models.liveness.initialDelaySeconds | int | `30` |  |
@@ -195,7 +195,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.env.OMP_NUM_THREADS | int | `2` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.15.1"` |  |
+| bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.image.tag | string | `"v2.13.0-3.17.0"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.cpu | int | `3` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.maxLimits.memory | string | `"3Gi"` |  |
 | bundle-doc-ver-core-versions.models.66e2b36788703787163f0ecf.minLimits.cpu | int | `2` |  |
@@ -209,7 +209,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.env.OMP_NUM_THREADS | int | `1` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.tag | string | `"v2.13.0-3.15.1"` |  |
+| bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.image.tag | string | `"v2.13.0-3.17.0"` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.maxLimits.cpu | int | `2` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.maxLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.67e56611a7b8d3605d024303.minLimits.cpu | int | `1` |  |
@@ -223,7 +223,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.env.OMP_NUM_THREADS | int | `1` |  |
 | bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.image.tag | string | `"v2.13.0-3.15.1"` |  |
+| bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.image.tag | string | `"v2.13.0-3.17.0"` |  |
 | bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.maxLimits.cpu | int | `2` |  |
 | bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.maxLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.68361556437e2714e4aec14b.minLimits.cpu | int | `1` |  |
@@ -237,7 +237,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.engine.type | string | `"tfServing"` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.env.OMP_NUM_THREADS | int | `1` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem"` |  |
-| bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.image.tag | string | `"v2.13.0-3.15.1"` |  |
+| bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.image.tag | string | `"v2.13.0-3.17.0"` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.maxLimits.cpu | int | `2` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.maxLimits.memory | string | `"1Gi"` |  |
 | bundle-doc-ver-core-versions.models.6890c881923c027093c71e05.minLimits.cpu | int | `1` |  |
