@@ -104,7 +104,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | bundle-doc-ver-core-versions.bundle.proxy.env | object | `{}` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.image.repository | string | `"us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem"` |  |
-| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.25.2"` |  |
+| bundle-doc-ver-core-versions.bundle.proxy.image.tag | string | `"v0.26.0"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.className | string | `"nginx"` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.enabled | bool | `false` |  |
 | bundle-doc-ver-core-versions.bundle.proxy.ingress.host | string | `""` |  |

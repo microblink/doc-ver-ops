@@ -171,7 +171,7 @@ bundle-doc-ver-core-versions:
           enabled: false
       image:
         repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.25.2
+        tag: v0.26.0
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP
