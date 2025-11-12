@@ -28,7 +28,7 @@ services:
         condition: service_healthy
       s66e2b36788703787163f0ecfs:
         condition: service_healthy
-    image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
+    image: fabiocicerchia/nginx-lua:1.29.3-alpine3.22.2
     healthcheck:
       test: ["CMD", "curl", "-f", "doc-ver-model-nginx:80/health"]
       interval: 15s
