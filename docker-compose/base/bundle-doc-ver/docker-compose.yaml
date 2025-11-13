@@ -4,7 +4,7 @@ services:
     depends_on:
       doc-ver-model-nginx:
         condition: service_healthy
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.25.2
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.26.0
     healthcheck:
       test: ["CMD", "grpc_health_probe", "-addr", "doc-ver-model-proxy:8005"]
       interval: 15s
@@ -24,11 +24,11 @@ services:
 
   doc-ver-model-nginx:
     depends_on:
-      s6890c881923c027093c71e05s:
+      sf4b53ebd1fa544c9bd528f374bd53a62s:
         condition: service_healthy
       s66e2b36788703787163f0ecfs:
         condition: service_healthy
-    image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
+    image: fabiocicerchia/nginx-lua:1.29.3-alpine3.22.2
     healthcheck:
       test: ["CMD", "curl", "-f", "doc-ver-model-nginx:80/health"]
       interval: 15s
@@ -39,14 +39,14 @@ services:
     volumes:
       - ${REL_DIR}/conf/bundle-doc-ver/nginx.conf:/etc/nginx/nginx.conf
 
-  s6890c881923c027093c71e05s:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+  sf4b53ebd1fa544c9bd528f374bd53a62s:
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:
       - --enable_model_warmup
-      - --model_name=6890c881923c027093c71e05
-      - --model_base_path=/models/6890c881923c027093c71e05
+      - --model_name=f4b53ebd1fa544c9bd528f374bd53a62
+      - --model_base_path=/models/f4b53ebd1fa544c9bd528f374bd53a62
       - --tensorflow_inter_op_parallelism=1
       - --tensorflow_intra_op_parallelism=1
       - --file_system_poll_wait_seconds=0
@@ -59,9 +59,9 @@ services:
           "CMD",
           "tfs_model_status_probe",
           "-addr",
-          "s6890c881923c027093c71e05s:8500",
+          "sf4b53ebd1fa544c9bd528f374bd53a62s:8500",
           "-model-name",
-          "6890c881923c027093c71e05",
+          "f4b53ebd1fa544c9bd528f374bd53a62",
           "-model-version",
           "1",
           "|",
@@ -74,13 +74,13 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${SERVING_6890c881923c027093c71e05_CPU_LIMIT}
-          memory: ${SERVING_6890c881923c027093c71e05_MEM_LIMIT}
+          cpus: ${SERVING_f4b53ebd1fa544c9bd528f374bd53a62_CPU_LIMIT}
+          memory: ${SERVING_f4b53ebd1fa544c9bd528f374bd53a62_MEM_LIMIT}
         reservations:
-          cpus: ${SERVING_6890c881923c027093c71e05_CPU_RESERVATION}
-          memory: ${SERVING_6890c881923c027093c71e05_MEM_RESERVATION}
+          cpus: ${SERVING_f4b53ebd1fa544c9bd528f374bd53a62_CPU_RESERVATION}
+          memory: ${SERVING_f4b53ebd1fa544c9bd528f374bd53a62_MEM_RESERVATION}
   s66e2b36788703787163f0ecfs:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:
@@ -119,14 +119,14 @@ services:
         reservations:
           cpus: ${SERVING_66e2b36788703787163f0ecf_CPU_RESERVATION}
           memory: ${SERVING_66e2b36788703787163f0ecf_MEM_RESERVATION}
-  s67e56611a7b8d3605d024303s:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
+  s4369153988fe407aa184beaff9bb8f8es:
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.17.0
     networks:
       - doc-ver-network
     command:
       - --enable_model_warmup
-      - --model_name=67e56611a7b8d3605d024303
-      - --model_base_path=/models/67e56611a7b8d3605d024303
+      - --model_name=4369153988fe407aa184beaff9bb8f8e
+      - --model_base_path=/models/4369153988fe407aa184beaff9bb8f8e
       - --tensorflow_inter_op_parallelism=1
       - --tensorflow_intra_op_parallelism=1
       - --file_system_poll_wait_seconds=0
@@ -139,9 +139,9 @@ services:
           "CMD",
           "tfs_model_status_probe",
           "-addr",
-          "s67e56611a7b8d3605d024303s:8500",
+          "s4369153988fe407aa184beaff9bb8f8es:8500",
           "-model-name",
-          "67e56611a7b8d3605d024303",
+          "4369153988fe407aa184beaff9bb8f8e",
           "-model-version",
           "1",
           "|",
@@ -154,51 +154,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${SERVING_67e56611a7b8d3605d024303_CPU_LIMIT}
-          memory: ${SERVING_67e56611a7b8d3605d024303_MEM_LIMIT}
+          cpus: ${SERVING_4369153988fe407aa184beaff9bb8f8e_CPU_LIMIT}
+          memory: ${SERVING_4369153988fe407aa184beaff9bb8f8e_MEM_LIMIT}
         reservations:
-          cpus: ${SERVING_67e56611a7b8d3605d024303_CPU_RESERVATION}
-          memory: ${SERVING_67e56611a7b8d3605d024303_MEM_RESERVATION}
-  s68361556437e2714e4aec14bs:
-    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-3.15.1
-    networks:
-      - doc-ver-network
-    command:
-      - --enable_model_warmup
-      - --model_name=68361556437e2714e4aec14b
-      - --model_base_path=/models/68361556437e2714e4aec14b
-      - --tensorflow_inter_op_parallelism=1
-      - --tensorflow_intra_op_parallelism=1
-      - --file_system_poll_wait_seconds=0
-      - --grpc_max_threads=12
-    environment:
-      OMP_NUM_THREADS: "1"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "tfs_model_status_probe",
-          "-addr",
-          "s68361556437e2714e4aec14bs:8500",
-          "-model-name",
-          "68361556437e2714e4aec14b",
-          "-model-version",
-          "1",
-          "|",
-          "grep",
-          "AVAILABLE",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: ${SERVING_68361556437e2714e4aec14b_CPU_LIMIT}
-          memory: ${SERVING_68361556437e2714e4aec14b_MEM_LIMIT}
-        reservations:
-          cpus: ${SERVING_68361556437e2714e4aec14b_CPU_RESERVATION}
-          memory: ${SERVING_68361556437e2714e4aec14b_MEM_RESERVATION}
-
+          cpus: ${SERVING_4369153988fe407aa184beaff9bb8f8e_CPU_RESERVATION}
+          memory: ${SERVING_4369153988fe407aa184beaff9bb8f8e_MEM_RESERVATION}
 networks:
   doc-ver-network:
