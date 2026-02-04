@@ -56,3 +56,6 @@ You should see a list of nodes in your cluster.
 ## Installing Helm
 
 To install `helm` on your local machine, besst follow the official Helm documentation: [Installing Helm](https://helm.sh/docs/intro/install/).
+
+## Single-image notes
+The single-image deployment bundles models into the container image. No external model storage or model proxy credentials are required.

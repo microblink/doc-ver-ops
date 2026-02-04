@@ -1,0 +1,135 @@
+{{- if .Values.singleImage.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "docver.fullname" . }}
+  labels:
+    {{- include "docver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.singleImage.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "docver.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "docver.labels" . | nindent 8 }}
+      {{- with .Values.singleImage.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "docver.serviceAccountName" . }}
+      terminationGracePeriodSeconds: {{ .Values.singleImage.terminationGracePeriodSeconds }}
+      {{- with .Values.singleImage.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.singleImage.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: doc-ver
+          image: "{{ .Values.singleImage.image.repository }}:{{ .Values.singleImage.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.singleImage.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.singleImage.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: var-tmp
+              mountPath: /var/tmp
+            {{- if .Values.singleImage.logFiles.enabled }}
+            - name: var-log
+              mountPath: /var/log
+            {{- end }}
+          {{- with .Values.singleImage.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.singleImage.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- range $key, $value := .Values.singleImage.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: LOG_FILES_ENABLED
+              value: {{ ternary "1" "0" .Values.singleImage.logFiles.enabled | quote }}
+            {{- range .Values.singleImage.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.auth.license.secretName }}
+            {{- range .Values.singleImage.extraSecrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.singleImage.probes.liveness.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.singleImage.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.singleImage.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.singleImage.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.singleImage.probes.liveness.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.singleImage.probes.readiness.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.singleImage.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.singleImage.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.singleImage.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.singleImage.probes.readiness.failureThreshold }}
+          {{- if .Values.singleImage.probes.startup.enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.singleImage.probes.startup.path }}
+              port: http
+            periodSeconds: {{ .Values.singleImage.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.singleImage.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.singleImage.probes.startup.failureThreshold }}
+          {{- end }}
+      {{- with .Values.singleImage.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.singleImage.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.singleImage.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.singleImage.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tmp
+          emptyDir:
+            {{- with .Values.singleImage.volumes.tmp.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        - name: var-tmp
+          emptyDir:
+            {{- with .Values.singleImage.volumes.varTmp.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        {{- if .Values.singleImage.logFiles.enabled }}
+        - name: var-log
+          emptyDir:
+            {{- with .Values.singleImage.volumes.varLog.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        {{- end }}
+{{- end }}

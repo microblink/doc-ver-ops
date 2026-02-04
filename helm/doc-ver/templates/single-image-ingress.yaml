@@ -1,0 +1,35 @@
+{{- if and .Values.singleImage.enabled .Values.singleImage.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "docver.fullname" . }}
+  labels:
+    {{- include "docver.labels" . | nindent 4 }}
+  {{- with .Values.singleImage.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.singleImage.ingress.className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- with .Values.singleImage.ingress.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range .Values.singleImage.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ . }}
+            pathType: {{ $.Values.singleImage.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "docver.fullname" $ }}
+                port:
+                  number: {{ $.Values.singleImage.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}

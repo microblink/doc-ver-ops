@@ -24,10 +24,8 @@ cp -r template $deploymentName
 
 cd $deploymentName
 
-mkdir -p creds/doc-ver-runner
-
-echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-runner/.env
-echo "APPLICATION_ID=\"$licensee\"" >> conf/doc-ver-runner/.env
+echo "LICENSE_KEY=\"$licenceKey\"" >> conf/doc-ver-single-image/.env
+echo "APPLICATION_ID=\"$licensee\"" >> conf/doc-ver-single-image/.env
 
 cdir="$(pwd)"
 
