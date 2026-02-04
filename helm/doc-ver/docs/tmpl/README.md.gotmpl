@@ -126,15 +126,15 @@ That might look something like this:
 minReplicas: 4
 maxReplicas: 100
 pollingInterval: 1
-  triggers:
-    Rate-based scaling: keep enough pods for current throughput
-    - type: rabbitmq
-      metadata:
-        protocol: http # Rate based scaling requires HTTP protocol with RMQ
-        queueName: document.verification.queue
-        mode: MessageRate
-        value: "0.33" # ~3 instances per RPS (should be about right with default settings) 
-        activationValue: "0.5" # activate policy at 0.5 RPS
+triggers:
+  # Rate-based scaling: keep enough pods for current throughput
+  - type: rabbitmq
+    metadata:
+      protocol: http # Rate based scaling requires HTTP protocol with RMQ
+      queueName: document.verification.queue
+      mode: MessageRate
+      value: "0.33" # ~3 instances per RPS (should be about right with default settings) 
+      activationValue: "0.5" # activate policy at 0.5 RPS
 ```
 
 or something like this for more control over the scaling behavior:

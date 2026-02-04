@@ -15,7 +15,7 @@ To use either helm or docker-compose based deployment you will need a licence ke
 You can acquire it on [developer.microblink.com](https://developer.microblink.com/).
 
 ## Helm
-For production ready, user facing loads we provide a Helm chart that deploys the **single-image** container (API + Worker + Models in one pod).
+For production-ready, user facing loads we provide a Helm chart that deploys the **single-image** container (API + Worker + Models in one pod).
 For more information please refer to [README.md](helm/doc-ver/README.md) under `helm/doc-ver`.
 
 ## Docker compose

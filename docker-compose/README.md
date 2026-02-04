@@ -62,8 +62,19 @@ License settings are injected by `init.sh`:
 - `APPLICATION_ID`
 
 ## Scaling advice
-For predictable workloads, prefer increasing `WORKER_COUNT` before scaling out replicas.
-Each replica loads the full model set, so horizontal scaling multiplies memory and storage usage.
+
+- Avoid changing `WORKER_COUNT`, especially if you're not changing the resource limits. `WORKER_COUNT` is exposed to allow you to rightsize the performance if you have specific requirements for your container resource allocation.
+- We recommend scaling horizontally by simply running more replicas and relying on a load balancer to distribute the traffic.
+
+## Throughput and latency
+
+On average, a single verification takes 2-3 seconds. This time can vary depending on the document type, settings, and resource constraints.
+
+By default, each image runs 2 worker processes, meaning a single container can handle roughly 0.8 requests per second.
+
+These requests are queued internally (up to a limit), so the container can easily buffer and handle spikes (which will cause additional latency, of course).
+
+When the API is too saturated, it will start rejecting requests with a 429 status code.
 
 ## Migration guide (from multi-service compose)
 

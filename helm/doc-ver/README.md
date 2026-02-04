@@ -185,7 +185,7 @@ minReplicas: 4
 maxReplicas: 100
 pollingInterval: 1
   triggers:
-    Rate-based scaling: keep enough pods for current throughput
+    # Rate-based scaling: keep enough pods for current throughput
     - type: rabbitmq
       metadata:
         protocol: http # Rate based scaling requires HTTP protocol with RMQ
