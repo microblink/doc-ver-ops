@@ -48,10 +48,10 @@ The single-image container accepts a set of configuration env vars. The most com
 - `API_TIMEOUT_SECONDS`, `WorkerPollTimeoutSeconds`, `JobTimeoutMinutes` – internal API/queue tuning
 - `MPROXY_MODELS_ENDPOINT`, `MPROXY_MODELS_ENDPOINT_SSL` – should remain `localhost:8500` / `OFF` for single-image
 
-Additional env vars can be injected via `singleImage.extraEnv`:
+Additional env vars can be injected via `docVer.extraEnv`:
 
 ```yaml
-singleImage:
+docVer:
   extraEnv:
     - name: DocVerV2InflightLimit
       value: "4"
@@ -62,7 +62,7 @@ singleImage:
 ## Logging
 
 By default, logs go to stdout/stderr (preferred for container logging).
-Optional file logging can be enabled by setting `singleImage.logFiles.enabled=true`, which adds:
+Optional file logging can be enabled by setting `docVer.logFiles.enabled=true`, which adds:
 
 - `/var/log/tf-serving.log`
 - `/var/log/api.log`
@@ -71,7 +71,7 @@ Optional file logging can be enabled by setting `singleImage.logFiles.enabled=tr
 In Kubernetes, stdout/stderr is captured by the kubelet and rotated by the container runtime. The `/var/log` files live on an `emptyDir` volume. If that volume fills up, the container will start failing to write logs and may crash or be evicted under node disk pressure. To mitigate:
 
 - keep log ingestion on stdout/stderr (preferred),
-- set `singleImage.volumes.*.sizeLimit` to cap `emptyDir` usage, and
+- set `docVer.volumes.*.sizeLimit` to cap `emptyDir` usage, and
 - use centralized log collection instead of retaining large files in-container.
 
 ## Migration guide (multi-component → single-image)
@@ -82,7 +82,7 @@ It should be fairly straightforward to migrate from the multi-service compose to
 2. Create a new license secret containing:
    - `LICENSE_KEY`
    - `LICENSE_APPLICATION_ID`
-3. Update your values file to the new `singleImage` structure and image.
+3. Update your values file to the new `docVer` structure and image.
 4. Deploy the new chart and validate readiness with `/health/ready`.
 
 ## Scaling advice

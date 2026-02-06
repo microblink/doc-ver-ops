@@ -1,5 +1,5 @@
 include:
-  - path: ../base/doc-ver-single-image/docker-compose.yaml
-    project_directory: ../base/doc-ver-single-image
+  - path: ../base/doc-ver-image/docker-compose.yaml
+    project_directory: ../base/doc-ver-image
     env_file:
-      - conf/doc-ver-single-image/.env
+      - conf/doc-ver-image/.env

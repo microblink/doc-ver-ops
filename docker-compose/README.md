@@ -19,7 +19,7 @@ cd docker-compose
 bash init.sh <deployment_name> <licence_key> <application_id>
 ```
 
-This creates a new directory in `docker-compose/<deployment_name>` containing config and `docker-compose.yaml`.
+This creates a new directory in `docker-compose/<deployment_name>` containing config and `docker-compose.yaml`. It also copies `conf/doc-ver-image/.env.example` to `conf/doc-ver-image/.env`.
 
 Start the deployment:
 ```bash
@@ -29,18 +29,18 @@ docker-compose up -d
 
 ## Inspecting logs
 ```bash
-docker-compose logs doc-ver-single
+docker-compose logs doc-ver
 ```
 
 ## Endpoint
 The Document verification API is available on port `8080` by default.
-To change it, update `DOC_VER_API_PORT` in `conf/doc-ver-single-image/.env`.
+To change it, update `DOC_VER_API_PORT` in `conf/doc-ver-image/.env`.
 
 ## Resource requirements
-Resource limits are configured in `conf/doc-ver-single-image/.env`.
+Resource limits are configured in `conf/doc-ver-image/.env`.
 
 ## Logging
-Logs are emitted to stdout/stderr (view via `docker-compose logs doc-ver-single`) and also written to files under `/var/log` inside the container:
+Logs are emitted to stdout/stderr (view via `docker-compose logs doc-ver`) and also written to files under `/var/log` inside the container:
 
 - `/var/log/tf-serving.log`
 - `/var/log/api.log`
@@ -50,7 +50,7 @@ File logging is optional. Set `LOG_FILES_ENABLED=1` to enable files; otherwise l
 If the container filesystem fills up due to log growth, writes will fail and the process may crash. Prefer external log collection and keep log files small.
 
 ## Environment variables
-Core knobs in `conf/doc-ver-single-image/.env`:
+Configuration options in `conf/doc-ver-image/.env`:
 - `DOCVER_IMAGE`, `DOCVER_IMAGE_TAG` – image repository and tag
 - `WORKER_COUNT` – number of worker processes inside the container
 - `HEALTH_PORT_BASE` – base port for worker health endpoints
@@ -63,8 +63,8 @@ License settings are injected by `init.sh`:
 
 ## Scaling advice
 
-- Avoid changing `WORKER_COUNT`, especially if you're not changing the resource limits. `WORKER_COUNT` is exposed to allow you to rightsize the performance if you have specific requirements for your container resource allocation.
 - We recommend scaling horizontally by simply running more replicas and relying on a load balancer to distribute the traffic.
+- Avoid changing `WORKER_COUNT`, especially if you're not changing the resource limits. `WORKER_COUNT` is exposed to allow you to rightsize the performance if you have specific requirements for your container resource allocation.
 
 ## Throughput and latency
 
@@ -78,7 +78,7 @@ When the API is too saturated, it will start rejecting requests with a 429 statu
 
 ## Migration guide (from multi-service compose)
 
-It should be fairly straightforward to migrate from the multi-service compose to the single-image deployment since it's designed to be backwards compatible. The only real difference is the number containers that run.
+It should be fairly straightforward to migrate from the multi-service compose to the single-image deployment since it's designed to be backwards compatible. The only real difference is the number of containers that run.
 
 1. Stop and remove the old stack: `docker-compose down`.
 2. Remove old configs under `conf/doc-ver-api`, `conf/doc-ver-runner`, `conf/bundle-doc-ver`.

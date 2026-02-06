@@ -9,7 +9,7 @@ auth:
     # -- App identifier from microblink developer hub
     applicationId: ""
 
-singleImage:
+docVer:
   # -- enable single-image deployment (API + Worker + Models in one container)
   enabled: true
   # -- number of replicas to run
@@ -24,7 +24,7 @@ singleImage:
     # -- deployment docker image pull policy
     pullPolicy: IfNotPresent
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.17.1"
+    tag: "3.19.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:

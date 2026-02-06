@@ -17,12 +17,12 @@ _json_key:{{ . | b64dec }}
 {{- end -}}
 
 {{- define "docver.name" -}}
-{{- default .Chart.Name .Values.singleImage.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.docVer.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "docver.fullname" -}}
-{{- if .Values.singleImage.fullnameOverride -}}
-{{- .Values.singleImage.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.docVer.fullnameOverride -}}
+{{- .Values.docVer.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s" .Release.Name (include "docver.name" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -36,9 +36,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "docver.serviceAccountName" -}}
-{{- if .Values.singleImage.serviceAccount.create -}}
-{{- default (include "docver.fullname" .) .Values.singleImage.serviceAccount.name -}}
+{{- if .Values.docVer.serviceAccount.create -}}
+{{- default (include "docver.fullname" .) .Values.docVer.serviceAccount.name -}}
 {{- else -}}
-{{- default "default" .Values.singleImage.serviceAccount.name -}}
+{{- default "default" .Values.docVer.serviceAccount.name -}}
 {{- end -}}
 {{- end -}}

@@ -19,6 +19,7 @@ For production-ready, user facing loads we provide a Helm chart that deploys the
 For more information please refer to [README.md](helm/doc-ver/README.md) under `helm/doc-ver`.
 
 ## Docker compose
+We formally support both Docker Compose and Kubernetes deployments on *nix systems.
 If you are working within a constrained environment or Kubernetes is not an option, you can deploy the **single-image** container using `docker-compose` (or just run it directly based on the compose file).
 For more information and install guidelines please follow the instructions in [docker-compose/README.md](docker-compose/README.md).
 
