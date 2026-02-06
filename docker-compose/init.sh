@@ -24,10 +24,30 @@ cp -r template $deploymentName
 
 cd $deploymentName
 
-mkdir -p creds/doc-ver-runner
+if [ ! -f conf/doc-ver-image/.env ] && [ -f conf/doc-ver-image/.env.example ]; then
+  cp conf/doc-ver-image/.env.example conf/doc-ver-image/.env
+fi
 
-echo "LICENSE_KEY=\"$licenceKey\"" > creds/doc-ver-runner/.env
-echo "APPLICATION_ID=\"$licensee\"" >> conf/doc-ver-runner/.env
+update_env_var() {
+  local key="$1"
+  local value="$2"
+  local file="conf/doc-ver-image/.env"
+  local escaped_value
+
+  escaped_value="$value"
+  escaped_value="${escaped_value//\\/\\\\}"
+  escaped_value="${escaped_value//&/\\&}"
+  escaped_value="${escaped_value//|/\\|}"
+
+  if grep -q "^${key}=" "$file"; then
+    sed -i '' "s|^${key}=.*|${key}=\"${escaped_value}\"|" "$file"
+  else
+    printf '%s\n' "${key}=\"${escaped_value}\"" >> "$file"
+  fi
+}
+
+update_env_var "LICENSE_KEY" "$licenceKey"
+update_env_var "APPLICATION_ID" "$licensee"
 
 cdir="$(pwd)"
 

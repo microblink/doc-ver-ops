@@ -1,0 +1,35 @@
+services:
+  doc-ver:
+    image: ${DOCVER_IMAGE:-us-docker.pkg.dev/document-verification-public/verify-public/single-image}:${DOCVER_IMAGE_TAG:-3.19.0}
+    ports:
+      - ${DOC_VER_API_PORT}:8080
+    environment:
+      LICENSE_APPLICATION_ID: ${APPLICATION_ID}
+      LICENSE_KEY: ${LICENSE_KEY}
+      WORKER_COUNT: ${WORKER_COUNT}
+      HEALTH_PORT_BASE: ${HEALTH_PORT_BASE}
+      API_TIMEOUT_SECONDS: ${API_TIMEOUT_SECONDS}
+      WorkerPollTimeoutSeconds: ${WORKER_POLL_TIMEOUT_SECONDS}
+      JobTimeoutMinutes: ${JOB_TIMEOUT_MINUTES}
+      LOG_FILES_ENABLED: ${LOG_FILES_ENABLED}
+      MPROXY_MODELS_ENDPOINT: "localhost:8500"
+      MPROXY_MODELS_ENDPOINT_SSL: "OFF"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    deploy:
+      resources:
+        limits:
+          cpus: ${LIMITS_CPUS}
+          memory: ${LIMITS_MEM}
+        reservations:
+          cpus: ${RESERVATIONS_CPUS}
+          memory: ${RESERVATIONS_MEM}
+    networks:
+      - doc-ver-network
+
+networks:
+  doc-ver-network:

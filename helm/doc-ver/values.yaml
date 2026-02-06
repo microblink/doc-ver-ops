@@ -1,6 +1,6 @@
 auth:
   license:
-    # -- name of license-key secret, if changed, it must be updated in doc-ver-api
+    # -- name of license-key secret
     secretName: "license-key"
     # -- enable if you want to create license secret as part of this charts deployment
     createSecret: false
@@ -9,20 +9,22 @@ auth:
     # -- App identifier from microblink developer hub
     applicationId: ""
 
-doc-ver-api:
-  # -- if autoscaling.enabled is false, deployment will run replicaCount replicas
+docVer:
+  # -- enable single-image deployment (API + Worker + Models in one container)
+  enabled: true
+  # -- number of replicas to run
   replicaCount: 1
   # -- if set, overrides app.kubernetes.io/name
-  nameOverride: "doc-ver-api"
+  nameOverride: "doc-ver"
   # -- if set, overrides deployment, hpa, ingress, and service metadata.name
   fullnameOverride: ""
   image:
     # -- deployment docker image repository
-    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-doc-ver
+    repository: us-docker.pkg.dev/document-verification-public/verify-public/single-image
     # -- deployment docker image pull policy
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.17.1"
+    tag: "3.19.0"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -30,61 +32,75 @@ doc-ver-api:
     type: ClusterIP
     # -- service and container port
     port: 8080
+  serviceAccount:
+    # -- create a service account
+    create: true
+    # -- if set, overrides the name of the service account
+    name: ""
+    # -- annotations for the service account
+    annotations: {}
   resources:
     limits:
       # -- deployment resource cpu limit
-      cpu: 500m
+      cpu: "4"
       # -- deployment resource memory limit
-      memory: 1Gi
+      memory: 8Gi
     requests:
       # -- deployment resource cpu requests
-      cpu: 250m
+      cpu: "2"
       # -- deployment resource memory requests
-      memory: 256Mi
-  autoscaling:
-    # -- if enabled, deployment will be autoscaled
-    enabled: false
-    # -- min replicas hpa will scale down to
-    minReplicas: 1
-    # -- max replicas hpa will scale up to
-    maxReplicas: 3
-    memory:
-      # -- if enabled, hpa will scale based on memory usage
-      enabled: false
-      # -- target memory usage percentage
-      target: 80
-    cpu:
-      # -- if enabled, hpa will scale based on cpu usage
-      enabled: true
-      # -- target cpu usage percentage
-      target: 80
+      memory: 4Gi
   ingress:
     # -- enable if you want to expose the service
     enabled: false
     className: ""
     annotations: {}
-    #      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    #      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    #      nginx.ingress.kubernetes.io/proxy-body-size: 100m
-    #      nginx.ingress.kubernetes.io/client-max-body-size: 50m
-    #      nginx.ingress.kubernetes.io/enable-cors: "true"
-    #      nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-    #      cert-manager.io/cluster-issuer: letsencrypt-production
-    tls:
-      - secretName: docver-tls
-        hosts:
-          # -- if you want to expose the service, set the host name
-          - "docver.microblink.com"
+    tls: []
     hosts:
       # -- if you want to expose the service, set the host name
       - host: "docver.microblink.com"
         paths: ["/docver/", "/api/"]
     pathType: ImplementationSpecific
-
   env:
-    Runner__Pools__3.0__Address: "dns:///docver-runner:8081"
-    Api__PermitLimit: "100"
-    Api__QueueLimit: "100"
+    # -- worker pool size
+    WORKER_COUNT: "2"
+    # -- base port for worker health servers
+    HEALTH_PORT_BASE: "18080"
+    # -- API / queue configuration
+    API_TIMEOUT_SECONDS: "30"
+    WorkerPollTimeoutSeconds: "10"
+    JobTimeoutMinutes: "2"
+    # -- TF Serving endpoint inside the container
+    MPROXY_MODELS_ENDPOINT: "localhost:8500"
+    MPROXY_MODELS_ENDPOINT_SSL: "OFF"
+  logFiles:
+    # -- enable writing log files to /var/log (stdout/stderr is always enabled)
+    enabled: false
+  # -- additional env vars (name/value pairs)
+  extraEnv: []
+  # -- list of secret names to be added to deployment environment
+  extraSecrets: []
+  probes:
+    liveness:
+      path: /health/live
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readiness:
+      path: /health/ready
+      initialDelaySeconds: 30
+      periodSeconds: 15
+      timeoutSeconds: 5
+      failureThreshold: 10
+    startup:
+      enabled: true
+      path: /health/ready
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 60
+  # -- graceful shutdown timeout
+  terminationGracePeriodSeconds: 30
   # -- deployment node selector
   nodeSelector: {}
   # -- deployment tolerations
@@ -95,11 +111,6 @@ doc-ver-api:
   affinity: {}
   # -- deployment topologySpreadConstraints
   topologySpreadConstraints: []
-  # -- list of secret names to be added to deployment environment
-  extraSecrets:
-    - license-key
-  # -- list of configmap names to be added to deployment environment
-  extraCMS: []
   # -- pod security context
   podSecurityContext: {}
   # -- container security context
@@ -113,346 +124,11 @@ doc-ver-api:
     runAsUser: 65534
     seccompProfile:
       type: RuntimeDefault
-  # -- app version
-  version: 2.7.0-cloud
-
-bundle-doc-ver-core-versions:
-  # -- enable bundle-doc-ver-core-versions component
-  enabled: true
-  fullnameOverride: "bundle-doc-ver-core-versions"
-  bundle:
-    serving:
-      service:
-        type: ClusterIP
-        grpcPort: "80"
-        httpPort: "8501"
-      nginx:
-        enabled: true
-        resolver: kube-dns.kube-system.svc.cluster.local
-        timeout: 600s
-        keepaliveRequests: "1000"
-        keepalive: "320"
-        liveness:
-          initialDelaySeconds: 15
-          periodSeconds: 15
-        replicaCount: 1
-        dnsPolicy: ""
-        dnsConfig: {}
-        podSecurityContext: {}
-        containerSecurityContext: {}
-        containerPort: "8080"
-        port: "80"
-      envoy:
-        enabled: false
-        liveness:
-          initialDelaySeconds: 15
-          periodSeconds: 15
-        replicaCount: 1
-        dnsPolicy: ""
-        dnsConfig: {}
-        podSecurityContext: {}
-        containerSecurityContext: {}
-        containerPort: "8080"
-        port: "80"
-      syncJob:
-        podSecurityContext: {}
-        containerSecurityContext: {}
-      downloadModels: false
-    proxy:
-      ingress:
-        enabled: false
-        host: ""
-        className: nginx
-        ssl:
-          enabled: true
-          redirect: true
-          force: false
-        tls:
-          enabled: false
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem
-        tag: v0.26.0
-        pullPolicy: IfNotPresent
-      service:
-        type: ClusterIP
-        grpcPort: "8005"
-        httpPort: "8000"
-      args:
-        printfServiceNameFormat: ""
-      autoscaling:
-        enabled: false
-        minReplicas: 0
-        maxReplicas: 0
-        targetCPUUtilizationPercentage: ""
-        targetMemoryUtilizationPercentage: ""
-      maxLimits:
-        cpu: "2"
-        memory: 2Gi
-      minLimits:
-        cpu: "1"
-        memory: 1Gi
-      labels: {}
-      replicaCount: ""
-      podAnnotations: {}
-      podSecurityContext: {}
-      containerSecurityContext: {}
-      liveness:
-        initialDelaySeconds: 15
-        periodSeconds: 15
-      readiness:
-        initialDelaySeconds: 15
-        periodSeconds: 15
-      nodeSelector: {}
-      affinity: {}
-      tolerations: []
-      env: {}
-      signatures:
-        signatureDefinitions:
-          photo-fraud-classifier-signature:
-            inputs:
-              - typeId: Image
-                params:
-                  imageInputKey: image_input
-            outputs:
-              - typeId: MaxClassification
-                params:
-                  classNameOutput: label
-                  scoreOutput: probability
-          photo-fraud-classifier-category-signature:
-            inputs:
-              - typeId: Image
-                params:
-                  imageInputKey: jpeg__default
-                name: image_input
-              - typeId: String
-                params:
-                  stringInputKey: string__default
-                name: string_input
-            outputs:
-              - typeId: MaxClassification
-                params:
-                  classNameOutput: single_label_classification.class_name.default
-                  scoreOutput: single_label_classification.class_score.default
-          photocopy-classifier-contextual-unified-signature:
-            inputs:
-              - typeId: Image
-                params:
-                  imageInputKey: image_input
-                name: image_input
-              - typeId: Quad
-                params:
-                  quadInputKey: card_edges
-                name: card_edges
-              - typeId: Scalar
-                params:
-                  scalarInputKey: aspect_ratio
-                name: aspect_ratio
-            outputs:
-              - typeId: MaxClassification
-                params:
-                  classNameOutput: label
-                  scoreOutput: probability
-
-        modelDefinitions:
-          photo-fraud-classifier:
-            backendInferenceEngine: tfServing
-            models:
-              - id: f4b53ebd1fa544c9bd528f374bd53a62
-                signatureId: photo-fraud-classifier-signature
-
-          photo-fraud-classifier-intl:
-            backendInferenceEngine: tfServing
-            models:
-              - id: 4369153988fe407aa184beaff9bb8f8e
-                signatureId: photo-fraud-classifier-category-signature
-
-          photocopy-classifier-contextual-unified:
-            backendInferenceEngine: tfServing
-            models:
-              - id: 66e2b36788703787163f0ecf
-                signatureId: photocopy-classifier-contextual-unified-signature
-    models:
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
-        pullPolicy: IfNotPresent
-      autoscaling:
-        enabled: true
-        type: hpa
-        minReplicas: 1
-        maxReplicas: 2
-        targetCPUUtilizationPercentage: "80"
-        targetMemoryUtilizationPercentage: ""
-        targetRPS: ""
-        targetConcurrency: ""
-        initialScale: 1
-        scaleDownDelay: 5m
-        scaleStableWindow: 60s
-      engine:
-        type: tfServing
-        batching:
-          enabled: false
-          max_enqueued_batches: ""
-          pad_variable_length_inputs: false
-          max_batch_size: ""
-          num_batch_threads: ""
-          batch_timeout_micros: ""
-        parallelization:
-          enabled: true
-          intra_op: 0
-          inter_op: 0
-        monitoring:
-          enabled: false
-        grpc_max_threads: 0
-        warmStart: false
-      model:
-        globalStorage:
-          type: gs
-          bucket: identity-enc-models-public
-          isPublic: true
-        storage:
-          type: gs
-          bucket: identity-enc-models-public
-          isPublic: true
-      liveness:
-        initialDelaySeconds: 30
-        periodSeconds: 30
-      startup:
-        failureThreshold: 30
-        periodSeconds: 16
-      maxLimits:
-        cpu: "3"
-        memory: 2Gi
-        gpu: ""
-      minLimits:
-        cpu: "3"
-        memory: 2Gi
-        gpu: ""
-      podAnnotations: {}
-      podSecurityContext: {}
-      containerSecurityContext: {}
-      initContainerSecurityContext: {}
-      env: {}
-      readiness: {}
-      nodeSelector: {}
-      affinity: {}
-      tolerations: []
-      labels: {}
-      replicaCount: ""
-  models:
-    66e2b36788703787163f0ecf:
-      model:
-        repository: photocopy-classifier-contextual-unified
-        project: doc-ver
-        version: 9.0.1
-      engine:
-        type: tfServing
-        parallelization:
-          enabled: true
-          intra_op: 2
-          inter_op: 2
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
-      env:
-        OMP_NUM_THREADS: 2
-      minLimits:
-        cpu: 2
-        memory: "2Gi"
-        gpu: ""
-      maxLimits:
-        cpu: 3
-        memory: "3Gi"
-        gpu: ""
-    f4b53ebd1fa544c9bd528f374bd53a62:
-      model:
-        repository: photo-fraud-classifier
-        project: doc-ver
-        version: 8.6.0
-      engine:
-        type: tfServing
-        parallelization:
-          enabled: true
-          intra_op: 1
-          inter_op: 1
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
-      env:
-        OMP_NUM_THREADS: 1
-      minLimits:
-        cpu: 1
-        memory: "1Gi"
-      maxLimits:
-        cpu: 2
-        memory: "1Gi"
-    4369153988fe407aa184beaff9bb8f8e:
-      model:
-        repository: photo-fraud-classifier-intl
-        project: doc-ver
-        version: 3.0.0
-      engine:
-        type: tfServing
-        parallelization:
-          enabled: true
-          intra_op: 2
-          inter_op: 2
-      image:
-        repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem
-        tag: v2.13.0-3.17.0
-      env:
-        OMP_NUM_THREADS: 2
-      minLimits:
-        cpu: 4
-        memory: "2Gi"
-      maxLimits:
-        cpu: 4
-        memory: "2Gi"
-
-docver-runner:
-  enabled: true
-  fullnameOverride: docver-runner
-  image:
-    # -- deployment docker image repository
-    repository: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/web-api-runner
-    # -- deployment docker image pull policy
-    pullPolicy: Always
-    # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.17.1"
-  env:
-    Executor__ModelServingUrl: "bundle-doc-ver-core-versions-mp:8005"
-    Executor__ModelServingSsl: "false"
-    Api__PermitLimit: "1"
-    Api__QueueLimit: "0"
-    Executor__RetryCount: "50"
-    Executor__RetryBackOff: "100"
-  extraSecrets:
-    - license-key
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 16
-    cpu:
-      enabled: true
-      target: 80
-    memory:
-      enabled: true
-      target: 70
-  resources:
-    requests:
-      cpu: 1
-      memory: 512Mi
-    limits:
-      cpu: 2
-      memory: 4Gi
-  tolerations: []
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 65534
-    seccompProfile:
-      type: RuntimeDefault
+  volumes:
+    # -- size limits for writable emptyDir volumes (optional, e.g. "1Gi")
+    tmp:
+      sizeLimit: ""
+    varTmp:
+      sizeLimit: ""
+    varLog:
+      sizeLimit: ""
