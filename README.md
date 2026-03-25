@@ -28,7 +28,7 @@ If you previously used the multi-component stack, follow the migration guide in 
 
 
 ## Product documentation
-The documentation for BlinkID Verify API is maintained [here](https://blinkidverify.docs.microblink.com) and API reference is [here](https://blinkidverify.docs.microblink.com/docs/docver/api-reference/api-reference-v2).
+The documentation for BlinkID Verify API is maintained [here](https://docs.microblink.com/verify) and API reference is [here](https://docs.microblink.com/verify/api/ref/v2).
 
 ## Release Notes
-Releases notes are published [here](https://blinkidverify.docs.microblink.com/docs/docver/release-notes/release-notes)
+Releases notes are published [here](https://docs.microblink.com/verify/release-notes)
