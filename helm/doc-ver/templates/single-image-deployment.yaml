@@ -1,0 +1,135 @@
+{{- if .Values.docVer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "docver.fullname" . }}
+  labels:
+    {{- include "docver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.docVer.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "docver.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "docver.labels" . | nindent 8 }}
+      {{- with .Values.docVer.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "docver.serviceAccountName" . }}
+      terminationGracePeriodSeconds: {{ .Values.docVer.terminationGracePeriodSeconds }}
+      {{- with .Values.docVer.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.docVer.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: doc-ver
+          image: "{{ .Values.docVer.image.repository }}:{{ .Values.docVer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.docVer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.docVer.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: var-tmp
+              mountPath: /var/tmp
+            {{- if .Values.docVer.logFiles.enabled }}
+            - name: var-log
+              mountPath: /var/log
+            {{- end }}
+          {{- with .Values.docVer.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.docVer.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- range $key, $value := .Values.docVer.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: LOG_FILES_ENABLED
+              value: {{ ternary "1" "0" .Values.docVer.logFiles.enabled | quote }}
+            {{- range .Values.docVer.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.auth.license.secretName }}
+            {{- range .Values.docVer.extraSecrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.docVer.probes.liveness.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.docVer.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.docVer.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.docVer.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.docVer.probes.liveness.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.docVer.probes.readiness.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.docVer.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.docVer.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.docVer.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.docVer.probes.readiness.failureThreshold }}
+          {{- if .Values.docVer.probes.startup.enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.docVer.probes.startup.path }}
+              port: http
+            periodSeconds: {{ .Values.docVer.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.docVer.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.docVer.probes.startup.failureThreshold }}
+          {{- end }}
+      {{- with .Values.docVer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.docVer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.docVer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.docVer.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tmp
+          emptyDir:
+            {{- with .Values.docVer.volumes.tmp.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        - name: var-tmp
+          emptyDir:
+            {{- with .Values.docVer.volumes.varTmp.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        {{- if .Values.docVer.logFiles.enabled }}
+        - name: var-log
+          emptyDir:
+            {{- with .Values.docVer.volumes.varLog.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        {{- end }}
+{{- end }}

@@ -5,8 +5,8 @@
 
 {{ template "chart.description" . }}
 
-## C4 Model
-![Scheme](docs/tmpl/docver-deployment.svg)
+## Architecture
+This chart deploys the single-image container (API + Worker + Models in one pod).
 
 ## Usage 
 
@@ -14,7 +14,7 @@
 To install helm and setup your local environment, please follow the instructions [here](docs/environment-setup.md).
 
 ### Installing the Chart
-This helm chart is published in microblinks helm chart repository - `https://helm.microblink.com/charts`.
+This helm chart is published in Microblink's helm chart repository - `https://helm.microblink.com/charts`.
 
 To use it, simply add the repository to your helm client:
 ```bash
@@ -24,7 +24,7 @@ helm repo update
 
 Then you can install the chart using:
 ```bash
-helm install my-release -f <path to values file you want to use to configure the chart> mb/doc-ver
+helm install my-release -f <path to values file you want to use to configure the chart> microblink/doc-ver
 ```
 
 {{ template "chart.homepageLine" . }}
@@ -38,3 +38,128 @@ helm install my-release -f <path to values file you want to use to configure the
 {{ template "chart.valuesSection" . }}
 
 {{ template "helm-docs.versionFooter" . }}
+
+## Environment variables
+
+The single-image container accepts a set of configuration env vars. The most commonly tuned ones:
+
+- `WORKER_COUNT` – number of worker processes in the container
+- `HEALTH_PORT_BASE` – base port for worker health endpoints
+- `API_TIMEOUT_SECONDS`, `WorkerPollTimeoutSeconds`, `JobTimeoutMinutes` – internal API/queue tuning
+- `MPROXY_MODELS_ENDPOINT`, `MPROXY_MODELS_ENDPOINT_SSL` – should remain `localhost:8500` / `OFF` for single-image
+
+Additional env vars can be injected via `docVer.extraEnv`:
+
+```yaml
+docVer:
+  extraEnv:
+    - name: DocVerV2InflightLimit
+      value: "4"
+    - name: DocVerV2QueueLimit
+      value: "0"
+```
+
+## Logging
+
+By default, logs go to stdout/stderr (preferred for container logging).
+Optional file logging can be enabled by setting `docVer.logFiles.enabled=true`, which adds:
+
+- `/var/log/tf-serving.log`
+- `/var/log/api.log`
+- `/var/log/worker-N.log`
+
+In Kubernetes, stdout/stderr is captured by the kubelet and rotated by the container runtime. The `/var/log` files live on an `emptyDir` volume. If that volume fills up, the container will start failing to write logs and may crash or be evicted under node disk pressure. To mitigate:
+
+- keep log ingestion on stdout/stderr (preferred),
+- set `docVer.volumes.*.sizeLimit` to cap `emptyDir` usage, and
+- use centralized log collection instead of retaining large files in-container.
+
+## Migration guide (multi-component → single-image)
+
+It should be fairly straightforward to migrate from the multi-service compose to the single-image deployment since it's designed to be backwards compatible. The only real difference is the number containers that run.
+
+1. Uninstall the old release (API/Runner/Model proxy charts).
+2. Create a new license secret containing:
+   - `LICENSE_KEY`
+   - `LICENSE_APPLICATION_ID`
+3. Update your values file to the new `docVer` structure and image.
+4. Deploy the new chart and validate readiness with `/health/ready`.
+
+## Scaling advice
+
+- Avoid changing `WORKER_COUNT`, especially if you're not changing the resource limits. `WORKER_COUNT` is exposed to allow you to rightsize the performance if you have specific requirements for your container resource allocation.
+- We recommend scaling horizontally.
+
+## Throughput and latency
+
+On average, a single verification takes 2-3 seconds. This time can vary depending on the document type, settings, and resource constraints.
+
+By default, each image runs 2 worker processes, meaning a single container can handle roughly 0.8 requests per second.
+
+These requests are queued internally (up to a limit), so the container can easily buffer and handle spikes (which will cause additional latency, of course).
+
+When the API is too saturated, it will start rejecting requests with a 429 status code.
+
+## Horizontal scaling
+
+There are three primary horizontal scaling approaches you can use to get higher throughput from the single image.
+
+1. Run a higher flat number of replicas. 
+
+Since the API can buffer requests, consider if you really need dynamic scaling or large numbers of replicas. 
+
+A single instance is capable processing some 70000 requests in a day. If you don't experience large spikes, this might be good enough. However, it's always best to have redundancy, and you likely have concentrated peak loads. Unless these loads are huge, running a few, or up to 10 replicas at all times is likely an excellent, cost effective solution to handle all your traffic.
+
+2. Dynamic scaling based on CPU usage.
+
+The easiest way to scale dynamically is to use HPA with a CPU metric that's a proxy for load. This generally works ok, because the processing is CPU heavy. However, there are multiple workers and a verification is not a uniform process so there's also a lot of variance and noise.
+
+It's better to set somewhat lower thresholds (~50-60%) and have more aggressive scaling. However, if you have a lot of traffic and pods, this might end up being wasteful. In that case, we'd recommend queue based scaling.
+
+3. Queue based scaling
+
+By putting a fast gateway and queue in front of the container (PubSub, RabbitMQ, etc.), and utilizing KEDA and queue metrics, you can scale the number of images based on the number of items in the queue. This is the most efficient way to scale, but it requires additional infrastructure and configuration. It's most likely not cost effective unless you have large loads or extreme spikes.
+
+That might look something like this:
+
+```yaml
+minReplicas: 4
+maxReplicas: 100
+pollingInterval: 1
+triggers:
+  # Rate-based scaling: keep enough pods for current throughput
+  - type: rabbitmq
+    metadata:
+      protocol: http # Rate based scaling requires HTTP protocol with RMQ
+      queueName: document.verification.queue
+      mode: MessageRate
+      value: "0.33" # ~3 instances per RPS (should be about right with default settings) 
+      activationValue: "0.5" # activate policy at 0.5 RPS
+```
+
+or something like this for more control over the scaling behavior:
+
+```yaml
+horizontalPodAutoscalerConfig:
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 50           # up to +50 pods / 30s
+          periodSeconds: 30
+        - type: Percent
+          value: 100          # or +100% / 30s
+          periodSeconds: 30
+      selectPolicy: Max       # most aggressive allowed
+
+    scaleDown:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 20           # can drop 20 pods / 30s
+          periodSeconds: 30
+        - type: Percent
+          value: 20           # or 20% / 30s
+          periodSeconds: 30
+      selectPolicy: Max       # take the more aggressive of the two

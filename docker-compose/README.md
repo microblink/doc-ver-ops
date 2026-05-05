@@ -1,236 +1,87 @@
-# Docver docker-compose deployment
+# Docver docker-compose deployment (single-image)
 
-Docver consists of six components, each of which is defined in `base/<component_dir>`.
-Both `base` and `template` directories should not be edited and you are expected to configure
-your deployment in a separate directory.
-To configure this we provide `init.sh` to easily create one or multiple deployment instances and configurations
-
-For more information on the topology of the services that make the solution please refer to
-documentation in helm package provided [here](../helm/doc-ver/README.md).
+This deployment runs the **single-image** container (API + Worker + Models in one container).
 
 ## Prerequisites
-* docker compose >= 2.22.0
-* docker >= 20.10.5
+- docker >= 20.10.5
+- docker compose >= 2.22.0
 
-### Docker compose
+## Quickstart
 
-To install docker compose, follow the instructions [here](https://docs.docker.com/compose/install/).
+Clone this repository and position yourself in the root:
+```bash
+git clone git@github.com:microblink/doc-ver-ops.git && cd doc-ver-ops
+```
 
-If you don't want to "pollute" your docker environment we recommend using a [standalone installation](https://docs.docker.com/compose/install/standalone/) of docker-compose. It is a single binary that you can put in your PATH 
-and use it as a regular command as explained in the provided link.
-
-### Your licence key
-
-As mentioned [here](../README.md). You can acquire these on [developer.microblink.com](https://developer.microblink.com/).
-If you are using Document verification self-hosted you will need to acquire the licence key from the licences section (under Document verification self-hosted).
-
-# Quickstart - Deploying your instance
-
-Clone this repository and position yourself in the root of the repo:
-`git clone git@github.com:microblink/doc-ver-ops.git && cd doc-ver-ops`
-
-## Initialise your environment and running the deployment
-
-To initialize your environment you should use `init.sh` provided in the `docker-compose` directory.
-
-You can do that by running the following commands
-
+Initialize your deployment:
 ```bash
 cd docker-compose
 bash init.sh <deployment_name> <licence_key> <application_id>
 ```
-Update the values in <> with your own values.
- * `<deployment_name>` - the name of your deployment, we recommend simply using your company name
- * `<licence_key>` - the licence key that you will use to authenticate. This key is acquired on developer.microblink.com under licences - document verification self-hosted.
- * `<application_id>` - application identifier. This value is acquired on developer.microblink.com under licences - document verification 
 
-This will create a new directory in the `docker-compose` directory with the `<deployment_name>` you provided. 
-This directory will contain the configuration files for your deployment runnable by a single command `docker-compose up -d`.
+This creates a new directory in `docker-compose/<deployment_name>` containing config and `docker-compose.yaml`. It also copies `conf/doc-ver-image/.env.example` to `conf/doc-ver-image/.env`.
 
-To prevent any confusion, if for example I'm working for company `microblink`, my licence key is `someExampleString` and application id is `myapp` I would run the following command:
-
+Start the deployment:
 ```bash
-bash init.sh microblink someExampleString myapp
-```
-
-Afterwards, I would continue to deploy my instance by running the following:
-
-```bash
-cd microblink
+cd <deployment_name>
 docker-compose up -d
 ```
 
-## Inspecting the logs
-
-To inspect the logs of a specific service, run `docker-compose logs <service_name>`.
-
-Available services
-* doc-ver-api
-* doc-ver-runner
-* visual-anomaly
-* retrieval-intermediary
-* embedding-store-server
-* seeder
-* pgvector
-
-# Startup 
-
-To successfully startup, our solution needs to initialize its database. Depending on the database size this can be a 
-lengthy process. The database initialization is done by the `seeder` service. The `seeder` service will run once and
-initialize the database. After the database is initialized, the `seeder` service will exit.
-
-To track the progress simply use `docker-compose logs seeder`, there you will see the logs on percentage of the database
-that is initialized.
-
-## Where is the Document verification endpoint available?
-
-Once initialized, the Document verification endpoint will be available on the machine 
-you started this docker-compose deployment on, on port `8080`.
-
-If you wish to change the port, you can do so by updating the configuration of the `doc-ver-api` service in the
-in the `config/doc-ver-api/.env` file, by updating the value of `DOC_VER_API_PORT` variable.
-
-# Available databases
-
-The database used can be configured at `conf/embedding-store-server/seeder.yaml` by changing the 
-`gc-seed-store-prefix` field. By default we use `full-db` as the prefix.
-
-Right now, we only have the `full-db` and `croatia-db` databases available. 
-Using `croatia-db` is helpful to confirm that the deployment is initializing and working as
-expected as it is by an order of magnitude smaller than `full-db`. Do not use `croatia-db` for production
-environments as it is likely not representative of the real-world use case.
-
-# Resource requirements
-
-For each service you will be able to configure how much CPU and RAM it can use. Alongside `docker-compose.yaml` 
-there is a `conf` directory. Inside the `conf` directory there is a directory for each service. Inside each 
-service directory there is a `.env` file where you can configure the resource requirements for the service.
-
-We set the default values for each service in the `conf` directory. Please reach out to us if you need to change
-the default values as we need to make sure that the services are not starved of resources. Given your expected load
-we can help you determine the right values for your deployment.
-
-
-# Configuration details
-
-We do not expect the need to change the default configuration for each service. However, if you need to change the
-parts of our deployment that are not exposed via env vars (that you can configure in `.env` files) you can do so by [extending](https://docs.docker.com/compose/multiple-compose-files/extends/) them in /<your instance>/docker-compose.yaml.
-Since creds and conf are loaded outside the /base directory, /<your instance>/.env file needs to be added. Inside there should be an env variable with the full path to the /<your instance> directory on the target server. 
-
-Server prerequisites and configuration options for each component will be described in the following sections.
-
-
-## Prerequisites
-* doc-ver-api licence key
-
-## Components
-
-### [doc-ver-api](https://bitbucket.org/microblink/docver-api/src/)
-doc-ver-api docker-compose.yaml will start one longrunning doc-ver-api server service
-#### conf
-To configure doc-ver-api, an .env file should be added to /<deployment_dir>/conf/doc-ver-api, with the following values:
-```
-ALLOWED_ORIGINS=<string_value>
-LIMITS_CPUS=<int_value>
-LIMITS_MEM=<string_value>
-RESERVATIONS_CPUS=<int_value>
-RESERVATIONS_MEM=<string_value>
-```
-##### creds
-Not needed for doc-ver-api
-
-### [doc-ver-runner](https://bitbucket.org/microblink/docver-api/src/)
-doc-ver-runner docker-compose.yaml will start longrunning doc-ver-runner server service. By default one process will be started, you can increase number by setting `REPLICAS` parameter.
-#### conf
-To configure doc-ver-runner, an .env file should be added to /<deployment_dir>/conf/doc-ver-runner, with the following values:
-```
-APPLICATION_ID=<string_value>
-LIMITS_CPUS=<int_value>
-LIMITS_MEM=<string_value>
-RESERVATIONS_CPUS=<int_value>
-RESERVATIONS_MEM=<string_value>
-REPLICAS=<int_value>
-```
-#### creds
-To be able to work, doc-ver-runner needs a license key that you can provide in /<deployment_dir>/creds/doc-ver-runner:
-```
-LICENSE_KEY=<string_value>
+## Inspecting logs
+```bash
+docker-compose logs doc-ver
 ```
 
-### [visual-anomaly](https://bitbucket.org/microblink/web-api-visual-anomaly/src/master/)
-visual-anomaly docker-compose.yaml will start one longrunning visual-anomaly server service
-#### conf
-To configure visual-anomaly, an .env file should be added to /<deployment_dir>/conf/visual-anomaly, with the following values:
-```
-ALLOW_CORS=false
-LIMITS_CPUS=2
-LIMITS_MEM=2Gb
-RESERVATIONS_CPUS=1
-RESERVATIONS_MEM=1Gb
-```
-#### creds
-Not needed for visual-anomaly
+## Endpoint
+The Document verification API is available on port `8080` by default.
+To change it, update `DOC_VER_API_PORT` in `conf/doc-ver-image/.env`.
 
-### [retrieval-intermediary](https://bitbucket.org/microblink/retrieval-intermediary/src/master/)
-retrieval-intermediary docker-compose.yaml will start one longrunning retrieval-intermediary server service
-#### conf
-To configure retrieval-intermediary, an .env file should be added to /<deployment_dir>/conf/retrieval-intermediary, with the following values:
-```
-COLLECTION_NAME=mdv
-PARALLEL_QUERIES=100
-```
-#### creds
-Not needed for retrieval-intermediary
+## Resource requirements
+Resource limits are configured in `conf/doc-ver-image/.env`.
 
-### [embedding-store](https://bitbucket.org/microblink/embedding-store/src/master/)
-embedding-store docker-compose.yaml will start three services, pgvector database, seeder and embedding-store-server. 
-seeder inserts predefined data to server database and exits when done.
-embedding-store-server and pgvector are longrunning services.
-#### seeder
-##### conf
-To configure seeder for s3, seeder.yaml should be added to /<deployment_dir>/conf/embedding-store, with the following values:
-```
-grpc-recv-size: <int_val>
-grpc-send-size: <int_val>
+## Logging
+Logs are emitted to stdout/stderr (view via `docker-compose logs doc-ver`) and also written to files under `/var/log` inside the container:
 
-col-create-workers: <int_val>
-col-insert-workers: <int_val>
-col-insert-batch: <int_val>
+- `/var/log/tf-serving.log`
+- `/var/log/api.log`
+- `/var/log/worker-N.log`
 
-s3-seed-store: <bool_val>
-s3-seed-store-endpoint: <string_val>
-s3-seed-store-secure: <bool_val>
-s3-seed-store-bucket: <string_val>
-s3-seed-store-prefix: <string_val>
-```
+File logging is optional. Set `LOG_FILES_ENABLED=1` to enable files; otherwise logs are stdout only.
+If the container filesystem fills up due to log growth, writes will fail and the process may crash. Prefer external log collection and keep log files small.
 
-To configure seeder for gcs, seeder.yaml shold be added to /<deployment_dir>/conf/embedding-store, with the following values:
-```
-grpc-recv-size: <int_val>
-grpc-send-size: <int_val>
+## Environment variables
+Configuration options in `conf/doc-ver-image/.env`:
+- `DOCVER_IMAGE`, `DOCVER_IMAGE_TAG` – image repository and tag
+- `WORKER_COUNT` – number of worker processes inside the container
+- `HEALTH_PORT_BASE` – base port for worker health endpoints
+- `API_TIMEOUT_SECONDS`, `WORKER_POLL_TIMEOUT_SECONDS`, `JOB_TIMEOUT_MINUTES` – internal API/queue tuning
+- `LIMITS_*` / `RESERVATIONS_*` – CPU and memory settings
 
-col-create-workers: <int_val>
-col-insert-workers: <int_val>
-col-insert-batch: <int_val>
+License settings are injected by `init.sh`:
+- `LICENSE_KEY`
+- `APPLICATION_ID`
 
-gc-seed-store: <bool_val>
-gc-seed-store-bucket: <string_val>
-gc-seed-store-prefix: <string_val>
-```
-#### server
-##### conf
-To configure server and db, .env file should be added to /<deployment_dir>/creds/embedding-store, with following values:
-```
-GRPC_RECV_SIZE=<int_value>
-GRPC_SEND_SIZE=<int_value>
-GRPC_TIMEOUT=<string_value>
+## Scaling advice
 
-PG_VECTOR_CMX_CONN=<int_value>
-PG_VECTOR_LIMITS_MEM=<string_value>
-PG_VECTOR_RESERVATIONS_MEM=<string_value>
-```
-##### creds
-Not needed for embedding-store server
+- We recommend scaling horizontally by simply running more replicas and relying on a load balancer to distribute the traffic.
+- Avoid changing `WORKER_COUNT`, especially if you're not changing the resource limits. `WORKER_COUNT` is exposed to allow you to rightsize the performance if you have specific requirements for your container resource allocation.
 
-### bundle
-To configure bundle services, see [base/bundle/README.md](base/bundle/README.md) (Services section)
+## Throughput and latency
+
+On average, a single verification takes 2-3 seconds. This time can vary depending on the document type, settings, and resource constraints.
+
+By default, each image runs 2 worker processes, meaning a single container can handle roughly 0.8 requests per second.
+
+These requests are queued internally (up to a limit), so the container can easily buffer and handle spikes (which will cause additional latency, of course).
+
+When the API is too saturated, it will start rejecting requests with a 429 status code.
+
+## Migration guide (from multi-service compose)
+
+It should be fairly straightforward to migrate from the multi-service compose to the single-image deployment since it's designed to be backwards compatible. The only real difference is the number of containers that run.
+
+1. Stop and remove the old stack: `docker-compose down`.
+2. Remove old configs under `conf/doc-ver-api`, `conf/doc-ver-runner`, `conf/bundle-doc-ver`.
+3. Re-run `init.sh` to generate the single-image config set.
+4. Start the new stack with `docker-compose up -d`.
+
