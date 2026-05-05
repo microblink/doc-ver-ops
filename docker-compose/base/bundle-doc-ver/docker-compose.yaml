@@ -1,0 +1,122 @@
+version: '3'
+
+services:
+  doc-ver-model-proxy:
+    depends_on:
+      doc-ver-model-nginx:
+        condition: service_healthy
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/mlp-model-proxy/onprem:v0.20.0
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr", "doc-ver-model-proxy:8005"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - doc-ver-network
+    volumes:
+      - ./proxy/bundle-signature.yaml:/etc/bundle-signature.yaml
+    command:
+      - mproxy
+      - server
+      - --tf-serving-connection-string
+      - doc-ver-model-nginx:80
+      - -c
+      - /etc/bundle-signature.yaml
+
+  doc-ver-model-nginx:
+    depends_on:
+      s66b61951fb85edd8517b6af6s:
+        condition: service_healthy
+      s66e2b36788703787163f0ecfs:
+        condition: service_healthy
+    image: fabiocicerchia/nginx-lua:1.25.2-alpine3.18.3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "doc-ver-model-nginx:80/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - doc-ver-network
+    volumes:
+      - ${REL_DIR}/conf/bundle-doc-ver/nginx.conf:/etc/nginx/nginx.conf
+
+  s66b61951fb85edd8517b6af6s:
+    depends_on:
+      doc-ver-model_download:
+        condition: service_completed_successfully
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aa3b3
+    networks:
+      - doc-ver-network
+    volumes:
+      - ./model-serving/model-download/models/66b61951fb85edd8517b6af6:/models/66b61951fb85edd8517b6af6
+    command:
+      - --enable_model_warmup
+      - --model_name=66b61951fb85edd8517b6af6
+      - --model_base_path=/models/66b61951fb85edd8517b6af6
+      - --tensorflow_inter_op_parallelism=2
+      - --tensorflow_intra_op_parallelism=2
+      - --file_system_poll_wait_seconds=0
+      - --grpc_max_threads=18
+    environment:
+      OMP_NUM_THREADS: "2"
+    healthcheck:
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s66b61951fb85edd8517b6af6s:8500", "-model-name", "66b61951fb85edd8517b6af6", "-model-version", "1", "|", "grep", "AVAILABLE"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: ${SERVING_66b61951fb85edd8517b6af6_CPU_LIMIT}
+          memory: ${SERVING_66b61951fb85edd8517b6af6_MEM_LIMIT}
+        reservations:
+          cpus: ${SERVING_66b61951fb85edd8517b6af6_CPU_RESERVATION}
+          memory: ${SERVING_66b61951fb85edd8517b6af6_MEM_RESERVATION}
+  s66e2b36788703787163f0ecfs:
+    depends_on:
+      doc-ver-model_download:
+        condition: service_completed_successfully
+    image: us-central1-docker.pkg.dev/document-verification-public/docver-gcm/tf-serving-kira-native-cpu/onprem:v2.13.0-aa3b3
+    networks:
+      - doc-ver-network
+    volumes:
+      - ./model-serving/model-download/models/66e2b36788703787163f0ecf:/models/66e2b36788703787163f0ecf
+    command:
+      - --enable_model_warmup
+      - --model_name=66e2b36788703787163f0ecf
+      - --model_base_path=/models/66e2b36788703787163f0ecf
+      - --tensorflow_inter_op_parallelism=1
+      - --tensorflow_intra_op_parallelism=1
+      - --file_system_poll_wait_seconds=0
+      - --grpc_max_threads=12
+    environment:
+      OMP_NUM_THREADS: "1"
+    healthcheck:
+      test: ["CMD", "tfs_model_status_probe", "-addr", "s66e2b36788703787163f0ecfs:8500", "-model-name", "66e2b36788703787163f0ecf", "-model-version", "1", "|", "grep", "AVAILABLE"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: ${SERVING_66e2b36788703787163f0ecf_CPU_LIMIT}
+          memory: ${SERVING_66e2b36788703787163f0ecf_MEM_LIMIT}
+        reservations:
+          cpus: ${SERVING_66e2b36788703787163f0ecf_CPU_RESERVATION}
+          memory: ${SERVING_66e2b36788703787163f0ecf_MEM_RESERVATION}
+
+
+  doc-ver-model_download:
+    image: rclone/rclone:1
+    networks:
+      - doc-ver-network
+    entrypoint: sh
+    volumes:
+      - ./model-serving/model-download/rclone.conf:/config/rclone/rclone.conf
+      - ./model-serving/model-download/models:/models
+      - ./model-serving/model-download/model-download.sh:/data/model-download.sh
+    command: 
+      - ./model-download.sh
+
+networks:
+  doc-ver-network:
