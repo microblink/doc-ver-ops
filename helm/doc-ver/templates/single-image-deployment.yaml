@@ -39,6 +39,8 @@ spec:
               containerPort: {{ .Values.docVer.service.port }}
               protocol: TCP
           volumeMounts:
+            - name: run
+              mountPath: /run
             - name: tmp
               mountPath: /tmp
             - name: var-tmp
@@ -115,6 +117,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: run
+          emptyDir:
+            {{- with .Values.docVer.volumes.run.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
         - name: tmp
           emptyDir:
             {{- with .Values.docVer.volumes.tmp.sizeLimit }}

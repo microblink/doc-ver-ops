@@ -90,6 +90,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docVer.terminationGracePeriodSeconds | int | `30` | graceful shutdown timeout |
 | docVer.tolerations | list | `[]` | deployment tolerations |
 | docVer.topologySpreadConstraints | list | `[]` | deployment topologySpreadConstraints |
+| docVer.volumes.run.sizeLimit | string | `""` |  |
 | docVer.volumes.tmp | object | `{"sizeLimit":""}` | size limits for writable emptyDir volumes (optional, e.g. "1Gi") |
 | docVer.volumes.varLog.sizeLimit | string | `""` |  |
 | docVer.volumes.varTmp.sizeLimit | string | `""` |  |
