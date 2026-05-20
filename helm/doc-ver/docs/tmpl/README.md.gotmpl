@@ -43,6 +43,7 @@ helm install my-release -f <path to values file you want to use to configure the
 
 The single-image container accepts a set of configuration env vars. The most commonly tuned ones:
 
+- `S6_READ_ONLY_ROOT` and `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` – s6-overlay Kubernetes compatibility settings; keep enabled for the default hardened container
 - `WORKER_COUNT` – number of worker processes in the container
 - `HEALTH_PORT_BASE` – base port for worker health endpoints
 - `API_TIMEOUT_SECONDS`, `WorkerPollTimeoutSeconds`, `JobTimeoutMinutes` – internal API/queue tuning
@@ -58,6 +59,14 @@ docVer:
     - name: DocVerV2QueueLimit
       value: "0"
 ```
+
+## Writable runtime paths
+
+The container runs with `readOnlyRootFilesystem: true` as non-root UID `65534`, with all capabilities dropped and privilege escalation disabled. Because s6-overlay runs as PID 1 and needs writable runtime state under `/run`, this chart mounts a writable `emptyDir` volume at `/run`.
+
+Kubernetes creates `emptyDir` volumes as root-owned. s6-overlay normally rejects `/run` when it is not owned by the runtime UID, which can fail startup with `/run belongs to uid 0 instead of 65534`. To avoid adding a root initContainer just to `chown /run`, the chart enables s6-overlay's explicit Kubernetes workaround by setting `S6_READ_ONLY_ROOT=1` and `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES=1`.
+
+This keeps the application container non-root and preserves `readOnlyRootFilesystem: true`, while allowing s6-overlay to initialize correctly in a Kubernetes pod where all supervised application processes run as the same non-root UID.
 
 ## Logging
 

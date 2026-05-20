@@ -62,6 +62,10 @@ docVer:
         paths: ["/docver/", "/api/"]
     pathType: ImplementationSpecific
   env:
+    # -- tell s6-overlay the container root filesystem is read-only
+    S6_READ_ONLY_ROOT: "1"
+    # -- allow s6-overlay to use Kubernetes root-owned /run emptyDir as writable runtime state
+    S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
     # -- worker pool size
     WORKER_COUNT: "2"
     # -- base port for worker health servers
@@ -127,6 +131,9 @@ docVer:
   volumes:
     # -- size limits for writable emptyDir volumes (optional, e.g. "1Gi")
     run:
+      # /run is required by s6-overlay when readOnlyRootFilesystem is enabled.
+      # Kubernetes creates emptyDir volumes as root-owned, so s6 uses its
+      # Kubernetes compatibility opt-in instead of a root initContainer.
       sizeLimit: ""
     tmp:
       sizeLimit: ""
