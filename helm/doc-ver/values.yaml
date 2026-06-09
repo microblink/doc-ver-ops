@@ -24,7 +24,7 @@ docVer:
     # -- deployment docker image pull policy
     pullPolicy: IfNotPresent
     # -- deployment docker image tag, if not set, version will be used as tag
-    tag: "3.22.0"
+    tag: "3.22.1"
     # -- deployment docker image pull secrets
     pullSecrets: []
   service:
@@ -68,9 +68,15 @@ docVer:
     S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
     # -- worker pool size
     WORKER_COUNT: "2"
+    # -- concurrent in-flight verification requests per pod
+    DocVerV2InflightLimit: "2"
+    # -- queued verification requests per pod; use "0" only for strict fail-fast deployments
+    DocVerV2QueueLimit: "1"
+    # -- maximum accepted image size in pixels
+    Api__MaxImagePixels: "60000000"
     # -- base port for worker health servers
     HEALTH_PORT_BASE: "18080"
-    # -- API / queue configuration
+    # -- request timeout tuning
     API_TIMEOUT_SECONDS: "30"
     WorkerPollTimeoutSeconds: "10"
     JobTimeoutMinutes: "2"

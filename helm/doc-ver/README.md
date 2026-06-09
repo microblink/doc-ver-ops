@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 1.0.6](https://img.shields.io/badge/Version-1.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.22.0](https://img.shields.io/badge/AppVersion-3.22.0-informational?style=flat-square)
+![Version: 1.0.7](https://img.shields.io/badge/Version-1.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.22.1](https://img.shields.io/badge/AppVersion-3.22.1-informational?style=flat-square)
 
 Single-image Document Verification deployment
 
@@ -37,7 +37,10 @@ helm install my-release -f <path to values file you want to use to configure the
 | docVer.affinity | object | `{}` | deployment affinity |
 | docVer.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65534,"seccompProfile":{"type":"RuntimeDefault"}}` | container security context |
 | docVer.enabled | bool | `true` | enable single-image deployment (API + Worker + Models in one container) |
-| docVer.env.API_TIMEOUT_SECONDS | string | `"30"` | API / queue configuration |
+| docVer.env.API_TIMEOUT_SECONDS | string | `"30"` | request timeout tuning |
+| docVer.env.Api__MaxImagePixels | string | `"60000000"` | maximum accepted image size in pixels |
+| docVer.env.DocVerV2InflightLimit | string | `"2"` | concurrent in-flight verification requests per pod |
+| docVer.env.DocVerV2QueueLimit | string | `"1"` | queued verification requests per pod; use "0" only for strict fail-fast deployments |
 | docVer.env.HEALTH_PORT_BASE | string | `"18080"` | base port for worker health servers |
 | docVer.env.JobTimeoutMinutes | string | `"2"` |  |
 | docVer.env.MPROXY_MODELS_ENDPOINT | string | `"localhost:8500"` | TF Serving endpoint inside the container |
@@ -52,7 +55,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docVer.image.pullPolicy | string | `"IfNotPresent"` | deployment docker image pull policy |
 | docVer.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | docVer.image.repository | string | `"us-docker.pkg.dev/document-verification-public/verify-public/single-image"` | deployment docker image repository |
-| docVer.image.tag | string | `"3.22.0"` | deployment docker image tag, if not set, version will be used as tag |
+| docVer.image.tag | string | `""` | deployment docker image tag, if not set, version will be used as tag |
 | docVer.ingress.annotations | object | `{}` |  |
 | docVer.ingress.className | string | `""` |  |
 | docVer.ingress.enabled | bool | `false` | enable if you want to expose the service |
@@ -107,18 +110,23 @@ The single-image container accepts a set of configuration env vars. The most com
 - `S6_READ_ONLY_ROOT` and `S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES` – s6-overlay Kubernetes compatibility settings; keep enabled for the default hardened container
 - `WORKER_COUNT` – number of worker processes in the container
 - `HEALTH_PORT_BASE` – base port for worker health endpoints
-- `API_TIMEOUT_SECONDS`, `WorkerPollTimeoutSeconds`, `JobTimeoutMinutes` – internal API/queue tuning
+- `DocVerV2InflightLimit` – concurrent in-flight verification requests per pod
+- `DocVerV2QueueLimit` – queued verification requests per pod; the default `1` smooths short Kubernetes bursts
+- `Api__MaxImagePixels` – maximum accepted image size in pixels
+- `API_TIMEOUT_SECONDS`, `WorkerPollTimeoutSeconds`, `JobTimeoutMinutes` – request timeout tuning
 - `MPROXY_MODELS_ENDPOINT`, `MPROXY_MODELS_ENDPOINT_SSL` – should remain `localhost:8500` / `OFF` for single-image
 
-Additional env vars can be injected via `docVer.extraEnv`:
+`DocVerV2QueueLimit=1` is the recommended Kubernetes/default burst-smoothing value. `DocVerV2QueueLimit=0` is still valid for strict fail-fast deployments, but it may produce more fast 429 responses without improving accepted-response latency.
+
+Additional env vars can be injected via `docVer.extraEnv` for deployment-specific overrides:
 
 ```yaml
 docVer:
   extraEnv:
     - name: DocVerV2InflightLimit
-      value: "4"
+      value: "2"
     - name: DocVerV2QueueLimit
-      value: "0"
+      value: "1"
 ```
 
 ## Writable runtime paths
@@ -166,9 +174,9 @@ On average, a single verification takes 2-3 seconds. This time can vary dependin
 
 By default, each image runs 2 worker processes, meaning a single container can handle roughly 0.8 requests per second.
 
-These requests are queued internally (up to a limit), so the container can easily buffer and handle spikes (which will cause additional latency, of course).
+By default, a pod allows 2 in-flight verification requests and 1 queued verification request. This small queue smooths short Kubernetes routing bursts without hiding sustained overload behind a large internal backlog.
 
-When the API is too saturated, it will start rejecting requests with a 429 status code.
+When the API is saturated beyond the configured in-flight and queue limits, it rejects requests with a 429 status code. Treat sustained 429s as a signal to add capacity or scale horizontally.
 
 ## Horizontal scaling
 
@@ -176,7 +184,7 @@ There are three primary horizontal scaling approaches you can use to get higher 
 
 1. Run a higher flat number of replicas.
 
-Since the API can buffer requests, consider if you really need dynamic scaling or large numbers of replicas.
+Since the API only keeps a small default internal queue, use the replica count to absorb sustained bursts instead of relying on large in-pod queues.
 
 A single instance is capable processing some 70000 requests in a day. If you don't experience large spikes, this might be good enough. However, it's always best to have redundancy, and you likely have concentrated peak loads. Unless these loads are huge, running a few, or up to 10 replicas at all times is likely an excellent, cost effective solution to handle all your traffic.
 
@@ -188,7 +196,7 @@ It's better to set somewhat lower thresholds (~50-60%) and have more aggressive 
 
 3. Queue based scaling
 
-By putting a fast gateway and queue in front of the container (PubSub, RabbitMQ, etc.), and utilizing KEDA and queue metrics, you can scale the number of images based on the number of items in the queue. This is the most efficient way to scale, but it requires additional infrastructure and configuration. It's most likely not cost effective unless you have large loads or extreme spikes.
+By putting a fast gateway and queue in front of the container (PubSub, RabbitMQ, etc.), and utilizing KEDA and queue metrics, you can scale the number of images based on the number of items in that external queue. This is the most efficient way to scale sustained bursts while keeping overload visible at the pod boundary, but it requires additional infrastructure and configuration. It's most likely not cost effective unless you have large loads or extreme spikes.
 
 That might look something like this:
 
