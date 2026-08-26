@@ -1,6 +1,6 @@
 # doc-ver
 
-![Version: 1.0.7](https://img.shields.io/badge/Version-1.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.22.1](https://img.shields.io/badge/AppVersion-3.22.1-informational?style=flat-square)
+![Version: 1.0.8](https://img.shields.io/badge/Version-1.0.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.22.3](https://img.shields.io/badge/AppVersion-3.22.3-informational?style=flat-square)
 
 Single-image Document Verification deployment
 
@@ -55,7 +55,7 @@ helm install my-release -f <path to values file you want to use to configure the
 | docVer.image.pullPolicy | string | `"IfNotPresent"` | deployment docker image pull policy |
 | docVer.image.pullSecrets | list | `[]` | deployment docker image pull secrets |
 | docVer.image.repository | string | `"us-docker.pkg.dev/document-verification-public/verify-public/single-image"` | deployment docker image repository |
-| docVer.image.tag | string | `"3.22.1"` | deployment docker image tag, if not set, version will be used as tag |
+| docVer.image.tag | string | `"3.22.3"` | deployment docker image tag, if not set, version will be used as tag |
 | docVer.ingress.annotations | object | `{}` |  |
 | docVer.ingress.className | string | `""` |  |
 | docVer.ingress.enabled | bool | `false` | enable if you want to expose the service |

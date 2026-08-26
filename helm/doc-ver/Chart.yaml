@@ -1,6 +1,6 @@
 name: doc-ver
 apiVersion: v2
-version: 1.0.7
-appVersion: 3.22.1
+version: 1.0.8
+appVersion: 3.22.3
 description: Single-image Document Verification deployment
 type: application
